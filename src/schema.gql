@@ -1,0 +1,53 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: Int!
+  userName: String!
+  email: String!
+  password: String!
+  birth_date: String!
+  userActivites: [Activite!]
+}
+
+type Activite {
+  id: Int!
+  activiteName: String!
+  activitesUsers: User
+}
+
+type Query {
+  activites: [Activite!]!
+  activite(id: Int!): Activite!
+  users: [User!]!
+  user(id: Int!): User!
+  getUserActivites(id: Int!): User!
+}
+
+type Mutation {
+  createActivite(activiteInp: CreateActiviteInput!): Activite!
+  createUser(createUserInput: CreateUserInput!): User!
+  addActivites(userId: Float!, actividadIds: [Float!]!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+}
+
+input CreateActiviteInput {
+  activiteName: String!
+}
+
+input CreateUserInput {
+  userName: String!
+  email: String!
+  password: String!
+  birth_date: String!
+}
+
+input UpdateUserInput {
+  userName: String
+  email: String
+  password: String
+  birth_date: String
+  id: Int!
+}
