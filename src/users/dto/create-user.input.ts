@@ -1,5 +1,7 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { IsEmpty, IsDate, MinLength, IsEmail,IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsEmpty, IsDate, MinLength, IsEmail,IsNotEmpty, MaxLength, Validate } from 'class-validator';
+import { IsAdult } from 'src/validators/is-adult.validator';
 
 @InputType()
 export class CreateUserInput {
@@ -22,7 +24,12 @@ export class CreateUserInput {
 
   @IsNotEmpty()
   @Field()
-  birth_date: string;
+  @Type(() => Date)
+  @Validate(IsAdult)
+  birth_date: Date;
 
+
+  @Field({nullable: true})
+  userDescription:string
   
 }

@@ -9,11 +9,21 @@ export class TravelResolver {
   constructor(private readonly travelService: TravelService) {}
 
   @Mutation(() => Travel)
-  createTravel(@Args('createTravelInput') createTravelInput: CreateTravelInput) {
+  createTravel(
+    @Args('createTravelInput') createTravelInput: CreateTravelInput,
+  ) {
     return this.travelService.create(createTravelInput);
   }
 
-  @Query(() => [Travel], { name: 'travel' })
+  @Mutation(() => Travel)
+  async joinToTravel(
+    @Args('userId', { type: () => Int }) userId: number,
+    @Args('travelId', { type: () => Int }) travelId: number,
+  ) {
+    return this.travelService.joinToTravel(userId, travelId);
+  }
+
+  @Query(() => [Travel], { name: 'travels' })
   findAll() {
     return this.travelService.findAll();
   }
@@ -24,7 +34,9 @@ export class TravelResolver {
   }
 
   @Mutation(() => Travel)
-  updateTravel(@Args('updateTravelInput') updateTravelInput: UpdateTravelInput) {
+  updateTravel(
+    @Args('updateTravelInput') updateTravelInput: UpdateTravelInput,
+  ) {
     return this.travelService.update(updateTravelInput.id, updateTravelInput);
   }
 
