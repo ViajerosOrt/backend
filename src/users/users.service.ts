@@ -14,7 +14,7 @@ export class UsersService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private activiteService: ActivitesService,
-  ) {}
+  ) { }
 
   create(createUserInput: CreateUserInput): Promise<User> {
     const user = this.userRepository.create(createUserInput);
@@ -36,7 +36,7 @@ export class UsersService {
     const activites =
       await this.activiteService.findActivitesByAllId(activitesId);
 
-    if(activites == null){
+    if (activites == null) {
       throw new Error("No existe esa actividad");
     }
 
@@ -55,19 +55,19 @@ export class UsersService {
       where: {
         id: id,
       },
-      relations: ['travelsCreated','joinsTravels', 'userActivites']
+      relations: ['travelsCreated', 'joinsTravels', 'userActivites']
     });
   }
 
-  async joinToTrabel(trvel: Travel, userId: number):Promise<User>{
+  async joinToTrabel(trvel: Travel, userId: number): Promise<User> {
 
     const user = await this.findOne(userId);
-    user.joinsTravels =  user.joinsTravels || [];
+    user.joinsTravels = user.joinsTravels || [];
     user.joinsTravels.push(trvel);
     return this.userRepository.save(user);
   }
 
-  async update(id: number, updateUserInput: UpdateUserInput):Promise<User> {
+  async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
     const user = await this.findOne(id);
     if (!user) {
       throw new NotFoundException(`No existe un usuario con esa ID ${id}`);
