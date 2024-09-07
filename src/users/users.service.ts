@@ -73,6 +73,13 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
+  async leaveTravel(travel: Travel, user: User){
+
+    user.joinsTravels = user.joinsTravels.filter(travel => travel.id !== travel.id);
+    this.userRepository.save(user);
+
+  }
+
   async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
     const user = await this.findOne(id);
     if (!user) {

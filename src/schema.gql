@@ -57,6 +57,7 @@ type Mutation {
   removeUser(id: Int!): User!
   createTravel(createTravelInput: CreateTravelInput!, activitesId: [Float!]!): Travel!
   joinToTravel(userId: Int!, travelId: Int!): Travel!
+  leaveTrabel(userId: Int!, travelId: Int!): Travel!
   updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
   removeTravel(id: Int!): Travel!
 }
