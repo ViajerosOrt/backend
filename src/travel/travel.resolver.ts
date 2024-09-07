@@ -11,8 +11,9 @@ export class TravelResolver {
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
+    @Args('activitesId', { type: () => [Number] }) activitesId: number[],
   ) {
-    return this.travelService.create(createTravelInput);
+    return this.travelService.create(createTravelInput, activitesId);
   }
 
   @Mutation(() => Travel)

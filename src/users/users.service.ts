@@ -62,7 +62,13 @@ export class UsersService {
   async joinToTrabel(trvel: Travel, userId: number): Promise<User> {
 
     const user = await this.findOne(userId);
-    user.joinsTravels = user.joinsTravels || [];
+
+    user.joinsTravels =  user.joinsTravels || [];
+
+    if(user.id == trvel.creatorUserId){
+      user.travelsCreated = user.travelsCreated || [];
+      user.travelsCreated.push(trvel);
+    }
     user.joinsTravels.push(trvel);
     return this.userRepository.save(user);
   }

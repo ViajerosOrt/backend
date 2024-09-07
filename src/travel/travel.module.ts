@@ -4,9 +4,10 @@ import { TravelResolver } from './travel.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { UsersModule } from 'src/users/users.module';
+import { ActivitesModule } from 'src/activites/activites.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Travel]), UsersModule],
+  imports:[TypeOrmModule.forFeature([Travel]), UsersModule, ActivitesModule],
   providers: [TravelResolver, TravelService],
 })
 export class TravelModule {}

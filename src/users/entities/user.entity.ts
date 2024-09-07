@@ -43,4 +43,7 @@ export class User {
   @Field(() => [Travel], {nullable: true})
   @JoinTable()
   joinsTravels: Travel[];
+
+
+  
 }
