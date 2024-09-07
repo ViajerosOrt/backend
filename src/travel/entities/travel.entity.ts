@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Activite } from 'src/activites/activites.entity';
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -49,4 +50,11 @@ export class Travel {
 @ManyToMany(() => User, (user)=> user.joinsTravels)
 @Field(() => [User], {nullable: true})
 usersTravelers: User[]
+
+//********************************************* */
+
+@ManyToMany(() => Activite, (activite) => activite.activitesTravels)
+@Field(() => [Activite], {nullable: true})
+@JoinTable()
+travelActivitis: Activite[]
 }

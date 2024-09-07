@@ -2,24 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Travel {
-  id: Int!
-  travelTitle: String!
-  travelDescription: String
-  startDate: DateTime!
-  finishDate: DateTime!
-  max_cap: Int
-  isEndable: Boolean!
-  creatorUserId: Int!
-  creatorUser: User!
-  usersTravelers: [User!]
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type User {
   id: Int!
   userName: String!
@@ -32,10 +14,30 @@ type User {
   joinsTravels: [Travel!]
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Travel {
+  id: Int!
+  travelTitle: String!
+  travelDescription: String
+  startDate: DateTime!
+  finishDate: DateTime!
+  max_cap: Int
+  isEndable: Boolean!
+  creatorUserId: Int!
+  creatorUser: User!
+  usersTravelers: [User!]
+  travelActivitis: [Activite!]
+}
+
 type Activite {
   id: Int!
   activiteName: String!
-  activitesUsers: User
+  activitesUsers: [User!]
+  activitesTravels: [Travel!]
 }
 
 type Query {
@@ -53,7 +55,7 @@ type Mutation {
   addActivites(userId: Float!, actividadIds: [Float!]!): User!
   updateUser(updateUserInput: UpdateUserInput!, userId: Float!): User!
   removeUser(id: Int!): User!
-  createTravel(createTravelInput: CreateTravelInput!): Travel!
+  createTravel(createTravelInput: CreateTravelInput!, activitesId: [Float!]!): Travel!
   joinToTravel(userId: Int!, travelId: Int!): Travel!
   updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
   removeTravel(id: Int!): Travel!

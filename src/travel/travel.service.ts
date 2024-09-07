@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
+import { ActivitesService } from 'src/activites/activites.service';
 
 @Injectable()
 export class TravelService {
@@ -13,20 +14,24 @@ export class TravelService {
     @InjectRepository(Travel)
     private travelRepository: Repository<Travel>,
     private userService: UsersService,
+    private activiteService: ActivitesService,
   ){}
 
-  async create(createTravelInput: CreateTravelInput):Promise<Travel> {
+  async create(createTravelInput: CreateTravelInput, activitesId : number[]):Promise<Travel> {
 
     const trav =  this.travelRepository.create(createTravelInput);
     const user =  await this.userService.joinToTrabel(trav, trav.creatorUserId)
+    const activites = await this.activiteService.findActivitesByAllId(activitesId);
 
     if (!user) {
       throw new Error("No existe ese ususrio");
     }
 
-    trav.creatorUser = user;
+    trav.creatorUser = user;    
     trav.usersTravelers = trav.usersTravelers || [];
-
+    trav.travelActivitis = trav.travelActivitis || [];
+    
+    trav.travelActivitis.push(...activites);
 
     trav.usersTravelers.push(user);
 
@@ -68,7 +73,7 @@ export class TravelService {
       where:{
         id
       },
-      relations: ['usersTravelers', 'creatorUser']
+      relations: ['usersTravelers', 'creatorUser', 'travelActivitis']
     });
   }
 
