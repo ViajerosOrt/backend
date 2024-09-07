@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path'
 import { UsersModule } from './users/users.module';
 import { TravelModule } from './travel/travel.module';
+import { LocationModule } from './location/location.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { TravelModule } from './travel/travel.module';
     }),
     ActivitesModule,
     UsersModule,
-    TravelModule],
+    TravelModule,
+    LocationModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -27,6 +27,22 @@ export class TravelService {
       throw new Error("No existe ese ususrio");
     }
 
+
+    const today = new Date(); 
+
+  const startDate = new Date(trav.startDate); 
+  const endDate = new Date(trav.finishDate); 
+
+  
+  if (startDate < today) {
+    throw new Error("La fecha de inicio no puede ser menor a la fecha actual.");
+  }
+
+  
+  if (endDate < startDate) {
+    throw new Error("La fecha de finalización no puede ser anterior a la fecha de inicio.");
+  }
+
     trav.creatorUser = user;    
     trav.usersTravelers = trav.usersTravelers || [];
     trav.travelActivitis = trav.travelActivitis || [];
@@ -61,6 +77,36 @@ export class TravelService {
 
     return this.travelRepository.save(trav);
 
+
+  }
+
+  async leaveTravel(userId: number, travelId: number):Promise<Travel>{
+    const travel = await this.findOne(travelId);
+
+    if(!travel){
+      throw new Error("El viaje no existe");
+    }
+
+    const user = await this.userService.findOne( userId);
+
+    if(!user){
+      throw new Error("El ususario no existe");
+    }
+
+    const isJoined = travel.usersTravelers.some(traveler => traveler.id === userId);
+    if (!isJoined) {
+      throw new Error("El usuario no está unido a este viaje");
+    } 
+
+     if (travel.creatorUserId === userId) {
+      throw new Error("EL creador del viaje no puede salir del mismo");
+     }
+
+    travel.usersTravelers = travel.usersTravelers.filter(traveler => traveler.id !== userId);
+   
+
+    await this.userService.leaveTravel(travel, user);  
+    return this.travelRepository.save(travel); 
 
   }
 

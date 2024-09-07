@@ -4,6 +4,7 @@ import { Travel } from './entities/travel.entity';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
 
+
 @Resolver(() => Travel)
 export class TravelResolver {
   constructor(private readonly travelService: TravelService) {}
@@ -22,6 +23,14 @@ export class TravelResolver {
     @Args('travelId', { type: () => Int }) travelId: number,
   ) {
     return this.travelService.joinToTravel(userId, travelId);
+  }
+
+  @Mutation(() => Travel)
+  async leaveTrabel(
+    @Args('userId', {type: () => Int}) userId: number,
+    @Args('travelId', { type: () => Int }) travelId: number,
+  ){
+    return this.travelService.leaveTravel(userId, travelId);
   }
 
   @Query(() => [Travel], { name: 'travels' })
