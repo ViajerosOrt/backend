@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Activite } from 'src/activites/activites.entity';
+import { Activity } from 'src/activity/activity.entity';
 import { Travel } from 'src/travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -26,24 +26,24 @@ export class User {
   @Field()
   birth_date: Date;
 
-  @Column({nullable: true})
-  @Field({nullable: true})
-  userDescription:string
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  userDescription: string
 
-  @ManyToMany(() => Activite, (activite) => activite.activitesUsers)
-  @Field(() => [Activite], { nullable: true })
+  @ManyToMany(() => Activity, (activity) => activity.userActivities)
+  @Field(() => [Activity], { nullable: true })
   @JoinTable()
-  userActivites: Activite[];
+  userActivities: Activity[];
 
   @OneToMany(() => Travel, (travel) => travel.creatorUser)
-  @Field(() => Travel, {nullable: true} )
+  @Field(() => Travel, { nullable: true })
   travelsCreated: Travel[];
 
   @ManyToMany(() => Travel, (travel) => travel.usersTravelers)
-  @Field(() => [Travel], {nullable: true})
+  @Field(() => [Travel], { nullable: true })
   @JoinTable()
   joinsTravels: Travel[];
 
 
-  
+
 }

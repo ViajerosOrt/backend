@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
-import { ActivitesService } from 'src/activites/activites.service';
+import { ActivityService } from 'src/activity/activity.service';
 
 @Injectable()
 export class TravelService {
@@ -14,53 +14,53 @@ export class TravelService {
     @InjectRepository(Travel)
     private travelRepository: Repository<Travel>,
     private userService: UsersService,
-    private activiteService: ActivitesService,
-  ){}
+    private activityService: ActivityService,
+  ) { }
 
-  async create(createTravelInput: CreateTravelInput, activitesId : number[]):Promise<Travel> {
+  async create(createTravelInput: CreateTravelInput, activityId: number[]): Promise<Travel> {
 
-    const trav =  this.travelRepository.create(createTravelInput);
-    const user =  await this.userService.joinToTrabel(trav, trav.creatorUserId)
-    const activites = await this.activiteService.findActivitesByAllId(activitesId);
+    const trav = this.travelRepository.create(createTravelInput);
+    const user = await this.userService.joinToTrabel(trav, trav.creatorUserId)
+    const activities = await this.activityService.findActivitiesById(activityId);
 
     if (!user) {
-      throw new Error("No existe ese ususrio");
+      throw new Error("This user does not exist");
     }
 
 
-    const today = new Date(); 
+    const today = new Date();
 
-  const startDate = new Date(trav.startDate); 
-  const endDate = new Date(trav.finishDate); 
+    const startDate = new Date(trav.startDate);
+    const endDate = new Date(trav.finishDate);
 
-  
-  if (startDate < today) {
-    throw new Error("La fecha de inicio no puede ser menor a la fecha actual.");
-  }
 
-  
-  if (endDate < startDate) {
-    throw new Error("La fecha de finalización no puede ser anterior a la fecha de inicio.");
-  }
+    if (startDate < today) {
+      throw new Error("The start date must be set in the future.");
+    }
 
-    trav.creatorUser = user;    
+
+    if (endDate < startDate) {
+      throw new Error("The end date must be set in the future of the start date.");
+    }
+
+    trav.creatorUser = user;
     trav.usersTravelers = trav.usersTravelers || [];
-    trav.travelActivitis = trav.travelActivitis || [];
-    
-    trav.travelActivitis.push(...activites);
+    trav.travelActivities = trav.travelActivities || [];
+
+    trav.travelActivities.push(...activities);
 
     trav.usersTravelers.push(user);
 
 
-    
-    
+
+
     return this.travelRepository.save(trav);
   }
 
-  async joinToTravel(userId: number, travelId: number):Promise<Travel>{
+  async joinToTravel(userId: number, travelId: number): Promise<Travel> {
 
     const trav = await this.findOne(travelId)
-    if(!trav){
+    if (!trav) {
       throw new Error("No existe ese viaje");
     }
     const user = await this.userService.findOne(userId)
@@ -68,7 +68,7 @@ export class TravelService {
       throw new Error("No existe ese ususrio");
     }
 
-    if(trav.usersTravelers.length == trav.max_cap){
+    if (trav.usersTravelers.length == trav.max_cap) {
       throw new Error("El viaje ya esta lleno");
     }
 
@@ -80,33 +80,33 @@ export class TravelService {
 
   }
 
-  async leaveTravel(userId: number, travelId: number):Promise<Travel>{
+  async leaveTravel(userId: number, travelId: number): Promise<Travel> {
     const travel = await this.findOne(travelId);
 
-    if(!travel){
+    if (!travel) {
       throw new Error("El viaje no existe");
     }
 
-    const user = await this.userService.findOne( userId);
+    const user = await this.userService.findOne(userId);
 
-    if(!user){
+    if (!user) {
       throw new Error("El ususario no existe");
     }
 
     const isJoined = travel.usersTravelers.some(traveler => traveler.id === userId);
     if (!isJoined) {
       throw new Error("El usuario no está unido a este viaje");
-    } 
+    }
 
-     if (travel.creatorUserId === userId) {
+    if (travel.creatorUserId === userId) {
       throw new Error("EL creador del viaje no puede salir del mismo");
-     }
+    }
 
     travel.usersTravelers = travel.usersTravelers.filter(traveler => traveler.id !== userId);
-   
 
-    await this.userService.leaveTravel(travel, user);  
-    return this.travelRepository.save(travel); 
+
+    await this.userService.leaveTravel(travel, user);
+    return this.travelRepository.save(travel);
 
   }
 
@@ -116,10 +116,10 @@ export class TravelService {
 
   async findOne(id: number) {
     return await this.travelRepository.findOne({
-      where:{
+      where: {
         id
       },
-      relations: ['usersTravelers', 'creatorUser', 'travelActivitis']
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities']
     });
   }
 

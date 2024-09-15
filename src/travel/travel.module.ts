@@ -4,10 +4,10 @@ import { TravelResolver } from './travel.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { UsersModule } from 'src/users/users.module';
-import { ActivitesModule } from 'src/activites/activites.module';
+import { ActivityModule } from 'src/activity/activity.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Travel]), UsersModule, ActivitesModule],
+  imports: [TypeOrmModule.forFeature([Travel]), UsersModule, ActivityModule],
   providers: [TravelResolver, TravelService],
 })
-export class TravelModule {}
+export class TravelModule { }

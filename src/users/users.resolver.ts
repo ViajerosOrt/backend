@@ -10,11 +10,9 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { Activite } from 'src/activites/activites.entity';
-
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Mutation(() => User)
   async createUser(
@@ -24,12 +22,12 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  async addActivites(
+  async addActivities(
     @Args('userId') userId: number,
-    @Args({ name: 'actividadIds', type: () => [Number] })
-    actividadIds: number[],
+    @Args({ name: 'activitiesIds', type: () => [Number] })
+    activitiesIds: number[],
   ): Promise<User> {
-    return await this.usersService.agregarActividad(userId, actividadIds);
+    return await this.usersService.addActivity(userId, activitiesIds);
   }
 
   @Query((returns) => [User], { name: 'users' })

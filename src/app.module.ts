@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ActivitesModule } from './activites/activites.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +8,7 @@ import { join } from 'path'
 import { UsersModule } from './users/users.module';
 import { TravelModule } from './travel/travel.module';
 import { LocationModule } from './location/location.module';
+import { ActivityModule } from './activity/activity.module';
 
 @Module({
   imports: [
@@ -22,7 +22,7 @@ import { LocationModule } from './location/location.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    ActivitesModule,
+    ActivityModule,
     UsersModule,
     TravelModule,
     LocationModule],

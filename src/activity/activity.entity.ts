@@ -5,23 +5,23 @@ import { Column, PrimaryGeneratedColumn, Entity, ManyToMany } from 'typeorm';
 
 @Entity()
 @ObjectType()
-export class Activite {
+export class Activity {
   @PrimaryGeneratedColumn()
   @Field((type) => Int)
   id: number;
 
   @Column()
   @Field()
-  activiteName: string;
+  activityName: string;
 
-  @ManyToMany(() => User, (user) => user.userActivites)
-  @Field(() => [User], {nullable: true})
-  activitesUsers: User[];
+  @ManyToMany(() => User, (user) => user.userActivities)
+  @Field(() => [User], { nullable: true })
+  userActivities: User[];
 
 
   @ManyToMany(() => Travel, (trvel) => trvel.travelDescription)
-  @Field(() => [Travel], {nullable: true})
-  activitesTravels: Travel[] 
+  @Field(() => [Travel], { nullable: true })
+  travelActivities: Travel[]
 
-  
+
 }
