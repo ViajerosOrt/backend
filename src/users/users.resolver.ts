@@ -24,10 +24,10 @@ export class UsersResolver {
   @Mutation(() => User)
   async addActivities(
     @Args('userId') userId: number,
-    @Args({ name: 'actividadIds', type: () => [Number] })
-    actividadIds: number[],
+    @Args({ name: 'activitiesIds', type: () => [Number] })
+    activitiesIds: number[],
   ): Promise<User> {
-    return await this.usersService.addActivity(userId, actividadIds);
+    return await this.usersService.addActivity(userId, activitiesIds);
   }
 
   @Query((returns) => [User], { name: 'users' })

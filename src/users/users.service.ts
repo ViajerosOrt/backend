@@ -29,14 +29,14 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error("No existe ese usuario");
+      throw new Error("The user does not exist");
     }
 
     const activities =
       await this.activityService.findActivitiesById(activityId);
 
     if (activities == null) {
-      throw new Error("No existe esa actividad");
+      throw new Error("The activities does not exist");
     }
 
     user.userActivities.push(...activities);

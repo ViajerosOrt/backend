@@ -27,7 +27,7 @@ export class ActivityService {
     async findActivitiesById(ids: number[]): Promise<Activity[]> {
         return await this.activityRepository.find({
             where: {
-                id: In(ids), //Busca muchas id y debuelve un conjunto
+                id: In(ids), //Busca muchas id y devuelve un conjunto
             }
         })
     }
