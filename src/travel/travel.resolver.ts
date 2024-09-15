@@ -7,14 +7,14 @@ import { UpdateTravelInput } from './dto/update-travel.input';
 
 @Resolver(() => Travel)
 export class TravelResolver {
-  constructor(private readonly travelService: TravelService) {}
+  constructor(private readonly travelService: TravelService) { }
 
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
-    @Args('activitesId', { type: () => [Number] }) activitesId: number[],
+    @Args('activityId', { type: () => [Number] }) activityId: number[],
   ) {
-    return this.travelService.create(createTravelInput, activitesId);
+    return this.travelService.create(createTravelInput, activityId);
   }
 
   @Mutation(() => Travel)
@@ -27,9 +27,9 @@ export class TravelResolver {
 
   @Mutation(() => Travel)
   async leaveTrabel(
-    @Args('userId', {type: () => Int}) userId: number,
+    @Args('userId', { type: () => Int }) userId: number,
     @Args('travelId', { type: () => Int }) travelId: number,
-  ){
+  ) {
     return this.travelService.leaveTravel(userId, travelId);
   }
 

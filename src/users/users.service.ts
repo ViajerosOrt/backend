@@ -4,16 +4,15 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { Activite } from 'src/activites/activites.entity';
-import { ActivitesService } from 'src/activites/activites.service';
 import { Travel } from 'src/travel/entities/travel.entity';
+import { ActivityService } from 'src/activity/activity.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private activiteService: ActivitesService,
+    private activityService: ActivityService,
   ) { }
 
   create(createUserInput: CreateUserInput): Promise<User> {
@@ -21,32 +20,32 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async agregarActividad(userId: number, activitesId: number[]): Promise<User> {
+  async addActivity(userId: number, activityId: number[]): Promise<User> {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
       },
-      relations: ['userActivites'],
+      relations: ['userActivities'],
     });
 
     if (!user) {
       throw new Error("No existe ese usuario");
     }
 
-    const activites =
-      await this.activiteService.findActivitesByAllId(activitesId);
+    const activities =
+      await this.activityService.findActivitiesById(activityId);
 
-    if (activites == null) {
+    if (activities == null) {
       throw new Error("No existe esa actividad");
     }
 
-    user.userActivites.push(...activites);
+    user.userActivities.push(...activities);
     return await this.userRepository.save(user);
   }
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find({
-      relations: ['userActivites']
+      relations: ['userActivities']
     });
   }
 
@@ -55,7 +54,7 @@ export class UsersService {
       where: {
         id: id,
       },
-      relations: ['travelsCreated', 'joinsTravels', 'userActivites']
+      relations: ['travelsCreated', 'joinsTravels', 'userActivities']
     });
   }
 
@@ -63,9 +62,9 @@ export class UsersService {
 
     const user = await this.findOne(userId);
 
-    user.joinsTravels =  user.joinsTravels || [];
+    user.joinsTravels = user.joinsTravels || [];
 
-    if(user.id == trvel.creatorUserId){
+    if (user.id == trvel.creatorUserId) {
       user.travelsCreated = user.travelsCreated || [];
       user.travelsCreated.push(trvel);
     }
@@ -73,7 +72,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async leaveTravel(travel: Travel, user: User){
+  async leaveTravel(travel: Travel, user: User) {
 
     user.joinsTravels = user.joinsTravels.filter(travel => travel.id !== travel.id);
     this.userRepository.save(user);
