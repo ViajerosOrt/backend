@@ -1,5 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Activite } from 'src/activites/activites.entity';
+import { Location } from 'src/location/entities/location.entity';
 import { User } from 'src/users/entities/user.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -57,4 +58,14 @@ usersTravelers: User[]
 @Field(() => [Activite], {nullable: true})
 @JoinTable()
 travelActivitis: Activite[]
+
+/******************************** */
+@Column()
+@Field( (type)=> Int)
+locationId: number;
+
+@ManyToOne(() => Location, (location) => location.locationTravels)
+@Field(() => Location)
+travelLocation: Location
+
 }

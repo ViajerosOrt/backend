@@ -3,6 +3,7 @@ import { TravelService } from './travel.service';
 import { Travel } from './entities/travel.entity';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
+import { CreateLocationInput } from 'src/location/dto/create-location.input';
 
 
 @Resolver(() => Travel)
@@ -13,8 +14,9 @@ export class TravelResolver {
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
     @Args('activitesId', { type: () => [Number] }) activitesId: number[],
+    @Args('createLocationInput') createLocationInput: CreateLocationInput
   ) {
-    return this.travelService.create(createTravelInput, activitesId);
+    return this.travelService.create(createTravelInput, activitesId, createLocationInput);
   }
 
   @Mutation(() => Travel)
