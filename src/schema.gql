@@ -7,7 +7,7 @@ type Location {
   name: String!
   state: String!
   address: String!
-  long_lat_point: String!
+  longLatPoint: String!
   locationTravels: [Travel!]
 }
 
@@ -111,7 +111,7 @@ input CreateLocationInput {
   name: String!
   state: String!
   address: String!
-  long_lat_point: String!
+  longLatPoint: String!
 }
 
 input UpdateTravelInput {
@@ -129,6 +129,6 @@ input UpdateLocationInput {
   name: String
   state: String
   address: String
-  long_lat_point: String
+  longLatPoint: String
   id: Int!
 }

@@ -15,7 +15,7 @@ export class CreateUserInput {
   email: string;
 
   @MinLength(8,{
-    message: "La caontrasenia tiene que tener mas de 8 caracteres"
+    message: 'The password must be more than 8 characters long'
   })
   @IsNotEmpty()
   @Field()
