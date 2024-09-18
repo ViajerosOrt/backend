@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Location {
+  id: Int!
+  name: String!
+  state: String!
+  address: String!
+  long_lat_point: String!
+  locationTravels: [Travel!]
+}
+
 type Travel {
   id: Int!
   travelTitle: String!
@@ -14,6 +23,8 @@ type Travel {
   creatorUser: User!
   usersTravelers: [User!]
   travelActivities: [Activity!]
+  locationId: Int!
+  travelLocation: Location!
 }
 
 """
@@ -40,11 +51,6 @@ type User {
   joinsTravels: [Travel!]
 }
 
-type Location {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type Query {
   activities: [Activity!]!
   activity(id: Int!): Activity!
@@ -58,10 +64,10 @@ type Query {
 type Mutation {
   createActivity(activityInp: CreateActivityInput!): Activity!
   createUser(createUserInput: CreateUserInput!): User!
-  addActivities(userId: Float!, actividadIds: [Float!]!): User!
+  addActivities(userId: Float!, activitiesIds: [Float!]!): User!
   updateUser(updateUserInput: UpdateUserInput!, userId: Float!): User!
   removeUser(id: Int!): User!
-  createTravel(createTravelInput: CreateTravelInput!, activityId: [Float!]!): Travel!
+  createTravel(createTravelInput: CreateTravelInput!, activityId: [Float!]!, createLocationInput: CreateLocationInput!): Travel!
   joinToTravel(userId: Int!, travelId: Int!): Travel!
   leaveTrabel(userId: Int!, travelId: Int!): Travel!
   updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
@@ -101,6 +107,13 @@ input CreateTravelInput {
   creatorUserId: Int!
 }
 
+input CreateLocationInput {
+  name: String!
+  state: String!
+  address: String!
+  long_lat_point: String!
+}
+
 input UpdateTravelInput {
   travelTitle: String
   travelDescription: String
@@ -112,13 +125,10 @@ input UpdateTravelInput {
   id: Int!
 }
 
-input CreateLocationInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 input UpdateLocationInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  name: String
+  state: String
+  address: String
+  long_lat_point: String
   id: Int!
 }
