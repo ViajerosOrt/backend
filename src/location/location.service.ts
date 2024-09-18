@@ -13,34 +13,38 @@ export class LocationService {
   ) {}
 
   async create(createLocationInput: CreateLocationInput): Promise<Location> {
-    const newloc = this.locationRepository.create(createLocationInput);
-    return this.locationRepository.save(newloc);
+    const newLocation = this.locationRepository.create(createLocationInput);
+    return this.locationRepository.save(newLocation);
   }
 
-  async assignLocation(createLocationInput: CreateLocationInput):Promise<Location>{
-      const location = this.findOneLocationByLog(createLocationInput.long_lat_point)
+  async assignLocation(
+    createLocationInput: CreateLocationInput,
+  ): Promise<Location> {
+    const location = this.findLocationByLog(
+      createLocationInput.longLatPoint,
+    );
 
-    if(!location){
+    if (!location) {
       return this.create(createLocationInput);
     }
 
     return location;
   }
 
-  async findAll():Promise<Location[]> {
+  async findAll(): Promise<Location[]> {
     return this.locationRepository.find();
   }
 
   findOne(id: number) {
     return this.locationRepository.findOne({
-      where:{id}
+      where: { id },
     });
   }
 
-  async findOneLocationByLog(logLat: string):Promise<Location>{
+  async findLocationByLog(logLat: string): Promise<Location> {
     return this.locationRepository.findOne({
-      where: {long_lat_point : logLat}
-    })
+      where: { longLatPoint: logLat },
+    });
   }
 
   update(id: number, updateLocationInput: UpdateLocationInput) {

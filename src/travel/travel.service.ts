@@ -5,12 +5,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
-
 import { LocationService } from 'src/location/location.service';
 import { CreateLocationInput } from 'src/location/dto/create-location.input';
-
 import { ActivityService } from 'src/activity/activity.service';
-
 
 @Injectable()
 export class TravelService {
@@ -18,7 +15,7 @@ export class TravelService {
     @InjectRepository(Travel)
     private travelRepository: Repository<Travel>,
     private userService: UsersService,
-    private activityService: ActivityService, 
+    private activityService: ActivityService,
     private locationService: LocationService,
   ) {}
 
@@ -27,102 +24,94 @@ export class TravelService {
     activityId: number[],
     createLocationInput: CreateLocationInput,
   ): Promise<Travel> {
-    const trav = this.travelRepository.create(createTravelInput);
-    const user = await this.userService.joinToTrabel(trav, trav.creatorUserId);
-    const activities = await this.activityService.findActivitiesById(activityId);
-
-
+    const travel = this.travelRepository.create(createTravelInput);
+    const user = await this.userService.joinToTrabel(
+      travel,
+      travel.creatorUserId,
+    );
+    const activities =
+      await this.activityService.findActivitiesById(activityId);
 
     if (!user) {
-      throw new Error("This user does not exist");
-
+      throw new Error('This user does not exist');
     }
 
     const today = new Date();
-
-    const startDate = new Date(trav.startDate);
-    const endDate = new Date(trav.finishDate);
-
+    const startDate = new Date(travel.startDate);
+    const endDate = new Date(travel.finishDate);
 
     if (startDate < today) {
-      throw new Error("The start date must be set in the future.");
+      throw new Error('The start date must be set in the future.');
     }
-
 
     if (endDate < startDate) {
-      throw new Error("The end date must be set in the future of the start date.");
+      throw new Error(
+        'The end date must be set in the future of the start date.',
+      );
     }
-
 
     const location =
       await this.locationService.assignLocation(createLocationInput);
 
-    trav.locationId = location.id;
-    trav.travelLocation = location;
-    trav.creatorUser = user;
-    trav.usersTravelers = trav.usersTravelers || [];
-    trav.travelActivities = trav.travelActivities || [];
+    travel.locationId = location.id;
+    travel.travelLocation = location;
+    travel.creatorUser = user;
+    travel.usersTravelers = travel.usersTravelers || [];
+    travel.travelActivities = travel.travelActivities || [];
 
-    trav.travelActivities.push(...activities);
+    travel.travelActivities.push(...activities);
+    travel.usersTravelers.push(user);
 
-    trav.usersTravelers.push(user);
-
-
-
-
-    return this.travelRepository.save(trav);
+    return this.travelRepository.save(travel);
   }
 
   async joinToTravel(userId: number, travelId: number): Promise<Travel> {
-    const trav = await this.findOne(travelId);
-    if (!trav) {
-      throw new Error('No existe ese viaje');
-
+    const travel = await this.findOne(travelId);
+    if (!travel) {
+      throw new Error('There is no such trip');
     }
     const user = await this.userService.findOne(userId);
     if (!user) {
-      throw new Error('No existe ese ususrio');
+      throw new Error('This user does not exist');
     }
 
-    if (trav.usersTravelers.length == trav.max_cap) {
-      throw new Error('El viaje ya esta lleno');
-
+    if (travel.usersTravelers.length == travel.max_cap) {
+      throw new Error('The trip is already full');
     }
 
-    trav.usersTravelers.push(user);
-    user.joinsTravels.push(trav);
+    travel.usersTravelers.push(user);
+    user.joinsTravels.push(travel);
 
-    return this.travelRepository.save(trav);
+    return this.travelRepository.save(travel);
   }
 
   async leaveTravel(userId: number, travelId: number): Promise<Travel> {
     const travel = await this.findOne(travelId);
 
     if (!travel) {
-      throw new Error('El viaje no existe');
+      throw new Error('There is no such trip');
     }
 
     const user = await this.userService.findOne(userId);
 
     if (!user) {
-      throw new Error('El ususario no existe');
+      throw new Error('This user does not exist');
     }
 
     const isJoined = travel.usersTravelers.some(
       (traveler) => traveler.id === userId,
     );
     if (!isJoined) {
-      throw new Error('El usuario no está unido a este viaje');
+      throw new Error('The user is not attached to this trip');
     }
 
     if (travel.creatorUserId === userId) {
-      throw new Error('EL creador del viaje no puede salir del mismo');
+      throw new Error('The creator of the trip cannot leave it');
     }
 
     travel.usersTravelers = travel.usersTravelers.filter(
       (traveler) => traveler.id !== userId,
     );
-
 
     await this.userService.leaveTravel(travel, user);
     return this.travelRepository.save(travel);
@@ -138,7 +127,6 @@ export class TravelService {
         id,
       },
       relations: ['usersTravelers', 'creatorUser', 'travelActivitis'],
-
     });
   }
 

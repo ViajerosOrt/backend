@@ -17,5 +17,5 @@ export class CreateLocationInput {
 
   @IsNotEmpty()
   @Field()
-  long_lat_point: string;
+  longLatPoint: string;
 }

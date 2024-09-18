@@ -23,7 +23,7 @@ export class Location {
 
   @Column()
   @Field()
-  long_lat_point: string
+  longLatPoint: string
 
   @OneToMany(() => Travel, (travel) => travel.travelLocation)
   @Field(() => [Travel], {nullable: true})

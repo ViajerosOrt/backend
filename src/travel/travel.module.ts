@@ -8,10 +8,12 @@ import { LocationModule } from 'src/location/location.module';
 import { ActivityModule } from 'src/activity/activity.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([Travel]), UsersModule, ActivityModule, LocationModule],
-
-
-
+  imports: [
+    TypeOrmModule.forFeature([Travel]),
+    UsersModule,
+    ActivityModule,
+    LocationModule,
+  ],
   providers: [TravelResolver, TravelService],
 })
-export class TravelModule { }
+export class TravelModule {}

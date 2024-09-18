@@ -29,14 +29,14 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error("The user does not exist");
+      throw new Error('The user does not exist');
     }
 
     const activities =
       await this.activityService.findActivitiesById(activityId);
 
     if (activities == null) {
-      throw new Error("The activities does not exist");
+      throw new Error('The activities does not exist');
     }
 
     user.userActivities.push(...activities);
@@ -82,7 +82,7 @@ export class UsersService {
   async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
     const user = await this.findOne(id);
     if (!user) {
-      throw new NotFoundException(`No existe un usuario con esa ID ${id}`);
+      throw new NotFoundException(`There is no user with that ID: ${id}`);
     }
 
     Object.assign(user, updateUserInput);
