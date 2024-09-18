@@ -8,15 +8,17 @@ import { CreateLocationInput } from 'src/location/dto/create-location.input';
 
 @Resolver(() => Travel)
 export class TravelResolver {
-  constructor(private readonly travelService: TravelService) {}
+  constructor(private readonly travelService: TravelService) { }
 
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
-    @Args('activitesId', { type: () => [Number] }) activitesId: number[],
+
+@Args('activityId', { type: () => [Number] }) activityId: number[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput
   ) {
-    return this.travelService.create(createTravelInput, activitesId, createLocationInput);
+    return this.travelService.create(createTravelInput, activityId, createLocationInput);
+
   }
 
   @Mutation(() => Travel)
@@ -29,9 +31,9 @@ export class TravelResolver {
 
   @Mutation(() => Travel)
   async leaveTrabel(
-    @Args('userId', {type: () => Int}) userId: number,
+    @Args('userId', { type: () => Int }) userId: number,
     @Args('travelId', { type: () => Int }) travelId: number,
-  ){
+  ) {
     return this.travelService.leaveTravel(userId, travelId);
   }
 

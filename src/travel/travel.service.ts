@@ -5,9 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
-import { ActivitesService } from 'src/activites/activites.service';
+
 import { LocationService } from 'src/location/location.service';
 import { CreateLocationInput } from 'src/location/dto/create-location.input';
+
+import { ActivityService } from 'src/activity/activity.service';
+
 
 @Injectable()
 export class TravelService {
@@ -15,22 +18,24 @@ export class TravelService {
     @InjectRepository(Travel)
     private travelRepository: Repository<Travel>,
     private userService: UsersService,
-    private activiteService: ActivitesService,
+    private activityService: ActivityService, 
     private locationService: LocationService,
   ) {}
 
   async create(
     createTravelInput: CreateTravelInput,
-    activitesId: number[],
+    activityId: number[],
     createLocationInput: CreateLocationInput,
   ): Promise<Travel> {
     const trav = this.travelRepository.create(createTravelInput);
     const user = await this.userService.joinToTrabel(trav, trav.creatorUserId);
-    const activites =
-      await this.activiteService.findActivitesByAllId(activitesId);
+    const activities = await this.activityService.findActivitiesById(activityId);
+
+
 
     if (!user) {
-      throw new Error('No existe ese ususrio');
+      throw new Error("This user does not exist");
+
     }
 
     const today = new Date();
@@ -38,17 +43,16 @@ export class TravelService {
     const startDate = new Date(trav.startDate);
     const endDate = new Date(trav.finishDate);
 
+
     if (startDate < today) {
-      throw new Error(
-        'La fecha de inicio no puede ser menor a la fecha actual.',
-      );
+      throw new Error("The start date must be set in the future.");
     }
 
+
     if (endDate < startDate) {
-      throw new Error(
-        'La fecha de finalización no puede ser anterior a la fecha de inicio.',
-      );
+      throw new Error("The end date must be set in the future of the start date.");
     }
+
 
     const location =
       await this.locationService.assignLocation(createLocationInput);
@@ -57,11 +61,14 @@ export class TravelService {
     trav.travelLocation = location;
     trav.creatorUser = user;
     trav.usersTravelers = trav.usersTravelers || [];
-    trav.travelActivitis = trav.travelActivitis || [];
+    trav.travelActivities = trav.travelActivities || [];
 
-    trav.travelActivitis.push(...activites);
+    trav.travelActivities.push(...activities);
 
     trav.usersTravelers.push(user);
+
+
+
 
     return this.travelRepository.save(trav);
   }
@@ -70,6 +77,7 @@ export class TravelService {
     const trav = await this.findOne(travelId);
     if (!trav) {
       throw new Error('No existe ese viaje');
+
     }
     const user = await this.userService.findOne(userId);
     if (!user) {
@@ -78,6 +86,7 @@ export class TravelService {
 
     if (trav.usersTravelers.length == trav.max_cap) {
       throw new Error('El viaje ya esta lleno');
+
     }
 
     trav.usersTravelers.push(user);
@@ -114,6 +123,7 @@ export class TravelService {
       (traveler) => traveler.id !== userId,
     );
 
+
     await this.userService.leaveTravel(travel, user);
     return this.travelRepository.save(travel);
   }
@@ -128,6 +138,7 @@ export class TravelService {
         id,
       },
       relations: ['usersTravelers', 'creatorUser', 'travelActivitis'],
+
     });
   }
 

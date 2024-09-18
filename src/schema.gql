@@ -2,22 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
+type Location {
   id: Int!
-  userName: String!
-  email: String!
-  password: String!
-  birth_date: DateTime!
-  userDescription: String
-  userActivites: [Activite!]
-  travelsCreated: Travel
-  joinsTravels: [Travel!]
+  name: String!
+  state: String!
+  address: String!
+  long_lat_point: String!
+  locationTravels: [Travel!]
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Travel {
   id: Int!
@@ -30,40 +22,63 @@ type Travel {
   creatorUserId: Int!
   creatorUser: User!
   usersTravelers: [User!]
-  travelActivitis: [Activite!]
+  travelActivities: [Activity!]
+  locationId: Int!
+  travelLocation: Location!
 }
 
-type Activite {
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Activity {
   id: Int!
-  activiteName: String!
-  activitesUsers: [User!]
-  activitesTravels: [Travel!]
+  activityName: String!
+  userActivities: [User!]
+  travelActivities: [Travel!]
+}
+
+type User {
+  id: Int!
+  userName: String!
+  email: String!
+  password: String!
+  birth_date: DateTime!
+  userDescription: String
+  userActivities: [Activity!]
+  travelsCreated: Travel
+  joinsTravels: [Travel!]
 }
 
 type Query {
-  activites: [Activite!]!
-  activite(id: Int!): Activite!
+  activities: [Activity!]!
+  activity(id: Int!): Activity!
   users: [User!]!
   user(id: Int!): User!
   travels: [Travel!]!
   travel(id: Int!): Travel!
+  location(id: Int!): Location!
 }
 
 type Mutation {
-  createActivite(activiteInp: CreateActiviteInput!): Activite!
+  createActivity(activityInp: CreateActivityInput!): Activity!
   createUser(createUserInput: CreateUserInput!): User!
-  addActivites(userId: Float!, actividadIds: [Float!]!): User!
+  addActivities(userId: Float!, activitiesIds: [Float!]!): User!
   updateUser(updateUserInput: UpdateUserInput!, userId: Float!): User!
   removeUser(id: Int!): User!
-  createTravel(createTravelInput: CreateTravelInput!, activitesId: [Float!]!): Travel!
+  createTravel(createTravelInput: CreateTravelInput!, activityId: [Float!]!, createLocationInput: CreateLocationInput!): Travel!
   joinToTravel(userId: Int!, travelId: Int!): Travel!
   leaveTrabel(userId: Int!, travelId: Int!): Travel!
   updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
   removeTravel(id: Int!): Travel!
+  createLocation(createLocationInput: CreateLocationInput!): Location!
+  updateLocation(updateLocationInput: UpdateLocationInput!): Location!
+  removeLocation(id: Int!): Location!
 }
 
-input CreateActiviteInput {
-  activiteName: String!
+input CreateActivityInput {
+  activityName: String!
 }
 
 input CreateUserInput {
@@ -92,6 +107,13 @@ input CreateTravelInput {
   creatorUserId: Int!
 }
 
+input CreateLocationInput {
+  name: String!
+  state: String!
+  address: String!
+  long_lat_point: String!
+}
+
 input UpdateTravelInput {
   travelTitle: String
   travelDescription: String
@@ -100,5 +122,13 @@ input UpdateTravelInput {
   max_cap: Float
   isEndable: Boolean
   creatorUserId: Int
+  id: Int!
+}
+
+input UpdateLocationInput {
+  name: String
+  state: String
+  address: String
+  long_lat_point: String
   id: Int!
 }
