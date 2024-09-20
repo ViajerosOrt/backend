@@ -41,7 +41,7 @@ export class UsersResolver {
   }
 
   @Mutation((returns) => User)
-  updateUser(
+  update(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
     @Args('userId') userId: number,
   ) {

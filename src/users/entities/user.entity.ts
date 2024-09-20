@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Activity } from 'src/activity/activity.entity';
-import { Travel } from 'src/travel/entities/travel.entity';
+import { Activity } from '../../activity/activity.entity';
+import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()

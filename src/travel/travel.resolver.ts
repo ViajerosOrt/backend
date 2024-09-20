@@ -3,7 +3,7 @@ import { TravelService } from './travel.service';
 import { Travel } from './entities/travel.entity';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
-import { CreateLocationInput } from 'src/location/dto/create-location.input';
+import { CreateLocationInput } from '../location/dto/create-location.input';
 
 
 @Resolver(() => Travel)
@@ -57,5 +57,10 @@ export class TravelResolver {
   @Mutation(() => Travel)
   removeTravel(@Args('id', { type: () => Int }) id: number) {
     return this.travelService.remove(id);
+  }
+
+  @Query(() => [Travel], { name: 'findAllTravelByUser' })
+  findAllTravelByUser(@Args('userId', { type: () => Int }) userId: number) {
+    return this.travelService.findAllTravelByUser(userId);
   }
 }
