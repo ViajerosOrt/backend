@@ -52,4 +52,15 @@ export class UsersResolver {
   removeUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.remove(id);
   }
+
+  @Mutation(() => Boolean)
+  async deleteAllUsers(): Promise<boolean> {
+    try {
+      await this.usersService.deleteAll();
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
 }

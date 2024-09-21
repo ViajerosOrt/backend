@@ -1,13 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Module } from '@nestjs/common';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { LocationService } from 'src/location/location.service';
 import { CreateLocationInput } from 'src/location/dto/create-location.input';
 import { ActivityService } from 'src/activity/activity.service';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Travel])],
+  providers: [TravelService],
+  exports: [TravelService],
+})
 
 @Injectable()
 export class TravelService {
@@ -126,7 +132,7 @@ export class TravelService {
       where: {
         id,
       },
-      relations: ['usersTravelers', 'creatorUser', 'travelActivitis'],
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities'],
     });
   }
 

@@ -5,7 +5,8 @@ import { Location } from 'src/location/entities/location.entity';
 import { Activity } from 'src/activity/activity.entity';
 
 import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Review } from 'src/review/entities/review.entity';
 
 @Entity()
 @ObjectType()
@@ -64,12 +65,16 @@ travelActivities: Activity[]
 
 /******************************** */
 @Column()
-@Field( (type)=> Int)
+@Field( (type)=> Int, { nullable: true })
 locationId: number;
 
 @ManyToOne(() => Location, (location) => location.locationTravels)
-@Field(() => Location)
+@Field(() => Location, { nullable: true })
 travelLocation: Location
 
+/******************************** */
+@OneToMany(() => Review, (review) => review.travel)
+  @Field(() => [Review], { nullable: true })
+  reviews: Review[];
 
 }

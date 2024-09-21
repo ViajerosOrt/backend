@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { Travel } from 'src/travel/entities/travel.entity';
-import { ActivityService } from 'src/activity/activity.service';
+import { ActivityService } from '../activity/activity.service';
 
 @Injectable()
 export class UsersService {
@@ -45,7 +45,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find({
-      relations: ['userActivities']
+      relations: ['userActivities', 'reviewsCreated', 'reviewsReceived']
     });
   }
 
@@ -90,7 +90,12 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    const result = await this.userRepository.delete(id);
   }
+
+  async deleteAll(): Promise<void> {
+    await this.userRepository.clear(); 
+  }
+
 }
