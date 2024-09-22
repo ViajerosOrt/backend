@@ -4,10 +4,10 @@ import { Type } from 'class-transformer';
 @InputType()
 export class CreateTravelInput {
   @Field()
-  travelTitle:string;
+  travelTitle: string;
 
   @Field()
-  travelDescription:string;
+  travelDescription: string;
 
   @Type(() => Date)
   @Field()
@@ -23,6 +23,6 @@ export class CreateTravelInput {
   @Field()
   isEndable: boolean;
 
-  @Field((type) => Int)
+  @Field(() => Int)
   creatorUserId: number;
 }

@@ -7,7 +7,7 @@ import { Column, PrimaryGeneratedColumn, Entity, ManyToMany } from 'typeorm';
 @ObjectType()
 export class Activity {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Column()

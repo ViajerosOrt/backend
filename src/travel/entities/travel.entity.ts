@@ -12,7 +12,7 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColum
 export class Travel {
 
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Column()
@@ -32,7 +32,7 @@ export class Travel {
   finishDate: Date;
 
   @Column({ nullable: true })
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   max_cap: number
 
   @Column({ type: 'boolean', default: true })
@@ -42,7 +42,7 @@ export class Travel {
 
   //********************************** */
   @Column()
-  @Field((type) => Int)
+  @Field(() => Int)
   creatorUserId: number;
 
   @ManyToOne(() => User, (user) => user.travelsCreated)

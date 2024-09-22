@@ -1,20 +1,20 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
-import { IsEmpty, IsDate, MinLength, IsEmail,IsNotEmpty, MaxLength, Validate } from 'class-validator';
+import { IsEmpty, IsDate, MinLength, IsEmail, IsNotEmpty, MaxLength, Validate } from 'class-validator';
 import { IsAdult } from 'src/validators/is-adult.validator';
 
 @InputType()
 export class CreateUserInput {
   @IsNotEmpty()
   @Field()
-  userName: string;
+  name: string;
 
   @IsEmail()
   @IsNotEmpty()
   @Field()
   email: string;
 
-  @MinLength(8,{
+  @MinLength(8, {
     message: 'The password must be more than 8 characters long'
   })
   @IsNotEmpty()
@@ -26,10 +26,10 @@ export class CreateUserInput {
   @Field()
   @Type(() => Date)
   @Validate(IsAdult)
-  birth_date: Date;
+  birthDate: Date;
 
 
-  @Field({nullable: true})
-  userDescription:string
-  
+  @Field({ nullable: true })
+  description: string
+
 }

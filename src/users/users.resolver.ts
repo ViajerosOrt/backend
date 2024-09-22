@@ -5,14 +5,17 @@ import {
   Args,
   Int,
   ResolveField,
+  Context,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private usersService: UsersService) { }
 
   @Mutation(() => User)
   async createUser(
@@ -22,6 +25,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
   async addActivities(
     @Args('userId') userId: number,
     @Args({ name: 'activitiesIds', type: () => [Number] })
@@ -30,17 +34,26 @@ export class UsersResolver {
     return await this.usersService.addActivity(userId, activitiesIds);
   }
 
-  @Query((returns) => [User], { name: 'users' })
-  async findAll(): Promise<User[]> {
+  @Query(() => [User], { name: 'users' })
+  @UseGuards(JwtAuthGuard)
+  async findAll(@Context() context): Promise<User[]> {
+    console.log(context.req);
     return this.usersService.findAll();
   }
 
-  @Query((returns) => User, { name: 'user' })
-  findOne(@Args('id', { type: () => Int }) id: number): Promise<User> {
-    return this.usersService.findOne(id);
+  @Query(() => User, { name: 'user' })
+  @UseGuards(JwtAuthGuard)
+  findById(@Args('id', { type: () => Int }) id: number): Promise<User> {
+    return this.usersService.findById(id);
   }
 
-  @Mutation((returns) => User)
+  @Query(() => User, { name: 'user' })
+  findByEmail(@Args('email', { type: () => String }) email: string): Promise<User> {
+    return this.usersService.findByEmail(email);
+  }
+
+  @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
   updateUser(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
     @Args('userId') userId: number,
@@ -48,7 +61,8 @@ export class UsersResolver {
     return this.usersService.update(userId, updateUserInput);
   }
 
-  @Mutation((returns) => User)
+  @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
   removeUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.remove(id);
   }

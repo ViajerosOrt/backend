@@ -1,17 +1,14 @@
 import { CreateUserInput } from './create-user.input';
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
-import { IsEmpty, IsDate, MinLength, IsEmail,IsNotEmpty, MaxLength } from 'class-validator';
+import { MinLength, IsNotEmpty, MaxLength } from 'class-validator';
 
 @InputType()
 export class UpdateUserInput extends PartialType(CreateUserInput) {
-
-
-
   @IsNotEmpty()
   @Field()
-  userName: string;
+  name: string;
 
-  @MinLength(8,{
+  @MinLength(8, {
     message: 'The password must be more than 8 characters long'
   })
   @IsNotEmpty()
@@ -20,6 +17,6 @@ export class UpdateUserInput extends PartialType(CreateUserInput) {
 
 
   @MaxLength(200)
-  @Field({nullable: true})
-  userDescription:string
+  @Field({ nullable: true })
+  description: string
 }

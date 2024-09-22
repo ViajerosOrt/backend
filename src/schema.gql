@@ -41,21 +41,26 @@ type Activity {
 
 type User {
   id: Int!
-  userName: String!
+  name: String!
   email: String!
   password: String!
-  birth_date: DateTime!
-  userDescription: String
+  birthDate: DateTime!
+  description: String
   userActivities: [Activity!]
   travelsCreated: Travel
   joinsTravels: [Travel!]
+}
+
+type LoginResponse {
+  access_token: String!
+  user: User!
 }
 
 type Query {
   activities: [Activity!]!
   activity(id: Int!): Activity!
   users: [User!]!
-  user(id: Int!): User!
+  user(email: String!): User!
   travels: [Travel!]!
   travel(id: Int!): Travel!
   location(id: Int!): Location!
@@ -67,14 +72,15 @@ type Mutation {
   addActivities(userId: Float!, activitiesIds: [Float!]!): User!
   updateUser(updateUserInput: UpdateUserInput!, userId: Float!): User!
   removeUser(id: Int!): User!
-  createTravel(createTravelInput: CreateTravelInput!, activityId: [Float!]!, createLocationInput: CreateLocationInput!): Travel!
-  joinToTravel(userId: Int!, travelId: Int!): Travel!
-  leaveTrabel(userId: Int!, travelId: Int!): Travel!
+  createTravel(createTravelInput: CreateTravelInput!, activitiesId: [Float!]!, createLocationInput: CreateLocationInput!): Travel!
+  joinToTravel(travelId: Int!): Travel!
+  leaveTravel(travelId: Int!): Travel!
   updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
   removeTravel(id: Int!): Travel!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
 }
 
 input CreateActivityInput {
@@ -82,19 +88,19 @@ input CreateActivityInput {
 }
 
 input CreateUserInput {
-  userName: String!
+  name: String!
   email: String!
   password: String!
-  birth_date: DateTime!
-  userDescription: String
+  birthDate: DateTime!
+  description: String
 }
 
 input UpdateUserInput {
-  userName: String!
+  name: String!
   email: String
   password: String!
-  birth_date: DateTime
-  userDescription: String
+  birthDate: DateTime
+  description: String
 }
 
 input CreateTravelInput {
@@ -131,4 +137,9 @@ input UpdateLocationInput {
   address: String
   longLatPoint: String
   id: Int!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
 }
