@@ -9,20 +9,12 @@ import {
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private usersService: UsersService) { }
-
-  @Mutation(() => User)
-  async createUser(
-    @Args('createUserInput') createUserInput: CreateUserInput,
-  ): Promise<User> {
-    return await this.usersService.create(createUserInput);
-  }
 
   @Mutation(() => User)
   @UseGuards(JwtAuthGuard)

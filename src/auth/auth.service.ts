@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { LoginUserInput } from './dto/login-user.input';
 import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { SignupUserInput } from './dto/signup-user.input';
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class AuthService {
@@ -11,12 +12,20 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findByEmail(email)
 
-    if (user && user.password == password) { // TODO MAkE THIS MORE SECURE
-      const { password, ...result } = user
-      return result
+    if (!user) {
+      throw new Error('User does not exist.')
     }
 
-    return null
+    // Validate the given password is correct 
+    const isValid = await bcrypt.compare(password, user?.password)
+
+    if (!isValid) {
+      throw new Error('The Password is not correct.')
+    }
+
+    const { password: notReturnedPassword, ...result } = user
+
+    return result
   }
 
   // Login mutation.
@@ -29,5 +38,22 @@ export class AuthService {
     }
   }
 
-  async signup
+  // Signup mutation.
+  // Validates the user does not exists, and creates a new one with a hashed password.
+  async signup(signupUserInput: SignupUserInput) {
+    // TODO: Remove this, try to insert and blow up wit the unique constraint
+    const user = await this.usersService.findByEmail(signupUserInput.email)
+
+    if (user) {
+      throw new Error('User already exists')
+    }
+
+    // We store a hashed password
+    const hashedPassword = await bcrypt.hash(signupUserInput.password, 10)
+
+    return this.usersService.create({
+      ...signupUserInput,
+      password: hashedPassword
+    })
+  }
 }

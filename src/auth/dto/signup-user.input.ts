@@ -4,7 +4,7 @@ import { IsEmpty, IsDate, MinLength, IsEmail, IsNotEmpty, MaxLength, Validate } 
 import { IsAdult } from 'src/validators/is-adult.validator';
 
 @InputType()
-export class CreateUserInput {
+export class SignupUserInput {
   @IsNotEmpty()
   @Field()
   name: string;

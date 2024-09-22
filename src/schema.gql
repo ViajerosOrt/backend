@@ -68,7 +68,6 @@ type Query {
 
 type Mutation {
   createActivity(activityInp: CreateActivityInput!): Activity!
-  createUser(createUserInput: CreateUserInput!): User!
   addActivities(userId: Float!, activitiesIds: [Float!]!): User!
   updateUser(updateUserInput: UpdateUserInput!, userId: Float!): User!
   removeUser(id: Int!): User!
@@ -81,18 +80,11 @@ type Mutation {
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
   login(loginUserInput: LoginUserInput!): LoginResponse!
+  signup(signupUserInput: SignupUserInput!): User!
 }
 
 input CreateActivityInput {
   activityName: String!
-}
-
-input CreateUserInput {
-  name: String!
-  email: String!
-  password: String!
-  birthDate: DateTime!
-  description: String
 }
 
 input UpdateUserInput {
@@ -142,4 +134,12 @@ input UpdateLocationInput {
 input LoginUserInput {
   email: String!
   password: String!
+}
+
+input SignupUserInput {
+  name: String!
+  email: String!
+  password: String!
+  birthDate: DateTime!
+  description: String
 }
