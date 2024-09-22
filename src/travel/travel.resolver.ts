@@ -8,6 +8,7 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
+
 @Resolver(() => Travel)
 @UseGuards(JwtAuthGuard)
 export class TravelResolver {
@@ -60,5 +61,10 @@ export class TravelResolver {
   @Mutation(() => Travel)
   removeTravel(@Args('id', { type: () => Int }) id: number) {
     return this.travelService.remove(id);
+  }
+
+  @Query(() => [Travel], { name: 'findAllTravelByUser' })
+  findAllTravelByUser(@Args('userId', { type: () => Int }) userId: number) {
+    return this.travelService.findAllTravelByUser(userId);
   }
 }

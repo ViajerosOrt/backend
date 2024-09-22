@@ -7,6 +7,7 @@ import { Travel } from 'src/travel/entities/travel.entity';
 import { ActivityService } from 'src/activity/activity.service';
 import { SignupUserInput } from 'src/auth/dto/signup-user.input';
 
+
 @Injectable()
 export class UsersService {
   constructor(
