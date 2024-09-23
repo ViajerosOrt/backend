@@ -63,6 +63,7 @@ type Query {
   user(email: String!): User!
   travels: [Travel!]!
   travel(id: Int!): Travel!
+  findAllTravelByUser(userId: Int!): [Travel!]!
   location(id: Int!): Location!
 }
 

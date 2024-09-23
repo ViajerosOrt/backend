@@ -3,9 +3,9 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { Travel } from 'src/travel/entities/travel.entity';
-import { ActivityService } from 'src/activity/activity.service';
-import { SignupUserInput } from 'src/auth/dto/signup-user.input';
+import { Travel } from '../travel/entities/travel.entity';
+import { ActivityService } from '../activity/activity.service';
+import { SignupUserInput } from '../auth/dto/signup-user.input';
 
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 import { IsEmpty, IsDate, MinLength, IsEmail, IsNotEmpty, MaxLength, Validate } from 'class-validator';
-import { IsAdult } from 'src/validators/is-adult.validator';
+import { IsAdult } from '../../validators/is-adult.validator';
 
 @InputType()
 export class SignupUserInput {

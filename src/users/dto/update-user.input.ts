@@ -1,6 +1,6 @@
 import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 import { MinLength, IsNotEmpty, MaxLength } from 'class-validator';
-import { SignupUserInput } from 'src/auth/dto/signup-user.input';
+import { SignupUserInput } from '../../auth/dto/signup-user.input';
 
 @InputType()
 export class UpdateUserInput extends PartialType(SignupUserInput) {

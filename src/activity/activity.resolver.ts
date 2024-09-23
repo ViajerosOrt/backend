@@ -3,7 +3,7 @@ import { Query } from '@nestjs/graphql';
 import { Activity } from './activity.entity';
 import { CreateActivityInput } from './dto/create-activity.input';
 import { ActivityService } from './activity.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
 @Resolver()

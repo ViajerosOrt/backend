@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private usersService: UsersService) { }
@@ -19,17 +19,16 @@ export class UsersResolver {
   @Mutation(() => User)
   @UseGuards(JwtAuthGuard)
   async addActivities(
-    @Args('userId') userId: number,
     @Args({ name: 'activitiesIds', type: () => [Number] })
+    @Context() context,
     activitiesIds: number[],
   ): Promise<User> {
-    return await this.usersService.addActivity(userId, activitiesIds);
+    return await this.usersService.addActivity(context.req.user.userId, activitiesIds);
   }
 
   @Query(() => [User], { name: 'users' })
   @UseGuards(JwtAuthGuard)
-  async findAll(@Context() context): Promise<User[]> {
-    console.log(context.req);
+  async findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
@@ -46,11 +45,11 @@ export class UsersResolver {
 
   @Mutation(() => User)
   @UseGuards(JwtAuthGuard)
-  updateUser(
+  update(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
-    @Args('userId') userId: number,
+    @Context() context,
   ) {
-    return this.usersService.update(userId, updateUserInput);
+    return this.usersService.update(context.req.user.userId, updateUserInput);
   }
 
   @Mutation(() => User)

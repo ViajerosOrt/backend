@@ -3,9 +3,9 @@ import { TravelService } from './travel.service';
 import { Travel } from './entities/travel.entity';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
-import { CreateLocationInput } from 'src/location/dto/create-location.input';
+import { CreateLocationInput } from '../location/dto/create-location.input';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 
 
