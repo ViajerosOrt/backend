@@ -17,7 +17,7 @@ export class TravelService {
     private userService: UsersService,
     private activityService: ActivityService,
     private locationService: LocationService,
-  ) {}
+  ) { }
 
   async create(
     createTravelInput: CreateTravelInput,
@@ -25,7 +25,7 @@ export class TravelService {
     createLocationInput: CreateLocationInput,
   ): Promise<Travel> {
     const travel = this.travelRepository.create(createTravelInput);
-    const user = await this.userService.joinToTrabel(
+    const user = await this.userService.joinToTravel(
       travel,
       travel.creatorUserId,
     );
@@ -70,7 +70,7 @@ export class TravelService {
     if (!travel) {
       throw new Error('There is no such trip');
     }
-    const user = await this.userService.findOne(userId);
+    const user = await this.userService.findById(userId);
     if (!user) {
       throw new Error('This user does not exist');
     }
@@ -92,7 +92,7 @@ export class TravelService {
       throw new Error('There is no such trip');
     }
 
-    const user = await this.userService.findOne(userId);
+    const user = await this.userService.findById(userId);
 
     if (!user) {
       throw new Error('This user does not exist');

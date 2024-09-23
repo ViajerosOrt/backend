@@ -1,12 +1,16 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { TravelService } from './travel.service';
 import { Travel } from './entities/travel.entity';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
 import { CreateLocationInput } from '../location/dto/create-location.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+
 
 
 @Resolver(() => Travel)
+@UseGuards(JwtAuthGuard)
 export class TravelResolver {
   constructor(private readonly travelService: TravelService) { }
 
@@ -14,7 +18,7 @@ export class TravelResolver {
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
 
-@Args('activityId', { type: () => [Number] }) activityId: number[],
+    @Args('activitiesId', { type: () => [Number] }) activityId: number[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput
   ) {
     return this.travelService.create(createTravelInput, activityId, createLocationInput);
@@ -23,18 +27,18 @@ export class TravelResolver {
 
   @Mutation(() => Travel)
   async joinToTravel(
-    @Args('userId', { type: () => Int }) userId: number,
     @Args('travelId', { type: () => Int }) travelId: number,
+    @Context() context
   ) {
-    return this.travelService.joinToTravel(userId, travelId);
+    return this.travelService.joinToTravel(context.req.user.userId, travelId);
   }
 
   @Mutation(() => Travel)
-  async leaveTrabel(
-    @Args('userId', { type: () => Int }) userId: number,
+  async leaveTravel(
     @Args('travelId', { type: () => Int }) travelId: number,
+    @Context() context
   ) {
-    return this.travelService.leaveTravel(userId, travelId);
+    return this.travelService.leaveTravel(context.req.user.userId, travelId);
   }
 
   @Query(() => [Travel], { name: 'travels' })

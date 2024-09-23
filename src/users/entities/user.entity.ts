@@ -7,12 +7,12 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGen
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Column()
   @Field()
-  userName: string;
+  name: string;
 
   @Column()
   @Field()
@@ -24,11 +24,11 @@ export class User {
 
   @Column({ type: 'date' })
   @Field()
-  birth_date: Date;
+  birthDate: Date;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  userDescription: string
+  description: string
 
   @ManyToMany(() => Activity, (activity) => activity.userActivities)
   @Field(() => [Activity], { nullable: true })
@@ -43,6 +43,4 @@ export class User {
   @Field(() => [Travel], { nullable: true })
   @JoinTable()
   joinsTravels: Travel[];
-
-
 }
