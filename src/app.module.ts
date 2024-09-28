@@ -11,6 +11,7 @@ import { LocationModule } from './location/location.module';
 import { ActivityModule } from './activity/activity.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { SeederModule } from './seeds/seeder.module';
 
 @Module({
   imports: [
@@ -23,15 +24,18 @@ import { ConfigModule } from '@nestjs/config';
       database: 'dtb.sqlite',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+      logging: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true, // Make ConfigModule available globally
     }),
+    SeederModule,
     ActivityModule,
     UsersModule,
     TravelModule,
     LocationModule,
-    AuthModule],
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

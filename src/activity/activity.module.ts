@@ -4,6 +4,7 @@ import { ActivityResolver } from './activity.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Activity } from './activity.entity';
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Activity])],
   providers: [ActivityService, ActivityResolver],
