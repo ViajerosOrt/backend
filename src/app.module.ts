@@ -12,10 +12,11 @@ import { ActivityModule } from './activity/activity.module';
 import { User } from './users/entities/user.entity';
 import { Travel } from './travel/entities/travel.entity';
 import { Activity } from './activity/activity.entity';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
 import { Location } from './location/entities/location.entity';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { SeederModule } from './seeds/seeder.module';
 
 @Module({
   imports: [
@@ -32,15 +33,18 @@ import { AuthModule } from './auth/auth.module';
       database: 'database_viajeros',
       entities: [User,  Activity, Location, Travel],
       synchronize: false,
+
     }),
     ConfigModule.forRoot({
       isGlobal: true, // Make ConfigModule available globally
     }),
+    SeederModule,
     ActivityModule,
     UsersModule,
     TravelModule,
     LocationModule,
-    AuthModule],
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
