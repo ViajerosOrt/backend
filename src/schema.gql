@@ -67,10 +67,10 @@ type Query {
   activity(id: Int!): Activity!
   users: [User!]!
   user(email: String!): User!
+  location(id: Int!): Location!
   travels: [Travel!]!
   travel(id: Int!): Travel!
   findAllTravelByUser(userId: Int!): [Travel!]!
-  location(id: Int!): Location!
 }
 
 type Mutation {
@@ -78,14 +78,14 @@ type Mutation {
   addActivities(activitiesIds: [Float!]!): User!
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
+  createLocation(createLocationInput: CreateLocationInput!): Location!
+  updateLocation(updateLocationInput: UpdateLocationInput!): Location!
+  removeLocation(id: Int!): Location!
   createTravel(createTravelInput: CreateTravelInput!, activitiesId: [Float!]!, createLocationInput: CreateLocationInput!): Travel!
   joinToTravel(travelId: Int!): Travel!
   leaveTravel(travelId: Int!): Travel!
   updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
   removeTravel(id: Int!): Travel!
-  createLocation(createLocationInput: CreateLocationInput!): Location!
-  updateLocation(updateLocationInput: UpdateLocationInput!): Location!
-  removeLocation(id: Int!): Location!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(signupUserInput: SignupUserInput!): User!
 }
@@ -102,6 +102,21 @@ input UpdateUserInput {
   description: String
 }
 
+input CreateLocationInput {
+  name: String!
+  state: String!
+  address: String!
+  longLatPoint: String!
+}
+
+input UpdateLocationInput {
+  name: String
+  state: String
+  address: String
+  longLatPoint: String
+  id: Int!
+}
+
 input CreateTravelInput {
   travelTitle: String!
   travelDescription: String!
@@ -112,13 +127,6 @@ input CreateTravelInput {
   creatorUserId: Int!
 }
 
-input CreateLocationInput {
-  name: String!
-  state: String!
-  address: String!
-  longLatPoint: String!
-}
-
 input UpdateTravelInput {
   travelTitle: String
   travelDescription: String
@@ -127,14 +135,6 @@ input UpdateTravelInput {
   max_cap: Float
   isEndable: Boolean
   creatorUserId: Int
-  id: Int!
-}
-
-input UpdateLocationInput {
-  name: String
-  state: String
-  address: String
-  longLatPoint: String
   id: Int!
 }
 
