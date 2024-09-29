@@ -51,8 +51,14 @@ type User {
   joinsTravels: [Travel!]
 }
 
+type AccessToken {
+  validForSeconds: Int!
+  validUntil: String!
+  value: String!
+}
+
 type LoginResponse {
-  access_token: String!
+  accessToken: AccessToken!
   user: User!
 }
 
@@ -69,8 +75,8 @@ type Query {
 
 type Mutation {
   createActivity(activityInp: CreateActivityInput!): Activity!
-  addActivities(userId: Float!, activitiesIds: [Float!]!): User!
-  updateUser(updateUserInput: UpdateUserInput!, userId: Float!): User!
+  addActivities(activitiesIds: [Float!]!): User!
+  update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
   createTravel(createTravelInput: CreateTravelInput!, activitiesId: [Float!]!, createLocationInput: CreateLocationInput!): Travel!
   joinToTravel(travelId: Int!): Travel!
