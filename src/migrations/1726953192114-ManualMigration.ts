@@ -111,56 +111,7 @@ export class ManualMigration1726953192114 implements MigrationInterface {
                 FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
             );
         `);
-
-        await queryRunner.query(`
-            INSERT INTO "activite" ("id", "activiteName") VALUES
-            (1, 'Nadar'),
-            (2, 'Saltar'),
-            (3, 'Correr'),
-            (4, 'Futbol');
-        `);
-
-        await queryRunner.query(`
-            INSERT INTO "activity" ("id", "activityName") VALUES
-            (1, 'Activity1'),
-            (2, 'Activity2');
-        `);
-
-        await queryRunner.query(`
-            INSERT INTO "travel" ("id", "travelTitle", "travelDescription", "startDate", "finishDate", "max_cap", "isEndable", "creatorUserId") VALUES
-            (1, 'Viajer largo', 'EL gran viaje', '2024-05-19', '2024-05-20', 2, TRUE, 1);
-        `);
-
-        await queryRunner.query(`
-            INSERT INTO "travel_travel_activitis_activite" ("travelId", "activiteId") VALUES
-            (1, 1),
-            (1, 2),
-            (1, 3);
-        `);
-
-        await queryRunner.query(`
-            INSERT INTO "user" ("id", "userName", "email", "password", "birth_date", "userDescription") VALUES
-            (1, 'Franco', 'Bruno@gmail.com', '123456789', '2001-05-19', NULL),
-            (2, 'Bruno', 'Bruno@gmail.com', '123456789', '2001-05-19', NULL),
-            (3, 'Fabricio', 'Fabricio@gmail.com', '123456789', '2001-05-19', NULL),
-            (14, 'Pepe', 'pepita@gmail.com', 'a12345678', '2001-01-31', NULL);
-        `);
-
-        await queryRunner.query(`
-            INSERT INTO "user_joins_travels_travel" ("userId", "travelId") VALUES
-            (1, 1),
-            (3, 1);
-        `);
-
-        await queryRunner.query(`
-            INSERT INTO "user_user_activites_activite" ("userId", "activiteId") VALUES
-            (3, 2),
-            (2, 2),
-            (2, 4),
-            (1, 1),
-            (1, 3);
-        `);
-
+        
         await queryRunner.query(`
             CREATE INDEX IF NOT EXISTS "IDX_user_joins_travels_travel_travelId" ON "user_joins_travels_travel" ("travelId");
         `);
