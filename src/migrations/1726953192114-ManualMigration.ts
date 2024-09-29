@@ -77,6 +77,16 @@ export class ManualMigration1726953192114 implements MigrationInterface {
                 FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
             );
         `);
+
+        await queryRunner.query(`
+            CREATE TABLE IF NOT EXISTS "user_user_activities_activity" (
+                "userId" INTEGER NOT NULL,
+                "activityId" INTEGER NOT NULL,
+                PRIMARY KEY("userId", "activityId"),
+                FOREIGN KEY("activityId") REFERENCES "activity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
+                FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+            );
+        `);
         
         await queryRunner.query(`
             CREATE INDEX IF NOT EXISTS "IDX_user_joins_travels_travel_travelId" ON "user_joins_travels_travel" ("travelId");
