@@ -4,6 +4,7 @@ import { User } from '../users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { SignupUserInput } from './dto/signup-user.input';
 import * as bcrypt from 'bcrypt'
+import { AuthenticationError } from '@nestjs/apollo';
 
 @Injectable()
 export class AuthService {
@@ -13,14 +14,14 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email)
 
     if (!user) {
-      throw new Error('User does not exist.')
+      throw new AuthenticationError('User does not exist.')
     }
 
     // Validate the given password is correct 
     const isValid = await bcrypt.compare(password, user?.password)
 
     if (!isValid) {
-      throw new Error('The Password is not correct.')
+      throw new AuthenticationError('The Password is not correct.')
     }
 
     const { password: notReturnedPassword, ...result } = user
@@ -32,8 +33,19 @@ export class AuthService {
   // Validates the given password + email and returns a JWT, which is used for authenticating future requests.
   async login(user: User) {
     // Returns an JWT + the user.
+    const token = this.jwtService.sign({ username: user.email, sub: user.id })
+
+    const decodedToken = this.jwtService.decode(token);
+    const validForSeconds = decodedToken.exp - Math.floor(Date.now() / 1000)
+    const validUntil = new Date(decodedToken.exp * 1000).toISOString();
+
     return {
-      access_token: this.jwtService.sign({ username: user.email, sub: user.id }),
+      accessToken: {
+        value: token,
+        validForSeconds,
+        validUntil
+
+      },
       user: user
     }
   }
