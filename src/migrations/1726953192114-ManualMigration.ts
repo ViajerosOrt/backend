@@ -5,13 +5,6 @@ export class ManualMigration1726953192114 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
 
         await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "activite" (
-                "id" SERIAL PRIMARY KEY,
-                "activiteName" VARCHAR NOT NULL
-            );
-        `);
-
-        await queryRunner.query(`
             CREATE TABLE IF NOT EXISTS "activity" (
                 "id" SERIAL PRIMARY KEY,
                 "activityName" VARCHAR NOT NULL
@@ -31,9 +24,13 @@ export class ManualMigration1726953192114 implements MigrationInterface {
         `);
 
         await queryRunner.query(`
-            ALTER TABLE public.review ADD CONSTRAINT "FK_1529396a7d5fc87b7d483bcba8f" FOREIGN KEY ("travelId") REFERENCES public.travel(id);
-            ALTER TABLE public.review ADD CONSTRAINT "FK_7f1febb5465b721169034ec247f" FOREIGN KEY ("createdById") REFERENCES public."user"(id);
-            ALTER TABLE public.review ADD CONSTRAINT "FK_f38d87ff045fb91629bedd66b9a" FOREIGN KEY ("receivedById") REFERENCES public."user"(id);
+            CREATE TABLE IF NOT EXISTS "user" (
+                "id" SERIAL PRIMARY KEY,
+                "name" VARCHAR NOT NULL,
+                "email" VARCHAR NOT NULL,
+                "password" VARCHAR NOT NULL,
+                "birth_date" DATE NOT NULL,
+                "description" VARCHAR
             );
         `);
 
@@ -52,33 +49,22 @@ export class ManualMigration1726953192114 implements MigrationInterface {
         `);
 
         await queryRunner.query(`
+            CREATE TABLE IF NOT EXISTS "user_user_activities_activity" (
+                "userId" INTEGER NOT NULL,
+                "activityId" INTEGER NOT NULL,
+                PRIMARY KEY("userId", "activityId"),
+                FOREIGN KEY("activityId") REFERENCES "activity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
+                FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
+            );
+        `);
+
+        await queryRunner.query(`
             CREATE TABLE IF NOT EXISTS "travel_travel_activities_activity" (
                 "travelId" INTEGER NOT NULL,
                 "activityId" INTEGER NOT NULL,
                 PRIMARY KEY("travelId", "activityId"),
                 FOREIGN KEY("activityId") REFERENCES "activity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
                 FOREIGN KEY("travelId") REFERENCES "travel"("id") ON DELETE CASCADE ON UPDATE CASCADE
-            );
-        `);
-
-        await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "travel_travel_activitis_activite" (
-                "travelId" INTEGER NOT NULL,
-                "activiteId" INTEGER NOT NULL,
-                PRIMARY KEY("travelId", "activiteId"),
-                FOREIGN KEY("activiteId") REFERENCES "activite"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
-                FOREIGN KEY("travelId") REFERENCES "travel"("id") ON DELETE CASCADE ON UPDATE CASCADE
-            );
-        `);
-
-        await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "user" (
-                "id" SERIAL PRIMARY KEY,
-                "userName" VARCHAR NOT NULL,
-                "email" VARCHAR NOT NULL,
-                "password" VARCHAR NOT NULL,
-                "birth_date" DATE NOT NULL,
-                "userDescription" VARCHAR
             );
         `);
 
@@ -91,26 +77,6 @@ export class ManualMigration1726953192114 implements MigrationInterface {
                 FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
             );
         `);
-
-        await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "user_user_activites_activite" (
-                "userId" INTEGER NOT NULL,
-                "activiteId" INTEGER NOT NULL,
-                PRIMARY KEY("userId", "activiteId"),
-                FOREIGN KEY("activiteId") REFERENCES "activite"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
-                FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
-            );
-        `);
-
-        await queryRunner.query(`
-            CREATE TABLE IF NOT EXISTS "user_user_activities_activity" (
-                "userId" INTEGER NOT NULL,
-                "activityId" INTEGER NOT NULL,
-                PRIMARY KEY("userId", "activityId"),
-                FOREIGN KEY("activityId") REFERENCES "activity"("id") ON DELETE NO ACTION ON UPDATE NO ACTION,
-                FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
-            );
-        `);
         
         await queryRunner.query(`
             CREATE INDEX IF NOT EXISTS "IDX_user_joins_travels_travel_travelId" ON "user_joins_travels_travel" ("travelId");
@@ -119,13 +85,7 @@ export class ManualMigration1726953192114 implements MigrationInterface {
             CREATE INDEX IF NOT EXISTS "IDX_user_user_activities_activity_activityId" ON "user_user_activities_activity" ("activityId");
         `);
         await queryRunner.query(`
-            CREATE INDEX IF NOT EXISTS "IDX_user_user_activites_activite_userId" ON "user_user_activites_activite" ("userId");
-        `);
-        await queryRunner.query(`
             CREATE INDEX IF NOT EXISTS "IDX_travel_travel_activities_activity_travelId" ON "travel_travel_activities_activity" ("travelId");
-        `);
-        await queryRunner.query(`
-            CREATE INDEX IF NOT EXISTS "IDX_user_user_activites_activite_activiteId" ON "user_user_activites_activite" ("activiteId");
         `);
         await queryRunner.query(`
             CREATE INDEX IF NOT EXISTS "IDX_user_joins_travels_travel_userId" ON "user_joins_travels_travel" ("userId");
@@ -136,15 +96,13 @@ export class ManualMigration1726953192114 implements MigrationInterface {
         await queryRunner.query(`
             CREATE INDEX IF NOT EXISTS "IDX_travel_travel_activities_activity_activityId" ON "travel_travel_activities_activity" ("activityId");
         `);
+
         await queryRunner.query(`
-            CREATE INDEX IF NOT EXISTS "IDX_travel_travel_activitis_activite_travelId" ON "travel_travel_activitis_activite" ("travelId");
-        `);
-        await queryRunner.query(`
-            CREATE INDEX IF NOT EXISTS "IDX_travel_travel_activitis_activite_activiteId" ON "travel_travel_activitis_activite" ("activiteId");
+            ALTER TABLE public.review ADD CONSTRAINT "FK_1529396a7d5fc87b7d483bcba8f" FOREIGN KEY ("travelId") REFERENCES public.travel(id);
+            ALTER TABLE public.review ADD CONSTRAINT "FK_7f1febb5465b721169034ec247f" FOREIGN KEY ("createdById") REFERENCES public."user"(id);
+            ALTER TABLE public.review ADD CONSTRAINT "FK_f38d87ff045fb91629bedd66b9a" FOREIGN KEY ("receivedById") REFERENCES public."user"(id);;
         `);
     }
-
-
 
     public async down(queryRunner: QueryRunner): Promise<void> {
     }

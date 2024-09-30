@@ -16,8 +16,8 @@ dotenvConfig({ path: '.env' });
       username: `postgres`,
       password: `postgres`,
       database: `database_viajeros`,
-      entities: ["dist/**/*.entity{.ts,.js}"],
-      migrations: ["dist/migrations/*{.ts,.js}"],
+      entities: ["src/**/*.entity{.ts,.js}"],
+      migrations: ["src/migrations/*{.ts,.js}"],
       autoLoadEntities: true,
       synchronize: false,
   }
