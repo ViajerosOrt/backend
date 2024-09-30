@@ -13,9 +13,7 @@ import { User } from './users/entities/user.entity';
 import { Travel } from './travel/entities/travel.entity';
 import { Activity } from './activity/activity.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ReviewModule } from './review/review.module';
 import typeorm from './config/typeorm';
-import { Review } from './review/entities/review.entity';
 import { Location } from './location/entities/location.entity';
 
 @Module({
@@ -31,11 +29,10 @@ import { Location } from './location/entities/location.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'database_viajeros',
-      entities: [User, Review, Activity, Location, Travel],
+      entities: [User,  Activity, Location, Travel],
       synchronize: false,
     }),
     UsersModule,
-    ReviewModule,
     ActivityModule,
     LocationModule,
     TravelModule
