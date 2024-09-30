@@ -7,7 +7,7 @@ export class CreateActivityInput {
     @MinLength(5)
     @MaxLength(20)
     @IsNotEmpty({
-        message: "This field is required"
+        message: 'This field is required'
     })
     @Field()
     activityName: string;

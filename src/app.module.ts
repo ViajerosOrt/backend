@@ -15,6 +15,7 @@ import { Activity } from './activity/activity.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
 import { Location } from './location/entities/location.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -32,10 +33,15 @@ import { Location } from './location/entities/location.entity';
       entities: [User,  Activity, Location, Travel],
       synchronize: false,
     }),
-    UsersModule,
+    ConfigModule.forRoot({
+      isGlobal: true, // Make ConfigModule available globally
+    }),
     ActivityModule,
+    UsersModule,
+    TravelModule,
     LocationModule,
-    TravelModule
-  ],
+    AuthModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

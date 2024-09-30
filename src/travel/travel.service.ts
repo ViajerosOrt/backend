@@ -4,10 +4,10 @@ import { UpdateTravelInput } from './dto/update-travel.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
 import { Repository } from 'typeorm';
-import { UsersService } from 'src/users/users.service';
-import { LocationService } from 'src/location/location.service';
-import { CreateLocationInput } from 'src/location/dto/create-location.input';
-import { ActivityService } from 'src/activity/activity.service';
+import { UsersService } from '../users/users.service';
+import { LocationService } from '../location/location.service';
+import { CreateLocationInput } from '../location/dto/create-location.input';
+import { ActivityService } from '../activity/activity.service';
 
 @Injectable()
 export class TravelService {
@@ -17,7 +17,7 @@ export class TravelService {
     private userService: UsersService,
     private activityService: ActivityService,
     private locationService: LocationService,
-  ) {}
+  ) { }
 
   async create(
     createTravelInput: CreateTravelInput,
@@ -25,7 +25,7 @@ export class TravelService {
     createLocationInput: CreateLocationInput,
   ): Promise<Travel> {
     const travel = this.travelRepository.create(createTravelInput);
-    const user = await this.userService.joinToTrabel(
+    const user = await this.userService.joinToTravel(
       travel,
       travel.creatorUserId,
     );
@@ -70,7 +70,7 @@ export class TravelService {
     if (!travel) {
       throw new Error('There is no such trip');
     }
-    const user = await this.userService.findOne(userId);
+    const user = await this.userService.findById(userId);
     if (!user) {
       throw new Error('This user does not exist');
     }
@@ -92,7 +92,7 @@ export class TravelService {
       throw new Error('There is no such trip');
     }
 
-    const user = await this.userService.findOne(userId);
+    const user = await this.userService.findById(userId);
 
     if (!user) {
       throw new Error('This user does not exist');
@@ -121,13 +121,23 @@ export class TravelService {
     return this.travelRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Travel> {
     return await this.travelRepository.findOne({
       where: {
         id,
       },
       relations: ['usersTravelers', 'creatorUser', 'travelActivitis'],
     });
+  }
+
+  async findAllTravelByUser(userId: number): Promise<Travel[]> {
+      return await this.travelRepository.find({
+        where: {
+          usersTravelers: {
+            id: userId
+          }
+        }
+      })
   }
 
   update(id: number, updateTravelInput: UpdateTravelInput) {
