@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Review } from 'src/review/entities/review.entity';
+import { Review } from '../../review/entities/review.entity';
 import { Activity } from '../../activity/activity.entity';
 import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';

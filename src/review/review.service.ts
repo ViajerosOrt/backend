@@ -4,7 +4,7 @@ import { UpdateReviewInput } from './dto/update-review.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from './entities/review.entity';
 import { Repository } from 'typeorm';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { TravelService } from '../travel/travel.service';
 import { error } from 'console';
 
@@ -21,8 +21,8 @@ export class ReviewService {
   async create(createReviewInput: CreateReviewInput): Promise<Review> {
     const { userCreatorId, userReceiverId, travelId, stars, content } = createReviewInput;
 
-    const createdBy = await this.userService.findOne(userCreatorId);
-    const receivedBy = await this.userService.findOne(userReceiverId);
+    const createdBy = await this.userService.findById(userCreatorId);
+    const receivedBy = await this.userService.findById(userReceiverId);
     const travel = await this.travelService.findOne(travelId);
 
     if(!createdBy){

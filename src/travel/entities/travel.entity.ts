@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Review } from 'src/review/entities/review.entity';
+import { Review } from '../../review/entities/review.entity';
 import { Location } from '../../location/entities/location.entity';
 import { Activity } from '../../activity/activity.entity';
 import { User } from '../../users/entities/user.entity';
