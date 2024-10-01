@@ -1,19 +1,19 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Activity } from 'src/activity/activity.entity';
 import { Review } from 'src/review/entities/review.entity';
-import { Travel } from 'src/travel/entities/travel.entity';
+import { Activity } from '../../activity/activity.entity';
+import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Column()
   @Field()
-  userName: string;
+  name: string;
 
   @Column()
   @Field()
@@ -25,11 +25,11 @@ export class User {
 
   @Column({ type: 'date' })
   @Field()
-  birth_date: Date;
+  birthDate: Date;
 
   @Column({ nullable: true })
   @Field({ nullable: true })
-  userDescription: string
+  description: string
 
   @ManyToMany(() => Activity, (activity) => activity.userActivities)
   @Field(() => [Activity], { nullable: true })

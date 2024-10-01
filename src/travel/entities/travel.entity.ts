@@ -1,19 +1,16 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-
-import { Location } from 'src/location/entities/location.entity';
-
-import { Activity } from 'src/activity/activity.entity';
-
-import { User } from 'src/users/entities/user.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Review } from 'src/review/entities/review.entity';
+import { Location } from '../../location/entities/location.entity';
+import { Activity } from '../../activity/activity.entity';
+import { User } from '../../users/entities/user.entity';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany,PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @ObjectType()
 export class Travel {
 
   @PrimaryGeneratedColumn()
-  @Field((type) => Int)
+  @Field(() => Int)
   id: number;
 
   @Column()
@@ -33,7 +30,7 @@ export class Travel {
   finishDate: Date;
 
   @Column({ nullable: true })
-  @Field((type) => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   max_cap: number
 
   @Column({ type: 'boolean', default: true })
@@ -43,7 +40,7 @@ export class Travel {
 
   //********************************** */
   @Column()
-  @Field((type) => Int)
+  @Field(() => Int)
   creatorUserId: number;
 
   @ManyToOne(() => User, (user) => user.travelsCreated)
