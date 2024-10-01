@@ -1,4 +1,5 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Review } from '../../review/entities/review.entity';
 import { Activity } from '../../activity/activity.entity';
 import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
@@ -43,4 +44,13 @@ export class User {
   @Field(() => [Travel], { nullable: true })
   @JoinTable()
   joinsTravels: Travel[];
+
+  @OneToMany(() => Review, (review) => review.createdBy)
+  @Field(() => [Review], { nullable: true })
+  reviewsCreated: Review[];
+
+  @OneToMany(() => Review, (review) => review.receivedBy)
+  @Field(() => [Review], { nullable: true })
+  reviewsReceived: Review[];
+
 }

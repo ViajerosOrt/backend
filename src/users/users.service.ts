@@ -7,7 +7,6 @@ import { Travel } from '../travel/entities/travel.entity';
 import { ActivityService } from '../activity/activity.service';
 import { SignupUserInput } from '../auth/dto/signup-user.input';
 
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -46,7 +45,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find({
-      relations: ['userActivities']
+      relations: ['userActivities', 'reviewsCreated', 'reviewsReceived']
     });
   }
 
@@ -100,7 +99,12 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    const result = await this.userRepository.delete(id);
   }
+
+  async deleteAll(): Promise<void> {
+    await this.userRepository.clear(); 
+  }
+
 }
