@@ -18,7 +18,7 @@ export class CreateTravelInput {
   finishDate: Date;
 
   @Field()
-  max_cap: number;
+  maxCap: number;
 
   @Field()
   isEndable: boolean;

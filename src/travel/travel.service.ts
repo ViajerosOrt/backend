@@ -81,7 +81,7 @@ export class TravelService {
       throw new Error('This user does not exist');
     }
 
-    if (travel.usersTravelers.length == travel.max_cap) {
+    if (travel.usersTravelers.length == travel.maxCap) {
       throw new Error('The trip is already full');
     }
 
@@ -137,13 +137,13 @@ export class TravelService {
   }
 
   async findAllTravelByUser(userId: number): Promise<Travel[]> {
-      return await this.travelRepository.find({
-        where: {
-          usersTravelers: {
-            id: userId
-          }
+    return await this.travelRepository.find({
+      where: {
+        usersTravelers: {
+          id: userId
         }
-      })
+      }
+    })
   }
 
   update(id: number, updateTravelInput: UpdateTravelInput) {

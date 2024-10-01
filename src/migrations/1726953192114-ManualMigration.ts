@@ -41,7 +41,7 @@ export class ManualMigration1726953192114 implements MigrationInterface {
                 "travelDescription" VARCHAR,
                 "startDate" DATE NOT NULL,
                 "finishDate" DATE NOT NULL,
-                "max_cap" INTEGER,
+                "maxCap" INTEGER,
                 "isEndable" BOOLEAN NOT NULL DEFAULT TRUE,
                 "creatorUserId" INTEGER NOT NULL,
                 FOREIGN KEY("creatorUserId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -87,7 +87,7 @@ export class ManualMigration1726953192114 implements MigrationInterface {
                 FOREIGN KEY("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE
             );
         `);
-        
+
         await queryRunner.query(`
             CREATE INDEX IF NOT EXISTS "IDX_user_joins_travels_travel_travelId" ON "user_joins_travels_travel" ("travelId");
         `);
