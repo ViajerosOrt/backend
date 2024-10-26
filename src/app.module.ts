@@ -17,6 +17,9 @@ import { Location } from './location/entities/location.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { SeederModule } from './seeds/seeder.module';
+import { ChecklistModule } from './checklist/checklist.module';
+import { ObjectModule } from './object/object.module';
+import { ThingModule } from './thing/thing.module';
 
 @Module({
   imports: [
@@ -43,6 +46,9 @@ import { SeederModule } from './seeds/seeder.module';
     TravelModule,
     LocationModule,
     AuthModule,
+    ChecklistModule,
+    ObjectModule,
+    ThingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

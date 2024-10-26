@@ -38,7 +38,7 @@ describe('AuthResolver', () => {
       };
 
       const result: User = {
-        id: 1,
+        id: "1",
         name: 'John Doe',
         email: 'john@example.com',
         password: '123456',

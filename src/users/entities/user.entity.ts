@@ -9,8 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  id: string;
 
   @Column()
   @Field()
@@ -24,7 +24,7 @@ export class User {
   @Field()
   password: string;
 
-  @Column({ type: 'date' })
+  @Column({ name: 'birth_date', type: 'date' })
   @Field()
   birthDate: Date;
 

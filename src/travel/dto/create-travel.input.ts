@@ -23,6 +23,6 @@ export class CreateTravelInput {
   @Field()
   isEndable: boolean;
 
-  @Field(() => Int)
-  creatorUserId: number;
+  @Field(() => String)
+  creatorUserId: string;
 }

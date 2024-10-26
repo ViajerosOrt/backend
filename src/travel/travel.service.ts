@@ -27,7 +27,7 @@ export class TravelService {
 
   async create(
     createTravelInput: CreateTravelInput,
-    activityId: number[],
+    activityId: string[],
     createLocationInput: CreateLocationInput,
   ): Promise<Travel> {
     const travel = this.travelRepository.create(createTravelInput);
@@ -71,7 +71,7 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async joinToTravel(userId: number, travelId: number): Promise<Travel> {
+  async joinToTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
     if (!travel) {
       throw new Error('There is no such trip');
@@ -91,7 +91,7 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async leaveTravel(userId: number, travelId: number): Promise<Travel> {
+  async leaveTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
 
     if (!travel) {
@@ -127,7 +127,7 @@ export class TravelService {
     return await this.travelRepository.find();
   }
 
-  async findOne(id: number): Promise<Travel> {
+  async findOne(id: string): Promise<Travel> {
     return await this.travelRepository.findOne({
       where: {
         id,
@@ -136,17 +136,19 @@ export class TravelService {
     });
   }
 
-  async findAllTravelByUser(userId: number): Promise<Travel[]> {
-    return await this.travelRepository.find({
-      where: {
-        usersTravelers: {
-          id: userId
+
+  async findAllTravelByUser(userId: string): Promise<Travel[]> {
+      return await this.travelRepository.find({
+        where: {
+          usersTravelers: {
+            id: userId
+          }
         }
       }
-    })
+    )
   }
 
-  update(id: number, updateTravelInput: UpdateTravelInput) {
+  update(id: string, updateTravelInput: UpdateTravelInput) {
     return `This action updates a #${id} travel`;
   }
 

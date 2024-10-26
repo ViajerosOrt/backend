@@ -16,7 +16,7 @@ export class ActivityService {
         return this.activityRepository.find();
     }
 
-    async findActivityById(id: number): Promise<Activity> {
+    async findActivityById(id: string): Promise<Activity> {
         return this.activityRepository.findOne({
             where: {
                 id,
@@ -24,7 +24,7 @@ export class ActivityService {
         });
     }
 
-    async findActivitiesById(ids: number[]): Promise<Activity[]> {
+    async findActivitiesById(ids: String[]): Promise<Activity[]> {
         return await this.activityRepository.find({
             where: {
                 id: In(ids), //Busca muchas id y devuelve un conjunto

@@ -11,38 +11,38 @@ import { v4 as uuidv4 } from 'uuid';
 export class Travel {
 
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  id: string;
 
-  @Column()
+  @Column({name: 'title'})
   @Field()
   travelTitle: string
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, name: 'travel_description' })
   @Field({ nullable: true })
   travelDescription: string
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', name: 'start_date' })
   @Field()
   startDate: Date;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', name: 'finish_date' })
   @Field()
   finishDate: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, name:'max_cap' })
   @Field(() => Int, { nullable: true })
   maxCap: number
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: 'boolean', default: true, name: 'is_endable'})
   @Field()
   isEndable: boolean
 
 
   //********************************** */
-  @Column()
-  @Field(() => Int)
-  creatorUserId: number;
+  @Column({name: 'creator_user_id'})
+  @Field(() => String)
+  creatorUserId: string;
 
   @ManyToOne(() => User, (user) => user.travelsCreated)
   @Field(() => User)
