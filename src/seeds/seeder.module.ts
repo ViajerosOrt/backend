@@ -23,12 +23,16 @@ import { ConfigModule } from "@nestjs/config";
 @Module({
     
     imports: [
-        TypeOrmModule.forRoot({
-            type: 'sqlite', 
-            database: 'dtb.sqlite', 
-            entities: [Activity, Location, User, Travel],
-            synchronize: true, 
-          }),
+      TypeOrmModule.forRoot({
+        type: 'postgres',
+        host: 'localhost',
+        port: 5432,
+        username: 'postgres',
+        password: 'postgres',
+        database: 'database_viajeros',
+        entities: [User,  Activity, Location, Travel],
+        synchronize: false,
+      }),
         ConfigModule.forRoot({
             isGlobal: true, 
           }),

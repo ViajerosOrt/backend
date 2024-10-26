@@ -14,7 +14,7 @@ describe('TravelResolver', () => {
     travelDescription: 'Test Description',
     startDate: new Date(),
     finishDate: new Date(),
-    max_cap: 10,
+    maxCap: 10,
     isEndable: true,
     creatorUserId: 1,
     usersTravelers: [],
@@ -60,7 +60,7 @@ describe('TravelResolver', () => {
         travelDescription: 'Test Travel',
         startDate: new Date(),
         finishDate: new Date(),
-        max_cap: 10,
+        maxCap: 10,
         isEndable: true,
         creatorUserId: 1,
       };
@@ -111,7 +111,7 @@ describe('TravelResolver', () => {
         travelDescription: 'Updated Description',
         startDate: new Date(),
         finishDate: new Date(),
-        max_cap: 10,
+        maxCap: 10,
         isEndable: true,
         creatorUserId: 1,
       };

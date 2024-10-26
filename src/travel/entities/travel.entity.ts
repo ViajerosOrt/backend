@@ -3,13 +3,14 @@ import { Review } from '../../review/entities/review.entity';
 import { Location } from '../../location/entities/location.entity';
 import { Activity } from '../../activity/activity.entity';
 import { User } from '../../users/entities/user.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 @ObjectType()
 export class Travel {
 
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => Int)
   id: number;
 
@@ -60,18 +61,18 @@ export class Travel {
   @JoinTable()
   travelActivities: Activity[]
 
-  /******************************** */
-  @Column()
-  @Field((type) => Int, { nullable: true })
-  locationId: number;
-
-  @ManyToOne(() => Location, (location) => location.locationTravels)
-  @Field(() => Location, { nullable: true })
-  travelLocation: Location
 
   /******************************** */
   @OneToMany(() => Review, (review) => review.travel)
   @Field(() => [Review], { nullable: true })
   reviews: Review[];
+
+/******************************** */
+
+@ManyToOne(() => Location, (location) => location.locationTravels)
+@Field(() => Location)
+@JoinColumn({ name: "locationId" }) 
+travelLocation: Location
+
 
 }
