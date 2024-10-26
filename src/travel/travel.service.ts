@@ -53,7 +53,7 @@ export class TravelService {
     const location =
       await this.locationService.assignLocation(createLocationInput);
 
-    travel.locationId = location.id;
+    travel.travelLocation.id = location.id;
     travel.travelLocation = location;
     travel.creatorUser = user;
     travel.usersTravelers = travel.usersTravelers || [];
@@ -75,7 +75,7 @@ export class TravelService {
       throw new Error('This user does not exist');
     }
 
-    if (travel.usersTravelers.length == travel.max_cap) {
+    if (travel.usersTravelers.length == travel.maxCap) {
       throw new Error('The trip is already full');
     }
 
@@ -117,8 +117,8 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  findAll() {
-    return this.travelRepository.find();
+  async findAll() {
+    return await this.travelRepository.find();
   }
 
   async findOne(id: number): Promise<Travel> {

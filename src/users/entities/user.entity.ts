@@ -2,11 +2,12 @@ import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Activity } from '../../activity/activity.entity';
 import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 @ObjectType()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Field(() => Int)
   id: number;
 
