@@ -25,6 +25,7 @@
     "migration:revert": "npm run typeorm -- -d ./src/config/typeorm.ts migration:revert",
     "seed": "ts-node src/seeds/seed.ts",
     "seed:refresh": "ts-node src/seeds/seed.ts --refresh",
+
   },
   "dependencies": {
     "@apollo/server": "^4.11.0",
@@ -34,6 +35,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/graphql": "^12.2.0",
     "@nestjs/jwt": "^10.2.0",
+    "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
@@ -51,7 +53,8 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.7",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -73,7 +76,7 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
   },

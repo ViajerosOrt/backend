@@ -17,13 +17,12 @@ type Travel {
   travelDescription: String
   startDate: DateTime!
   finishDate: DateTime!
-  max_cap: Int
+  maxCap: Int
   isEndable: Boolean!
   creatorUserId: Int!
   creatorUser: User!
   usersTravelers: [User!]
   travelActivities: [Activity!]
-  locationId: Int!
   travelLocation: Location!
 }
 
@@ -122,7 +121,7 @@ input CreateTravelInput {
   travelDescription: String!
   startDate: DateTime!
   finishDate: DateTime!
-  max_cap: Float!
+  maxCap: Float!
   isEndable: Boolean!
   creatorUserId: Int!
 }
@@ -132,7 +131,7 @@ input UpdateTravelInput {
   travelDescription: String
   startDate: DateTime
   finishDate: DateTime
-  max_cap: Float
+  maxCap: Float
   isEndable: Boolean
   creatorUserId: Int
   id: Int!

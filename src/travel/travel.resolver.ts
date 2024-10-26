@@ -42,8 +42,12 @@ export class TravelResolver {
   }
 
   @Query(() => [Travel], { name: 'travels' })
-  findAll() {
-    return this.travelService.findAll();
+  async findAll() {
+    const travels = await this.travelService.findAll();
+    return travels.map(travel => ({
+      ...travel,
+      creatorUserId: travel.creatorUserId.toString(), 
+    }));
   }
 
   @Query(() => Travel, { name: 'travel' })
