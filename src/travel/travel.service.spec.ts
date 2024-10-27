@@ -9,6 +9,8 @@ import { Travel } from '../travel/entities/travel.entity';
 import { User } from '../users/entities/user.entity';
 import { Location } from '../location/entities/location.entity';
 import { Activity } from '../activity/activity.entity';
+import { ReviewModule } from '../review/review.module';
+import { Review } from '../review/entities/review.entity';
 
 describe('TravelService', () => {
   let service: TravelService;
@@ -19,13 +21,14 @@ describe('TravelService', () => {
         TypeOrmModule.forRoot({
           type: 'sqlite',
           database: ':memory:',
-          entities: [Travel, User, Location, Activity],
+          entities: [Travel, User, Location, Activity, Review],
           synchronize: true,
         }),
         TypeOrmModule.forFeature([Travel]),
         UsersModule,
         ActivityModule,
         LocationModule,
+        ReviewModule
       ],
       providers: [TravelResolver, TravelService],
     }).compile();

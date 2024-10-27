@@ -12,17 +12,11 @@ export class UserSeeder implements Seeder{
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        private readonly activityService: ActivityService,
     ){}
 
     async seed(): Promise<any>{ 
 
-      const activities = await this.activityService.findAll();
-      const activitiesUser = [];
-  
-      for(let i = 0; i < 3; i++){
-        activitiesUser.push(activities[Math.floor(Math.random() * activities.length)])
-      }
+    
 
         const users = [
             {
@@ -31,7 +25,6 @@ export class UserSeeder implements Seeder{
               password: await bcrypt.hash('password123', 10),
               birthDate: new Date('2002-01-01'),
               description: 'First user for seeder',
-              userActivities: activitiesUser,
             },
             {
               name: 'Franco Borreli',
@@ -39,7 +32,6 @@ export class UserSeeder implements Seeder{
               password: await bcrypt.hash('password456', 10),
               birthDate: new Date('2002-05-10'),
               description: 'Second user for seeder',
-              userActivities: activitiesUser,
             },
             {
               name: 'Bruno Lapaz',
@@ -47,7 +39,6 @@ export class UserSeeder implements Seeder{
               password: await bcrypt.hash('password789', 10),
               birthDate: new Date('2001-11-20'),
               description: 'Third user for seeder',
-              userActivities: activitiesUser,
             }
         ];
 

@@ -5,9 +5,7 @@ import { Seeder } from 'nestjs-seeder';
 import { Travel } from '../travel/entities/travel.entity';
 import { LocationService } from '../location/location.service';
 import { UsersService } from '../users/users.service';
-import { TravelService } from 'src/travel/travel.service';
-import { ActivityService } from 'src/activity/activity.service';
-import { Activity } from 'src/activity/activity.entity';
+
 
 @Injectable()
 export class TravelSeeder implements Seeder {
@@ -16,19 +14,15 @@ export class TravelSeeder implements Seeder {
     private readonly travelRepository: Repository<Travel>,
     private readonly locationService: LocationService,
     private readonly userService: UsersService,
-    private readonly activityService: ActivityService,
   ) {}
 
   async seed(): Promise<any> {
     const location =
       await this.locationService.findLocationByLog('-31.4827, -57.9119');
     const user = await this.userService.findByEmail('fabricioSc@example.com');
-    const activities = await this.activityService.findAll();
-    const activitiesTravel = [];
 
-    for(let i = 0; i < 3; i++){
-      activitiesTravel.push(activities[Math.floor(Math.random() * activities.length)])
-    }
+
+ 
     const travels = [
       {
         travelTitle: 'Summer Beach Getaway',
@@ -37,9 +31,8 @@ export class TravelSeeder implements Seeder {
         finishDate: new Date('2025-06-20'),
         maxCap: 10,
         isEndable: true,
-        creatorUserId: user.id,
+        creatorUser: user,
         trabelLocation: location.id,
-        travelActivities: activitiesTravel,
       },
       {
         travelTitle: 'Mountain Adventure',
@@ -48,9 +41,8 @@ export class TravelSeeder implements Seeder {
         finishDate: new Date('2025-07-05'),
         maxCap: 8,
         isEndable: true,
-        creatorUserId: user.id,
+        creatorUser: user,
         trabelLocation: location.id,
-        travelActivities: activitiesTravel,
       },
       {
         travelTitle: 'City Exploration',
@@ -59,9 +51,8 @@ export class TravelSeeder implements Seeder {
         finishDate: new Date('2025-08-15'),
         maxCap: 15,
         isEndable: false,
-        creatorUserId: user.id,
+        creatorUser: user,
         trabelLocation: location.id,
-        travelActivities: activitiesTravel,
       },
     ];
     await this.travelRepository.save(travels);

@@ -16,7 +16,7 @@ describe('TravelResolver', () => {
     finishDate: new Date(),
     maxCap: 10,
     isEndable: true,
-    creatorUserId: "1",
+    creatorUser: "1",
     usersTravelers: [],
     travelActivities: [],
     locationId: "1",
@@ -62,7 +62,6 @@ describe('TravelResolver', () => {
         finishDate: new Date(),
         maxCap: 10,
         isEndable: true,
-        creatorUserId: "1",
       };
       const activityIds = ["1", "2", "3"];
 
@@ -73,16 +72,21 @@ describe('TravelResolver', () => {
         longLatPoint: '1245.12345',
       };
 
+      const userId = "1";
+
       const result = await resolver.createTravel(
         createTravelInput,
+        userId,
         activityIds,
         createLocationInput,
+        
       );
       expect(result).toEqual(mockTravel);
       expect(service.create).toHaveBeenCalledWith(
         createTravelInput,
         activityIds,
         createLocationInput,
+        userId,
       );
     });
   });
@@ -113,7 +117,6 @@ describe('TravelResolver', () => {
         finishDate: new Date(),
         maxCap: 10,
         isEndable: true,
-        creatorUserId: "1",
       };
 
       const result = await resolver.updateTravel(updateTravelInput);

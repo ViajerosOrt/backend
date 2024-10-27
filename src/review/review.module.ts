@@ -11,5 +11,6 @@ import { TravelModule } from '../travel/travel.module';
 @Module({ 
   imports: [TypeOrmModule.forFeature([Review]), UsersModule, TravelModule],
   providers: [ReviewService, ReviewResolver],
+  exports:[ReviewService]
 })
 export class ReviewModule {}

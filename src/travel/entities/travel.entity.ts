@@ -40,12 +40,10 @@ export class Travel {
 
 
   //********************************** */
-  @Column({name: 'creator_user_id'})
-  @Field(() => String)
-  creatorUserId: string;
 
   @ManyToOne(() => User, (user) => user.travelsCreated)
   @Field(() => User)
+  @JoinColumn({ name: 'creatorUser' }) 
   creatorUser: User
 
   //******************************************** */

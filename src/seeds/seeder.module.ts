@@ -17,6 +17,9 @@ import { LocationModule } from "../location/location.module";
 import { TravelModule } from "../travel/travel.module";
 import { AuthModule } from "../auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
+import { ActivityService } from "../activity/activity.service";
+import { Review } from "../review/entities/review.entity";
+import { ReviewModule } from "../review/review.module";
 
 
 
@@ -30,21 +33,22 @@ import { ConfigModule } from "@nestjs/config";
         username: 'postgres',
         password: 'postgres',
         database: 'database_viajeros',
-        entities: [User,  Activity, Location, Travel],
+        entities: [User,  Activity, Location, Travel, Review],
         synchronize: false,
       }),
         ConfigModule.forRoot({
             isGlobal: true, 
           }),
-        TypeOrmModule.forFeature([Activity, Location, User, Travel]),
+        TypeOrmModule.forFeature([Activity, Location, User, Travel, Review]),
         ActivityModule,
         UsersModule,
         LocationModule,
         TravelModule,
-        AuthModule
+        AuthModule,
+        ReviewModule
     ],
-    providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService],
-    exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService]
+    providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService],
+    exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService]
 })
 
 export class SeederModule {}

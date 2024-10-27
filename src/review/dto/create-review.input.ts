@@ -9,12 +9,12 @@ export class CreateReviewInput {
   @Field()
   content: string;
 
-  @Field(() => Int)
-  travelId: number;
+  @Field(() => String)
+  travelId: string;
 
-  @Field(() => Int)
-  userReceiverId: number;
+  @Field(() => String)
+  userReceiverId: string;
 
-  @Field(() => Int)
-  userCreatorId: number;
+  @Field(() => String)
+  userCreatorId: string;
 }

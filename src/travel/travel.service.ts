@@ -29,11 +29,12 @@ export class TravelService {
     createTravelInput: CreateTravelInput,
     activityId: string[],
     createLocationInput: CreateLocationInput,
+    userId: string,
   ): Promise<Travel> {
     const travel = this.travelRepository.create(createTravelInput);
     const user = await this.userService.joinToTravel(
       travel,
-      travel.creatorUserId,
+      userId,
     );
     const activities =
       await this.activityService.findActivitiesById(activityId);
@@ -111,7 +112,7 @@ export class TravelService {
       throw new Error('The user is not attached to this trip');
     }
 
-    if (travel.creatorUserId === userId) {
+    if (travel.creatorUser.id === userId) {
       throw new Error('The creator of the trip cannot leave it');
     }
 

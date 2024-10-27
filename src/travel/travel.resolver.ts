@@ -17,11 +17,11 @@ export class TravelResolver {
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
-
-    @Args('activitiesId', { type: () => [Number] }) activityId: string[],
+    @Args('createUserId', {type: () => String}) userId: string,
+    @Args('activitiesId', { type: () => [String] }) activityId: string[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput
   ) {
-    return this.travelService.create(createTravelInput, activityId, createLocationInput);
+    return this.travelService.create(createTravelInput, activityId, createLocationInput, userId);
 
   }
 
@@ -43,11 +43,8 @@ export class TravelResolver {
 
   @Query(() => [Travel], { name: 'travels' })
   async findAll() {
-    const travels = await this.travelService.findAll();
-    return travels.map(travel => ({
-      ...travel,
-      creatorUserId: travel.creatorUserId.toString(), 
-    }));
+    return await this.travelService.findAll();
+    
   }
 
   @Query(() => Travel, { name: 'travel' })

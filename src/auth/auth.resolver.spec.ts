@@ -47,6 +47,8 @@ describe('AuthResolver', () => {
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],
+        reviewsCreated:[],
+        reviewsReceived:[],
       };
 
       jest.spyOn(service, 'signup').mockResolvedValue(result);

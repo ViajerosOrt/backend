@@ -6,9 +6,9 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGen
 @ObjectType()
 @Entity()
 export class Review {
-  @PrimaryGeneratedColumn()
-  @Field((type) => Int)
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  @Field((type) => String)
+  id: string;
 
   @Column()
   @Field()
@@ -18,22 +18,13 @@ export class Review {
   @Field()
   content: string;
 
-  @Field(() => Int)
-  travelId: number;
-
-  @Field(() => Int)
-  userReceiverId: number;
-
-  @Field(() => Int)
-  userCreatorId: number
-
   @ManyToOne(() => User, (user) => user.reviewsCreated)
   @Field(() => User)
-  createdBy: User;
+  createdUserBy: User;
 
   @ManyToOne(() => User, (user) => user.reviewsReceived)
   @Field(() => User)
-  receivedBy: User;
+  receivedUserBy: User;
   
   @ManyToOne(() => Travel, (travel) => travel.reviews)
   @Field(() => Travel)

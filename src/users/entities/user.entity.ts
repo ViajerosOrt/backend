@@ -46,11 +46,11 @@ export class User {
   @JoinTable()
   joinsTravels: Travel[];
 
-  @OneToMany(() => Review, (review) => review.createdBy)
+  @OneToMany(() => Review, (review) => review.createdUserBy)
   @Field(() => [Review], { nullable: true })
   reviewsCreated: Review[];
 
-  @OneToMany(() => Review, (review) => review.receivedBy)
+  @OneToMany(() => Review, (review) => review.receivedUserBy)
   @Field(() => [Review], { nullable: true })
   reviewsReceived: Review[];
 

@@ -73,7 +73,7 @@ export class UsersService {
 
     user.joinsTravels = user.joinsTravels || [];
 
-    if (user.id == travel.creatorUserId) {
+    if (user.id == travel.creatorUser.id) {
       user.travelsCreated = user.travelsCreated || [];
       user.travelsCreated.push(travel);
     }
