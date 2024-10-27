@@ -20,6 +20,7 @@ describe('UsersResolver', () => {
     joinsTravels: [],
     reviewsCreated:[],
     reviewsReceived:[],
+    items:[],
   }
 
   const mockContext = {
@@ -70,6 +71,7 @@ describe('UsersResolver', () => {
         joinsTravels: [],
         reviewsCreated:[],
         reviewsReceived:[],
+        items:[],
       };
 
       jest.spyOn(service, 'addActivity').mockResolvedValue(result);
@@ -93,6 +95,7 @@ describe('UsersResolver', () => {
           joinsTravels: [],
           reviewsCreated:[],
           reviewsReceived:[],
+          items:[],
         },
       ];
 
@@ -120,6 +123,7 @@ describe('UsersResolver', () => {
         joinsTravels: [],
         reviewsCreated:[],
         reviewsReceived:[],
+        items:[],
       }
 
       jest.spyOn(service, 'findById').mockResolvedValue(result);

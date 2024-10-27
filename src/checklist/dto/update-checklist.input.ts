@@ -3,6 +3,9 @@ import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateChecklistInput extends PartialType(CreateChecklistInput) {
-  @Field(() => Int)
-  id: number;
+  @Field()
+  id: string;
+
+  @Field()
+  name: string;
 }

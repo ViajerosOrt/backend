@@ -1,7 +1,7 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
 
 @InputType()
-export class CreateChecklistInput {
+export class CreateItemInput {
   @Field()
   name: string;
 }

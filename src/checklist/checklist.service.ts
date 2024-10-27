@@ -16,7 +16,7 @@ export class ChecklistService {
     return `This action returns a #${id} checklist`;
   }
 
-  update(id: number, updateChecklistInput: UpdateChecklistInput) {
+  update(id: string, updateChecklistInput: UpdateChecklistInput) {
     return `This action updates a #${id} checklist`;
   }
 

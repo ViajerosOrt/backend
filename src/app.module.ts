@@ -18,11 +18,11 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { SeederModule } from './seeds/seeder.module';
 import { ChecklistModule } from './checklist/checklist.module';
-import { ThingModule } from './thing/thing.module';
 import { Review } from './review/entities/review.entity';
 import { ReviewModule } from './review/review.module';
 import { Checklist } from './checklist/entities/checklist.entity';
-import { Thing } from './thing/entities/thing.entity';
+import { ItemModule } from './item/item.module';
+import { Item } from './item/entities/item.entity';
 
 @Module({
   imports: [
@@ -37,7 +37,7 @@ import { Thing } from './thing/entities/thing.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'database_viajeros',
-      entities: [User,  Activity, Location, Travel, Review, Checklist, Thing],
+      entities: [User,  Activity, Location, Travel, Review, Checklist, Item],
       synchronize: false,
     }),
     ConfigModule.forRoot({
@@ -50,8 +50,8 @@ import { Thing } from './thing/entities/thing.entity';
     LocationModule,
     AuthModule,
     ChecklistModule,
-    ThingModule,
     ReviewModule,
+    ItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

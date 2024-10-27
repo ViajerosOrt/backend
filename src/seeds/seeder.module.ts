@@ -20,6 +20,10 @@ import { ConfigModule } from "@nestjs/config";
 import { ActivityService } from "../activity/activity.service";
 import { Review } from "../review/entities/review.entity";
 import { ReviewModule } from "../review/review.module";
+import { Item } from "../item/entities/item.entity";
+import { Checklist } from "../checklist/entities/checklist.entity";
+import { ItemModule } from "../item/item.module";
+import { ChecklistModule } from "../checklist/checklist.module";
 
 
 
@@ -33,19 +37,21 @@ import { ReviewModule } from "../review/review.module";
         username: 'postgres',
         password: 'postgres',
         database: 'database_viajeros',
-        entities: [User,  Activity, Location, Travel, Review],
+        entities: [User,  Activity, Location, Travel, Review, Item, Checklist],
         synchronize: false,
       }),
         ConfigModule.forRoot({
             isGlobal: true, 
           }),
-        TypeOrmModule.forFeature([Activity, Location, User, Travel, Review]),
+        TypeOrmModule.forFeature([Activity, Location, User, Travel, Review, Item, Checklist]),
         ActivityModule,
         UsersModule,
         LocationModule,
         TravelModule,
         AuthModule,
-        ReviewModule
+        ReviewModule,
+        ItemModule,
+        ChecklistModule
     ],
     providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService],
     exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService]

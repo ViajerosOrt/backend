@@ -11,6 +11,10 @@ import { Location } from '../location/entities/location.entity';
 import { Activity } from '../activity/activity.entity';
 import { ReviewModule } from '../review/review.module';
 import { Review } from '../review/entities/review.entity';
+import { Checklist } from '../checklist/entities/checklist.entity';
+import { Item } from '../item/entities/item.entity';
+import { ChecklistModule } from '../checklist/checklist.module';
+import { ItemModule } from '../item/item.module';
 
 describe('TravelService', () => {
   let service: TravelService;
@@ -19,16 +23,22 @@ describe('TravelService', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
-          type: 'sqlite',
-          database: ':memory:',
-          entities: [Travel, User, Location, Activity, Review],
-          synchronize: true,
+          type: 'postgres',
+          host: 'localhost',
+          port: 5432,
+          username: 'postgres',
+          password: 'postgres',
+          database: 'database_viajeros',
+          entities: [User,  Activity, Location, Travel, Review, Item, Checklist],
+          synchronize: false,
         }),
         TypeOrmModule.forFeature([Travel]),
         UsersModule,
         ActivityModule,
         LocationModule,
-        ReviewModule
+        ReviewModule,
+        ChecklistModule,
+        ItemModule
       ],
       providers: [TravelResolver, TravelService],
     }).compile();
