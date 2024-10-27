@@ -19,9 +19,9 @@ export class UsersResolver {
   @Mutation(() => User)
   @UseGuards(JwtAuthGuard)
   async addActivities(
-    @Args({ name: 'activitiesIds', type: () => [Number] })
+    @Args({ name: 'activitiesIds', type: () => [String] })
     @Context() context,
-    activitiesIds: number[],
+    activitiesIds: String[],
   ): Promise<User> {
     return await this.usersService.addActivity(context.req.user.userId, activitiesIds);
   }
@@ -34,7 +34,7 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'user' })
   @UseGuards(JwtAuthGuard)
-  findById(@Args('id', { type: () => Int }) id: number): Promise<User> {
+  findById(@Args('id', { type: () => String }) id: string): Promise<User> {
     return this.usersService.findById(id);
   }
 

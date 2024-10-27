@@ -4,7 +4,7 @@ import { IsNotEmpty, MaxLength, MinLength } from 'class-validator'
 @InputType()
 export class CreateActivityInput {
 
-    @MinLength(5)
+    @MinLength(2)
     @MaxLength(20)
     @IsNotEmpty({
         message: 'This field is required'

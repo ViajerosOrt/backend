@@ -27,13 +27,14 @@ export class TravelService {
 
   async create(
     createTravelInput: CreateTravelInput,
-    activityId: number[],
+    activityId: string[],
     createLocationInput: CreateLocationInput,
+    userId: string,
   ): Promise<Travel> {
     const travel = this.travelRepository.create(createTravelInput);
     const user = await this.userService.joinToTravel(
       travel,
-      travel.creatorUserId,
+      userId,
     );
     const activities =
       await this.activityService.findActivitiesById(activityId);
@@ -59,7 +60,7 @@ export class TravelService {
     const location =
       await this.locationService.assignLocation(createLocationInput);
 
-    travel.locationId = location.id;
+    travel.travelLocation.id = location.id;
     travel.travelLocation = location;
     travel.creatorUser = user;
     travel.usersTravelers = travel.usersTravelers || [];
@@ -71,7 +72,7 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async joinToTravel(userId: number, travelId: number): Promise<Travel> {
+  async joinToTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
     if (!travel) {
       throw new Error('There is no such trip');
@@ -91,7 +92,7 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async leaveTravel(userId: number, travelId: number): Promise<Travel> {
+  async leaveTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
 
     if (!travel) {
@@ -111,7 +112,7 @@ export class TravelService {
       throw new Error('The user is not attached to this trip');
     }
 
-    if (travel.creatorUserId === userId) {
+    if (travel.creatorUser.id === userId) {
       throw new Error('The creator of the trip cannot leave it');
     }
 
@@ -123,11 +124,11 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  findAll() {
-    return this.travelRepository.find();
+  async findAll() {
+    return await this.travelRepository.find();
   }
 
-  async findOne(id: number): Promise<Travel> {
+  async findOne(id: string): Promise<Travel> {
     return await this.travelRepository.findOne({
       where: {
         id,
@@ -136,17 +137,19 @@ export class TravelService {
     });
   }
 
-  async findAllTravelByUser(userId: number): Promise<Travel[]> {
-    return await this.travelRepository.find({
-      where: {
-        usersTravelers: {
-          id: userId
+
+  async findAllTravelByUser(userId: string): Promise<Travel[]> {
+      return await this.travelRepository.find({
+        where: {
+          usersTravelers: {
+            id: userId
+          }
         }
       }
-    })
+    )
   }
 
-  update(id: number, updateTravelInput: UpdateTravelInput) {
+  update(id: string, updateTravelInput: UpdateTravelInput) {
     return `This action updates a #${id} travel`;
   }
 

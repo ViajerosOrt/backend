@@ -9,17 +9,17 @@ describe('TravelResolver', () => {
   let service: TravelService;
 
   const mockTravel = {
-    id: 1,
+    id: "1",
     travelTitle: 'Test Travel',
     travelDescription: 'Test Description',
     startDate: new Date(),
     finishDate: new Date(),
-    max_cap: 10,
+    maxCap: 10,
     isEndable: true,
-    creatorUserId: 1,
+    creatorUser: "1",
     usersTravelers: [],
     travelActivities: [],
-    locationId: 1,
+    locationId: "1",
   };
 
 
@@ -60,11 +60,10 @@ describe('TravelResolver', () => {
         travelDescription: 'Test Travel',
         startDate: new Date(),
         finishDate: new Date(),
-        max_cap: 10,
+        maxCap: 10,
         isEndable: true,
-        creatorUserId: 1,
       };
-      const activityIds = [1, 2, 3];
+      const activityIds = ["1", "2", "3"];
 
       const createLocationInput = {
         name: 'Test Location',
@@ -73,16 +72,21 @@ describe('TravelResolver', () => {
         longLatPoint: '1245.12345',
       };
 
+      const userId = "1";
+
       const result = await resolver.createTravel(
         createTravelInput,
+        userId,
         activityIds,
         createLocationInput,
+        
       );
       expect(result).toEqual(mockTravel);
       expect(service.create).toHaveBeenCalledWith(
         createTravelInput,
         activityIds,
         createLocationInput,
+        userId,
       );
     });
   });
@@ -97,28 +101,27 @@ describe('TravelResolver', () => {
 
   describe('findOne', () => {
     it('should return a single travel', async () => {
-      const result = await resolver.findOne(1);
+      const result = await resolver.findOne("1");
       expect(result).toEqual(mockTravel);
-      expect(service.findOne).toHaveBeenCalledWith(1);
+      expect(service.findOne).toHaveBeenCalledWith("1");
     });
   });
 
   describe('updateTravel', () => {
     it('should update a travel', async () => {
       const updateTravelInput: UpdateTravelInput = {
-        id: 1,
+        id: "1",
         travelTitle: 'Updated Travel',
         travelDescription: 'Updated Description',
         startDate: new Date(),
         finishDate: new Date(),
-        max_cap: 10,
+        maxCap: 10,
         isEndable: true,
-        creatorUserId: 1,
       };
 
       const result = await resolver.updateTravel(updateTravelInput);
       expect(result).toEqual(mockTravel);
-      expect(service.update).toHaveBeenCalledWith(1, updateTravelInput);
+      expect(service.update).toHaveBeenCalledWith("1", updateTravelInput);
     });
   });
 

@@ -11,7 +11,7 @@ import { UsersService } from '../users/users.service';
 
 
 @Module({
-  imports: [PassportModule, UsersModule,
+  imports: [PassportModule, UsersModule, ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

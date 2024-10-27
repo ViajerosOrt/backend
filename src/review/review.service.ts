@@ -38,10 +38,11 @@ export class ReviewService {
     const review = this.reviewRepository.create({
       stars: stars.toString(),
       content,
-      createdBy,
-      receivedBy,
-      travel,
     });
+
+    review.createdUserBy = createdBy;
+    review.receivedUserBy = receivedBy;
+    review.travel = travel;
   
     return this.reviewRepository.save(review);
   }
@@ -50,14 +51,14 @@ export class ReviewService {
     return this.reviewRepository.find({ relations: ['createdBy', 'receivedBy'] });
   }
   
-  async findOne(id: number): Promise<Review | undefined> {
+  async findOne(id: string): Promise<Review | undefined> {
     return this.reviewRepository.findOne({
       where: { id },
       relations: ['createdBy', 'receivedBy'],
     });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await this.reviewRepository.delete(id);
   }
 

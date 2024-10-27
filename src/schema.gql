@@ -3,7 +3,7 @@
 # ------------------------------------------------------
 
 type Location {
-  id: Int!
+  id: String!
   name: String!
   state: String!
   address: String!
@@ -11,19 +11,25 @@ type Location {
   locationTravels: [Travel!]
 }
 
+type Activity {
+  id: String!
+  activityName: String!
+  userActivities: [User!]
+  travelActivities: [Travel!]
+}
+
 type Travel {
-  id: Int!
+  id: String!
   travelTitle: String!
   travelDescription: String
   startDate: DateTime!
   finishDate: DateTime!
-  max_cap: Int
+  maxCap: Int
   isEndable: Boolean!
-  creatorUserId: Int!
   creatorUser: User!
   usersTravelers: [User!]
   travelActivities: [Activity!]
-  locationId: Int!
+  reviews: [Review!]
   travelLocation: Location!
 }
 
@@ -32,15 +38,17 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type Activity {
-  id: Int!
-  activityName: String!
-  userActivities: [User!]
-  travelActivities: [Travel!]
+type Review {
+  id: String!
+  stars: String!
+  content: String!
+  createdUserBy: User!
+  receivedUserBy: User!
+  travel: Travel!
 }
 
 type User {
-  id: Int!
+  id: String!
   name: String!
   email: String!
   password: String!
@@ -49,6 +57,8 @@ type User {
   userActivities: [Activity!]
   travelsCreated: Travel
   joinsTravels: [Travel!]
+  reviewsCreated: [Review!]
+  reviewsReceived: [Review!]
 }
 
 type AccessToken {
@@ -62,32 +72,55 @@ type LoginResponse {
   user: User!
 }
 
+type Checklist {
+  id: String!
+}
+
+type Thing {
+  id: String!
+  name: String!
+  state: Boolean!
+}
+
 type Query {
   activities: [Activity!]!
-  activity(id: Int!): Activity!
+  activity(id: String!): Activity!
   users: [User!]!
   user(email: String!): User!
+  location(id: String!): Location!
   travels: [Travel!]!
-  travel(id: Int!): Travel!
-  findAllTravelByUser(userId: Int!): [Travel!]!
-  location(id: Int!): Location!
+  travel(id: String!): Travel!
+  findAllTravelByUser(userId: String!): [Travel!]!
+  review(id: String!): Review!
+  getReviews: [Review!]!
+  getReview(id: String!): Review!
+  checklist(id: Int!): Checklist!
+  thing(id: Int!): Thing!
 }
 
 type Mutation {
   createActivity(activityInp: CreateActivityInput!): Activity!
-  addActivities(activitiesIds: [Float!]!): User!
+  addActivities(activitiesIds: [String!]!): User!
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
-  createTravel(createTravelInput: CreateTravelInput!, activitiesId: [Float!]!, createLocationInput: CreateLocationInput!): Travel!
-  joinToTravel(travelId: Int!): Travel!
-  leaveTravel(travelId: Int!): Travel!
-  updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
-  removeTravel(id: Int!): Travel!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
+  createTravel(createTravelInput: CreateTravelInput!, createUserId: String!, activitiesId: [String!]!, createLocationInput: CreateLocationInput!): Travel!
+  joinToTravel(travelId: String!): Travel!
+  leaveTravel(travelId: String!): Travel!
+  updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
+  removeTravel(id: Int!): Travel!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(signupUserInput: SignupUserInput!): User!
+  createReview(createReviewInput: CreateReviewInput!): Review!
+  removeReview(id: String!): Review!
+  createChecklist(createChecklistInput: CreateChecklistInput!): Checklist!
+  updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
+  removeChecklist(id: Int!): Checklist!
+  createThing(createThingInput: CreateThingInput!): Thing!
+  updateThing(updateThingInput: UpdateThingInput!): Thing!
+  removeThing(id: Int!): Thing!
 }
 
 input CreateActivityInput {
@@ -102,32 +135,11 @@ input UpdateUserInput {
   description: String
 }
 
-input CreateTravelInput {
-  travelTitle: String!
-  travelDescription: String!
-  startDate: DateTime!
-  finishDate: DateTime!
-  max_cap: Float!
-  isEndable: Boolean!
-  creatorUserId: Int!
-}
-
 input CreateLocationInput {
   name: String!
   state: String!
   address: String!
   longLatPoint: String!
-}
-
-input UpdateTravelInput {
-  travelTitle: String
-  travelDescription: String
-  startDate: DateTime
-  finishDate: DateTime
-  max_cap: Float
-  isEndable: Boolean
-  creatorUserId: Int
-  id: Int!
 }
 
 input UpdateLocationInput {
@@ -136,6 +148,25 @@ input UpdateLocationInput {
   address: String
   longLatPoint: String
   id: Int!
+}
+
+input CreateTravelInput {
+  travelTitle: String!
+  travelDescription: String!
+  startDate: DateTime!
+  finishDate: DateTime!
+  maxCap: Float!
+  isEndable: Boolean!
+}
+
+input UpdateTravelInput {
+  travelTitle: String
+  travelDescription: String
+  startDate: DateTime
+  finishDate: DateTime
+  maxCap: Float
+  isEndable: Boolean
+  id: String!
 }
 
 input LoginUserInput {
@@ -149,4 +180,34 @@ input SignupUserInput {
   password: String!
   birthDate: DateTime!
   description: String
+}
+
+input CreateReviewInput {
+  stars: Int!
+  content: String!
+  travelId: String!
+  userReceiverId: String!
+  userCreatorId: String!
+}
+
+input CreateChecklistInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateChecklistInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateThingInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateThingInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

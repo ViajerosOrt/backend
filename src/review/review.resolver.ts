@@ -19,14 +19,14 @@ export class ReviewResolver {
   }
 
   @Query(() => Review, { name: 'review' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.findOne(id);
   }
 
   
 
   @Mutation(() => Review)
-  removeReview(@Args('id', { type: () => Int }) id: number) {
+  removeReview(@Args('id', { type: () => String }) id: string) {
     return this.reviewService.remove(id);
 
   }
@@ -37,7 +37,7 @@ export class ReviewResolver {
   }
 
   @Query(() => Review)
-  async getReview(@Args('id') id: number): Promise<Review> {
+  async getReview(@Args('id') id: string): Promise<Review> {
     return this.reviewService.findOne(id);
   }
 }

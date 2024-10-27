@@ -20,7 +20,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async addActivity(userId: number, activityId: number[]): Promise<User> {
+  async addActivity(userId: string, activityId: String[]): Promise<User> {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
@@ -49,7 +49,7 @@ export class UsersService {
     });
   }
 
-  async findById(id: number): Promise<User> {
+  async findById(id: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
         id: id,
@@ -67,17 +67,17 @@ export class UsersService {
     });
   }
 
-  async joinToTravel(trvel: Travel, userId: number): Promise<User> {
+  async joinToTravel(travel: Travel, userId: string): Promise<User> {
 
     const user = await this.findById(userId);
 
     user.joinsTravels = user.joinsTravels || [];
 
-    if (user.id == trvel.creatorUserId) {
+    if (user.id == travel.creatorUser.id) {
       user.travelsCreated = user.travelsCreated || [];
-      user.travelsCreated.push(trvel);
+      user.travelsCreated.push(travel);
     }
-    user.joinsTravels.push(trvel);
+    user.joinsTravels.push(travel);
     return this.userRepository.save(user);
   }
 
@@ -88,7 +88,7 @@ export class UsersService {
 
   }
 
-  async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
+  async update(id: string, updateUserInput: UpdateUserInput): Promise<User> {
     const user = await this.findById(id);
     if (!user) {
       throw new NotFoundException(`There is no user with that ID: ${id}`);

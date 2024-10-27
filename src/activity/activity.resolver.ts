@@ -17,7 +17,7 @@ export class ActivityResolver {
     }
 
     @Query((returns) => Activity)
-    activity(@Args('id', { type: () => Int }) id: number) {
+    activity(@Args('id', { type: () => String }) id: string) {
         return this.activityService.findActivityById(id);
     }
 

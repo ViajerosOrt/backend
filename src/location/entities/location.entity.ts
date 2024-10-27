@@ -1,13 +1,14 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, JoinTable} from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 @ObjectType()
 export class Location {
-  @PrimaryGeneratedColumn()
-  @Field((type) => Int)
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  @Field((type) => String)
+  id: string;
 
   @Column()
   @Field()
@@ -21,7 +22,7 @@ export class Location {
   @Field()
   address: string
 
-  @Column()
+  @Column({name: 'long_lat_point'})
   @Field()
   longLatPoint: string
 
