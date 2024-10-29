@@ -7,8 +7,8 @@ import { v4 as uuidv4 } from 'uuid';
 @ObjectType()
 export class Location {
   @PrimaryGeneratedColumn('uuid')
-  @Field((type) => Int)
-  id: number;
+  @Field((type) => String)
+  id: string;
 
   @Column()
   @Field()
@@ -22,7 +22,7 @@ export class Location {
   @Field()
   address: string
 
-  @Column()
+  @Column({name: 'long_lat_point'})
   @Field()
   longLatPoint: string
 

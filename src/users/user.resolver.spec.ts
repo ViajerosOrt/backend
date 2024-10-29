@@ -9,7 +9,7 @@ describe('UsersResolver', () => {
   let service: UsersService;
 
   let mockUser: User = {
-    id: 1,
+    id: "1",
     name: 'Mock Doe',
     email: 'mock@example.com',
     password: '123456789',
@@ -18,12 +18,15 @@ describe('UsersResolver', () => {
     userActivities: [],
     travelsCreated: [],
     joinsTravels: [],
+    reviewsCreated:[],
+    reviewsReceived:[],
+    items:[],
   }
 
   const mockContext = {
     req: {
       user: {
-        userId: 1,
+        userId: "1",
       },
     },
   };
@@ -54,10 +57,10 @@ describe('UsersResolver', () => {
 
   describe('addActivities', () => {
     it('should add activities to a user', async () => {
-      const activitiesIds = [1, 2, 3];
+      const activitiesIds = ["1", "2", "3"];
 
       const result: User = {
-        id: 1,
+        id: "1",
         name: 'John Doe',
         email: 'john@example.com',
         password: '123456',
@@ -66,6 +69,9 @@ describe('UsersResolver', () => {
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],
+        reviewsCreated:[],
+        reviewsReceived:[],
+        items:[],
       };
 
       jest.spyOn(service, 'addActivity').mockResolvedValue(result);
@@ -78,7 +84,7 @@ describe('UsersResolver', () => {
     it('should return a list of users', async () => {
       const result: User[] = [
         {
-          id: 1,
+          id: "1",
           name: 'John Doe',
           email: 'john@example.com',
           password: '123456',
@@ -87,6 +93,9 @@ describe('UsersResolver', () => {
           userActivities: [],
           travelsCreated: [],
           joinsTravels: [],
+          reviewsCreated:[],
+          reviewsReceived:[],
+          items:[],
         },
       ];
 
@@ -100,10 +109,10 @@ describe('UsersResolver', () => {
   describe('findOne', () => {
     it('shoild return a user ', async () => {
 
-      const userId = 1;
+      const userId = "1";
 
       const result: User = {
-        id: 1,
+        id: "1",
         name: 'John Doe',
         email: 'john@example.com',
         password: '123456789',
@@ -112,6 +121,9 @@ describe('UsersResolver', () => {
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],
+        reviewsCreated:[],
+        reviewsReceived:[],
+        items:[],
       }
 
       jest.spyOn(service, 'findById').mockResolvedValue(result);
@@ -128,7 +140,7 @@ describe('UsersResolver', () => {
         description: "des"
       };
 
-      const userId = 1;
+      const userId = "1";
       jest.spyOn(service, 'update').mockResolvedValue(mockUser);
       const result = await resolver.update(updateUserInput, mockContext);
       expect(result).toEqual(mockUser);

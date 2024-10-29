@@ -35,7 +35,7 @@ export class LocationService {
     return this.locationRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.locationRepository.findOne({
       where: { id },
     });

@@ -9,7 +9,7 @@ describe('ActivityResolver', () => {
     let service: ActivityService;
 
     const mockActivity: Activity = {
-        id: 1,
+        id: "1",
         activityName: 'Mock Activity',
         userActivities: [],
         travelActivities: [],
@@ -50,7 +50,7 @@ describe('ActivityResolver', () => {
 
       describe('activity', () => {
         it('should return a single activity by ID', async () => {
-            const userId = 1;
+            const userId = "1";
             const result = await resolver.activity(userId);
             expect(result).toEqual(mockActivity);
             expect(service.findActivityById).toHaveBeenCalledWith(userId);

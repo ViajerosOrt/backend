@@ -17,17 +17,17 @@ export class TravelResolver {
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
-
-    @Args('activitiesId', { type: () => [Number] }) activityId: number[],
+    @Args('createUserId', {type: () => String}) userId: string,
+    @Args('activitiesId', { type: () => [String] }) activityId: string[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput
   ) {
-    return this.travelService.create(createTravelInput, activityId, createLocationInput);
+    return this.travelService.create(createTravelInput, activityId, createLocationInput, userId);
 
   }
 
   @Mutation(() => Travel)
   async joinToTravel(
-    @Args('travelId', { type: () => Int }) travelId: number,
+    @Args('travelId', { type: () => String }) travelId: string,
     @Context() context
   ) {
     return this.travelService.joinToTravel(context.req.user.userId, travelId);
@@ -35,7 +35,7 @@ export class TravelResolver {
 
   @Mutation(() => Travel)
   async leaveTravel(
-    @Args('travelId', { type: () => Int }) travelId: number,
+    @Args('travelId', { type: () => String }) travelId: string,
     @Context() context
   ) {
     return this.travelService.leaveTravel(context.req.user.userId, travelId);
@@ -43,15 +43,11 @@ export class TravelResolver {
 
   @Query(() => [Travel], { name: 'travels' })
   async findAll() {
-    const travels = await this.travelService.findAll();
-    return travels.map(travel => ({
-      ...travel,
-      creatorUserId: travel.creatorUserId.toString(), 
-    }));
+    return await this.travelService.findAll();
   }
 
   @Query(() => Travel, { name: 'travel' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.travelService.findOne(id);
   }
 
@@ -68,7 +64,7 @@ export class TravelResolver {
   }
 
   @Query(() => [Travel], { name: 'findAllTravelByUser' })
-  findAllTravelByUser(@Args('userId', { type: () => Int }) userId: number) {
+  findAllTravelByUser(@Args('userId', { type: () => String }) userId: string) {
     return this.travelService.findAllTravelByUser(userId);
   }
 }

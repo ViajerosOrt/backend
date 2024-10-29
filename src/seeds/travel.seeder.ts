@@ -18,7 +18,8 @@ export class TravelSeeder implements Seeder {
 
   async seed(): Promise<any> {
 
-    const location = await this.locationService.findLocationByLog("-31.4827, -57.9119")
+    const location =
+      await this.locationService.findLocationByLog('-31.4827, -57.9119');
     const user = await this.userService.findByEmail('fabricioSc@example.com');
 
     const travels = [
@@ -29,7 +30,7 @@ export class TravelSeeder implements Seeder {
         finishDate: new Date('2025-06-20'),
         maxCap: 10,
         isEndable: true,
-        creatorUserId: user.id, 
+        creatorUser: user,
         trabelLocation: location.id,
       },
       {
@@ -39,7 +40,7 @@ export class TravelSeeder implements Seeder {
         finishDate: new Date('2025-07-05'),
         maxCap: 8,
         isEndable: true,
-        creatorUserId: user.id, 
+        creatorUser: user,
         trabelLocation: location.id,
       },
       {
@@ -49,15 +50,15 @@ export class TravelSeeder implements Seeder {
         finishDate: new Date('2025-08-15'),
         maxCap: 15,
         isEndable: false,
-        creatorUserId: user.id,
+        creatorUser: user,
         trabelLocation: location.id,
       },
     ];
-
     await this.travelRepository.save(travels);
   }
 
   async drop(): Promise<any> {
-    await this.travelRepository.delete({})
-}
+    await this.travelRepository.delete({});
+  }
+
 }

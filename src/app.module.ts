@@ -12,11 +12,17 @@ import { ActivityModule } from './activity/activity.module';
 import { User } from './users/entities/user.entity';
 import { Travel } from './travel/entities/travel.entity';
 import { Activity } from './activity/activity.entity';
-import { ConfigModule} from '@nestjs/config';
+import typeorm from './config/typeorm';
 import { Location } from './location/entities/location.entity';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 import { SeederModule } from './seeds/seeder.module';
-
+import { ChecklistModule } from './checklist/checklist.module';
+import { Review } from './review/entities/review.entity';
+import { ReviewModule } from './review/review.module';
+import { Checklist } from './checklist/entities/checklist.entity';
+import { ItemModule } from './item/item.module';
+import { Item } from './item/entities/item.entity';
 
 @Module({
   imports: [
@@ -31,7 +37,7 @@ import { SeederModule } from './seeds/seeder.module';
       username: 'postgres',
       password: 'postgres',
       database: 'database_viajeros',
-      entities: [User,  Activity, Location, Travel],
+      entities: [User,  Activity, Location, Travel, Review, Checklist, Item],
       synchronize: false,
     }),
     ConfigModule.forRoot({
@@ -43,6 +49,9 @@ import { SeederModule } from './seeds/seeder.module';
     TravelModule,
     LocationModule,
     AuthModule,
+    ChecklistModule,
+    ReviewModule,
+    ItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],
