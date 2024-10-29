@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 @ObjectType()
 export class Activity {
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  id: string;
 
   @Column()
   @Field()

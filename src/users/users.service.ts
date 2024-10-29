@@ -7,7 +7,6 @@ import { Travel } from '../travel/entities/travel.entity';
 import { ActivityService } from '../activity/activity.service';
 import { SignupUserInput } from '../auth/dto/signup-user.input';
 
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -21,7 +20,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async addActivity(userId: number, activityId: number[]): Promise<User> {
+  async addActivity(userId: string, activityId: String[]): Promise<User> {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
@@ -46,11 +45,11 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find({
-      relations: ['userActivities']
+      relations: ['userActivities', 'reviewsCreated', 'reviewsReceived']
     });
   }
 
-  async findById(id: number): Promise<User> {
+  async findById(id: string): Promise<User> {
     return this.userRepository.findOne({
       where: {
         id: id,
@@ -68,17 +67,17 @@ export class UsersService {
     });
   }
 
-  async joinToTravel(trvel: Travel, userId: number): Promise<User> {
+  async joinToTravel(travel: Travel, userId: string): Promise<User> {
 
     const user = await this.findById(userId);
 
     user.joinsTravels = user.joinsTravels || [];
 
-    if (user.id == trvel.creatorUserId) {
+    if (user.id == travel.creatorUser.id) {
       user.travelsCreated = user.travelsCreated || [];
-      user.travelsCreated.push(trvel);
+      user.travelsCreated.push(travel);
     }
-    user.joinsTravels.push(trvel);
+    user.joinsTravels.push(travel);
     return this.userRepository.save(user);
   }
 
@@ -89,7 +88,7 @@ export class UsersService {
 
   }
 
-  async update(id: number, updateUserInput: UpdateUserInput): Promise<User> {
+  async update(id: string, updateUserInput: UpdateUserInput): Promise<User> {
     const user = await this.findById(id);
     if (!user) {
       throw new NotFoundException(`There is no user with that ID: ${id}`);
@@ -100,7 +99,12 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    const result = await this.userRepository.delete(id);
   }
+
+  async deleteAll(): Promise<void> {
+    await this.userRepository.clear(); 
+  }
+
 }

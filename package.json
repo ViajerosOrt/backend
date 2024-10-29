@@ -25,6 +25,8 @@
     "migration:revert": "npm run typeorm -- -d ./src/config/typeorm.ts migration:revert",
     "seed": "ts-node src/seeds/seed.ts",
     "seed:refresh": "ts-node src/seeds/seed.ts --refresh",
+    "migration:revert-ts": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/config/typeorm.ts",
+    "migration:generate-ts": "npx typeorm migration:generate ./dist/src/migrations/InitialMigration -d ./dist/src/config/typeorm.js"
 
   },
   "dependencies": {

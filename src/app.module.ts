@@ -17,6 +17,15 @@ import { Location } from './location/entities/location.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { SeederModule } from './seeds/seeder.module';
+<<<<<<< HEAD
+=======
+import { ChecklistModule } from './checklist/checklist.module';
+import { Review } from './review/entities/review.entity';
+import { ReviewModule } from './review/review.module';
+import { Checklist } from './checklist/entities/checklist.entity';
+import { ItemModule } from './item/item.module';
+import { Item } from './item/entities/item.entity';
+>>>>>>> d584f07 (feat(VIA-85): Guardando cambios antes del rebase)
 
 @Module({
   imports: [
@@ -31,7 +40,7 @@ import { SeederModule } from './seeds/seeder.module';
       username: 'postgres',
       password: 'postgres',
       database: 'database_viajeros',
-      entities: [User,  Activity, Location, Travel],
+      entities: [User,  Activity, Location, Travel, Review, Checklist, Item],
       synchronize: false,
 
     }),
@@ -44,6 +53,9 @@ import { SeederModule } from './seeds/seeder.module';
     TravelModule,
     LocationModule,
     AuthModule,
+    ChecklistModule,
+    ReviewModule,
+    ItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

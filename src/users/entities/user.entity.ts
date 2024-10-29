@@ -1,15 +1,17 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Review } from '../../review/entities/review.entity';
 import { Activity } from '../../activity/activity.entity';
 import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { Item } from '../../item/entities/item.entity';
 
-@Entity()
+@Entity('users')
 @ObjectType()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  @Field(() => Int)
-  id: number;
+  @Field(() => String)
+  id: string;
 
   @Column()
   @Field()
@@ -23,7 +25,7 @@ export class User {
   @Field()
   password: string;
 
-  @Column({ type: 'date' })
+  @Column({ name: 'birth_date', type: 'timestamp' })
   @Field()
   birthDate: Date;
 
@@ -44,4 +46,17 @@ export class User {
   @Field(() => [Travel], { nullable: true })
   @JoinTable()
   joinsTravels: Travel[];
+
+  @OneToMany(() => Review, (review) => review.createdUserBy)
+  @Field(() => [Review], { nullable: true })
+  reviewsCreated: Review[];
+
+  @OneToMany(() => Review, (review) => review.receivedUserBy)
+  @Field(() => [Review], { nullable: true })
+  reviewsReceived: Review[];
+
+  @OneToMany(() => Item, (item) => item.user)
+  @Field(() => [Item], { nullable: true })
+  items: Item[];
+
 }
