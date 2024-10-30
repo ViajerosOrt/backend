@@ -19,9 +19,8 @@ describe('TravelResolver', () => {
     creatorUser: "1",
     usersTravelers: [],
     travelActivities: [],
-    locationId: "1",
+    travelLocation: { id: "1" },
   };
-
 
   const mockTravelService = {
     create: jest.fn().mockResolvedValue(mockTravel),
@@ -58,8 +57,8 @@ describe('TravelResolver', () => {
       const createTravelInput: CreateTravelInput = {
         travelTitle: 'New Travel',
         travelDescription: 'Test Travel',
-        startDate: new Date(),
-        finishDate: new Date(),
+        startDate: new Date(Date.now() + 100000), // Fecha futura
+        finishDate: new Date(Date.now() + 200000), // Fecha futura
         maxCap: 10,
         isEndable: true,
       };
@@ -73,13 +72,15 @@ describe('TravelResolver', () => {
       };
 
       const userId = "1";
+      
+      const items: string[] = ['pelota', 'silla']; 
 
       const result = await resolver.createTravel(
         createTravelInput,
         userId,
         activityIds,
         createLocationInput,
-        
+        items,
       );
       expect(result).toEqual(mockTravel);
       expect(service.create).toHaveBeenCalledWith(
@@ -87,6 +88,7 @@ describe('TravelResolver', () => {
         activityIds,
         createLocationInput,
         userId,
+        items 
       );
     });
   });
@@ -113,8 +115,8 @@ describe('TravelResolver', () => {
         id: "1",
         travelTitle: 'Updated Travel',
         travelDescription: 'Updated Description',
-        startDate: new Date(),
-        finishDate: new Date(),
+        startDate: new Date(Date.now() + 100000), 
+        finishDate: new Date(Date.now() + 200000), 
         maxCap: 10,
         isEndable: true,
       };
@@ -127,9 +129,9 @@ describe('TravelResolver', () => {
 
   describe('removeTravel', () => {
     it('should remove a travel', async () => {
-      const result = await resolver.removeTravel(1);
+      const result = await resolver.removeTravel("1"); 
       expect(result).toEqual(true);
-      expect(service.remove).toHaveBeenCalledWith(1);
+      expect(service.remove).toHaveBeenCalledWith("1");
     });
   });
 });

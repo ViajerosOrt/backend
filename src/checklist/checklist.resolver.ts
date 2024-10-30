@@ -3,14 +3,17 @@ import { ChecklistService } from './checklist.service';
 import { Checklist } from './entities/checklist.entity';
 import { CreateChecklistInput } from './dto/create-checklist.input';
 import { UpdateChecklistInput } from './dto/update-checklist.input';
+import { Travel } from '../travel/entities/travel.entity';
 
 @Resolver(() => Checklist)
 export class ChecklistResolver {
   constructor(private readonly checklistService: ChecklistService) {}
 
-  @Mutation(() => Checklist)
-  createChecklist(@Args('createChecklistInput') createChecklistInput: CreateChecklistInput) {
-    return this.checklistService.create(createChecklistInput);
+  @Mutation(() => Checklist, {name: 'createCheck'})
+  create(
+    @Args('travel') travelId: string,
+    @Args('items', {type: () => [String]}) items: string[]){
+    return this.checklistService.create(travelId, items);
   }
 
   @Query(() => [Checklist], { name: 'checklist' })
@@ -19,7 +22,7 @@ export class ChecklistResolver {
   }
 
   @Query(() => Checklist, { name: 'checklist' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id', { type: () => String }) id: string) {
     return this.checklistService.findOne(id);
   }
 
