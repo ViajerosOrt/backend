@@ -12,7 +12,7 @@ export class LocationService {
     private locationRepository: Repository<Location>,
   ) {}
 
-  async create(createLocationInput: CreateLocationInput): Promise<Location> {
+  async createLocation(createLocationInput: CreateLocationInput): Promise<Location> {
     const newLocation = this.locationRepository.create(createLocationInput);
     return this.locationRepository.save(newLocation);
   }
@@ -20,16 +20,16 @@ export class LocationService {
   async assignLocation(
     createLocationInput: CreateLocationInput,
   ): Promise<Location> {
-    const location = this.findLocationByLog(
+    const location = await this.findLocationByLog(
       createLocationInput.longLatPoint,
     );
 
     if (!location) {
-      return this.create(createLocationInput);
+      return await this.createLocation(createLocationInput);
     }
-
     return location;
-  }
+
+  } 
 
   async findAll(): Promise<Location[]> {
     return this.locationRepository.find();

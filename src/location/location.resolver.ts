@@ -13,7 +13,7 @@ export class LocationResolver {
 
   @Mutation(() => Location)
   createLocation(@Args('createLocationInput') createLocationInput: CreateLocationInput) {
-    return this.locationService.create(createLocationInput);
+    return this.locationService.createLocation(createLocationInput);
   }
 
   @Query(() => [Location], { name: 'location' })

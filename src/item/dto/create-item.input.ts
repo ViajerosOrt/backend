@@ -4,4 +4,7 @@ import { InputType, Int, Field } from '@nestjs/graphql';
 export class CreateItemInput {
   @Field()
   name: string;
+
+  @Field()
+  isEndable: boolean;
 }

@@ -7,6 +7,7 @@ import { ReviewModule } from '../review/review.module';
 import { UsersModule } from '../users/users.module';
 import { LocationModule } from '../location/location.module';
 import { ActivityModule } from '../activity/activity.module';
+import { ChecklistModule } from '../checklist/checklist.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ActivityModule } from '../activity/activity.module';
     UsersModule,
     ActivityModule,
     LocationModule, 
+    ChecklistModule,
   ],
   providers: [TravelResolver, TravelService],
   exports: [TravelService],

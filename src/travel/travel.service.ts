@@ -8,6 +8,8 @@ import { UsersService } from '../users/users.service';
 import { LocationService } from '../location/location.service';
 import { CreateLocationInput } from '../location/dto/create-location.input';
 import { ActivityService } from '../activity/activity.service';
+import { Item } from 'src/item/entities/item.entity';
+import { ChecklistService } from '../checklist/checklist.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
@@ -23,6 +25,7 @@ export class TravelService {
     private userService: UsersService,
     private activityService: ActivityService,
     private locationService: LocationService,
+    private checklistService: ChecklistService,
   ) { }
 
   async create(
@@ -30,9 +33,10 @@ export class TravelService {
     activityId: string[],
     createLocationInput: CreateLocationInput,
     userId: string,
+    items: string[]
   ): Promise<Travel> {
     const travel = this.travelRepository.create(createTravelInput);
-    const user = await this.userService.joinToTravel(
+    const user = await this.userService.createToTravel(
       travel,
       userId,
     );
@@ -59,18 +63,22 @@ export class TravelService {
 
     const location =
       await this.locationService.assignLocation(createLocationInput);
+ 
 
-    travel.travelLocation.id = location.id;
     travel.travelLocation = location;
     travel.creatorUser = user;
     travel.usersTravelers = travel.usersTravelers || [];
     travel.travelActivities = travel.travelActivities || [];
-
     travel.travelActivities.push(...activities);
     travel.usersTravelers.push(user);
+    
+   
 
     return this.travelRepository.save(travel);
   }
+
+
+
 
   async joinToTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
@@ -124,8 +132,78 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
+  async addChecklistToTravel(travelId: string, userId: string, items: string[]):Promise<Travel>{
+    const travel = await this.findOne(travelId)
+
+    if(!travel){
+      throw new Error('this travel not exist');
+    }
+
+    if(travel.creatorUser.id != userId){
+      throw new Error('Only the trip creator can add a checklist');
+    }
+    
+    if(travel.checklist != null){
+      throw new Error('This trip already has a checklist');
+    }
+
+    if(!items || items.length === 0){
+      throw new Error('the cheklist must have items');
+    }
+
+    
+    travel.checklist = await this.checklistService.createChecklist(travel, items);
+
+    return this.travelRepository.save(travel);
+  }
+
+  async addItemToChecklist(travelId: string, userId: string, items: string[]):Promise<Travel>{
+    const travel = await this.findOne(travelId);
+    if(!travel){
+      throw new Error('this travel not exist');
+    }
+    if(travel.creatorUser.id != userId){
+      throw new Error('Only the creator can add items');
+    }
+
+    travel.checklist = await this.checklistService.addItems(travel.checklist.id, items);
+
+    return this.travelRepository.save(travel);
+
+  }
+
+  async removeItemToChecklist(travelId: string, userId: string, itemsId: string[]):Promise<Travel>{
+    const travel = await this.findOne(travelId);
+    if(!travel){
+      throw new Error('this travel not exist');
+    }
+    if(travel.creatorUser.id != userId){
+      throw new Error('Only the trip creator can add a checklist');
+    }
+
+    travel.checklist = await this.checklistService.removeItems(travel.checklist.id, itemsId)
+
+    return this.travelRepository.save(travel)
+
+  }
+
+  async assignItemToUser(travelId: string, userId: string, itemId: string):Promise<Travel>{
+    const travel = await this.findOne(travelId);
+    if(!travel){
+      throw new Error('this travel not exist');
+    }
+
+    this.checklistService.assingItemToUser(travel.checklist.id,userId,itemId)
+    console.log(travel.checklist)
+    return travel;
+  }
+
   async findAll() {
-    return await this.travelRepository.find();
+    const travel = await this.travelRepository.find({
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist','checklist.items', 'checklist.items.user', 'travelLocation'],
+    });
+
+    return travel
   }
 
   async findOne(id: string): Promise<Travel> {
@@ -133,8 +211,21 @@ export class TravelService {
       where: {
         id,
       },
-      relations: ['usersTravelers', 'creatorUser', 'travelActivities'],
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist','checklist.items','checklist.items.user', 'travelLocation'],
     });
+  }
+
+  async bringTotalTravelers(id: string): Promise<number> {
+    const travel = await this.travelRepository.findOne({
+      where: {
+        id,
+      },
+      relations: ['usersTravelers'],
+    });
+    if(!travel){
+      throw new Error('this travel not exist');
+    }
+    return travel ? travel.usersTravelers.length : 0;
   }
 
 
@@ -144,7 +235,8 @@ export class TravelService {
           usersTravelers: {
             id: userId
           }
-        }
+        },
+        relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist', 'travelLocation'],
       }
     )
   }
@@ -153,7 +245,7 @@ export class TravelService {
     return `This action updates a #${id} travel`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} travel`;
   }
 }

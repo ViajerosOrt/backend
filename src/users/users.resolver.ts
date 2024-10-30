@@ -32,10 +32,11 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
-  @Query(() => User, { name: 'user' })
+  @Query(() => User, { name: 'userById' })
   @UseGuards(JwtAuthGuard)
-  findById(@Args('id', { type: () => String }) id: string): Promise<User> {
-    return this.usersService.findById(id);
+  async findById(@Args('id', { type: () => String }) id: string): Promise<User> {
+    const user =  await this.usersService.findById(id);
+    return user;
   }
 
   @Query(() => User, { name: 'user' })

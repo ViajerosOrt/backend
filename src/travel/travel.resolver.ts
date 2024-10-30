@@ -6,6 +6,7 @@ import { UpdateTravelInput } from './dto/update-travel.input';
 import { CreateLocationInput } from '../location/dto/create-location.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Item } from '../item/entities/item.entity';
 
 
 
@@ -17,11 +18,12 @@ export class TravelResolver {
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
-    @Args('createUserId', {type: () => String}) userId: string,
-    @Args('activitiesId', { type: () => [String] }) activityId: string[],
-    @Args('createLocationInput') createLocationInput: CreateLocationInput
+    @Args('userId', {type: () => String}) userId: string,
+    @Args('activityId', { type: () => [String] }) activityId: string[],
+    @Args('createLocationInput') createLocationInput: CreateLocationInput,
+    @Args('items', {type: () => [String]}) items: string[],
   ) {
-    return this.travelService.create(createTravelInput, activityId, createLocationInput, userId);
+    return this.travelService.create(createTravelInput, activityId, createLocationInput, userId, items);
 
   }
 
@@ -41,14 +43,59 @@ export class TravelResolver {
     return this.travelService.leaveTravel(context.req.user.userId, travelId);
   }
 
+  @Mutation(() => Travel, {name: 'addChecklistToTravel'})
+  async addChecklistToTravel(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context,
+    @Args('items', {type: () => [String]}) items: string[],
+  ){
+    return await this.travelService.addChecklistToTravel(id, context.req.user.userId, items);
+  }
+
+  @Mutation(() => Travel, {name: 'addItemsToChecklist'})
+  async addItemsToChecklist(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context,
+    @Args('items', {type: () => [String]}) items: string[],
+  ){
+    return await this.travelService.addItemToChecklist(id,context.req.user.userId, items );
+  }
+
+  @Mutation(() => Travel, {name: 'removeItemsToChecklist'})
+  async removeItemsToChecklist(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context,
+    @Args('items', {type: () => [String]}) items: string[],
+  ){
+    return await this.travelService.removeItemToChecklist(id,context.req.user.userId, items );
+  }
+  @Mutation(() => Travel, {name: 'assignItemToUser'})
+  async assignItemToUser(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context,
+    @Args('itemId', {type: () => String}) itemId: string,
+  ){
+    return await this.travelService.assignItemToUser(id,context.req.user.userId, itemId );
+  }
+
+
+
+
   @Query(() => [Travel], { name: 'travels' })
   async findAll() {
     return await this.travelService.findAll();
   }
 
   @Query(() => Travel, { name: 'travel' })
-  findOne(@Args('id', { type: () => String }) id: string) {
+  async findOne(@Args('id', { type: () => String }) id: string) {
     return this.travelService.findOne(id);
+  }
+
+  @Query(() => Int, { name: 'bringTotalTravelers' })
+  async bringTotalTravelers(@Args('id', { type: () => String }) id: string) {
+    const numero = this.travelService.bringTotalTravelers(id);
+    console.log(numero)
+    return numero
   }
 
   @Mutation(() => Travel)
@@ -59,7 +106,7 @@ export class TravelResolver {
   }
 
   @Mutation(() => Travel)
-  removeTravel(@Args('id', { type: () => Int }) id: number) {
+  removeTravel(@Args('id', { type: () => String }) id: string) {
     return this.travelService.remove(id);
   }
 

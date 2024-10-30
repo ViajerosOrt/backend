@@ -50,12 +50,16 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<User> {
-    return this.userRepository.findOne({
-      where: {
-        id: id,
-      },
-      relations: ['travelsCreated', 'joinsTravels', 'userActivities']
+
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'joinsTravels', 'userActivities', 'items'],
     });
+    if (!user) {
+      throw new Error(`User with ID ${id} not found`);
+    }
+    
+    return user;
   }
 
   async findByEmail(email: string): Promise<User> {
@@ -70,13 +74,23 @@ export class UsersService {
   async joinToTravel(travel: Travel, userId: string): Promise<User> {
 
     const user = await this.findById(userId);
-
-    user.joinsTravels = user.joinsTravels || [];
-
-    if (user.id == travel.creatorUser.id) {
-      user.travelsCreated = user.travelsCreated || [];
-      user.travelsCreated.push(travel);
+    if (!user) {
+      throw new Error('This user does not exist');
     }
+    user.joinsTravels = user.joinsTravels || [];
+    user.joinsTravels.push(travel);
+    return this.userRepository.save(user);
+  }
+
+  async createToTravel(travel: Travel, userId: string): Promise<User> {
+
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new Error('This user does not exist');
+    }
+    user.joinsTravels = user.joinsTravels || [];
+    user.travelsCreated = user.travelsCreated || [];
+    user.travelsCreated.push(travel);
     user.joinsTravels.push(travel);
     return this.userRepository.save(user);
   }

@@ -14,7 +14,7 @@ export class Item {
   @Field()
   name: string;
 
-  @Column({ type: 'boolean', default: true, name: 'is_endable'})
+  @Column({ type: 'boolean', default: false, name: 'is_endable'})
   @Field()
   state: boolean;
 
@@ -23,8 +23,8 @@ export class Item {
   @JoinColumn({ name: "checklist_id" }) 
   checklist: Checklist;
 
-  @ManyToOne(() => User, (user) => user.items)
-  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.items, { nullable: true })
+  @Field(() => User, {nullable: true})
   @JoinColumn({ name: "user_id" }) 
-  user: User;
+  user?: User;
 }

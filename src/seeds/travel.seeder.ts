@@ -5,6 +5,7 @@ import { Seeder } from 'nestjs-seeder';
 import { Travel } from '../travel/entities/travel.entity';
 import { LocationService } from '../location/location.service';
 import { UsersService } from '../users/users.service';
+import { ActivityService } from '../activity/activity.service';
 
 
 @Injectable()
@@ -14,14 +15,21 @@ export class TravelSeeder implements Seeder {
     private readonly travelRepository: Repository<Travel>,
     private readonly locationService: LocationService,
     private readonly userService: UsersService,
+    private readonly activityService: ActivityService
   ) {}
 
   async seed(): Promise<any> {
 
     const location =
       await this.locationService.findLocationByLog('-31.4827, -57.9119');
+    
     const user = await this.userService.findByEmail('fabricioSc@example.com');
 
+    const activitys = await this.activityService.findAll()
+    const activityTravel = [];
+    for(let i= 0; i < 3; i++ ){
+      activityTravel.push(activitys[Math.floor(Math.random() * activitys.length)])
+    }
     const travels = [
       {
         travelTitle: 'Summer Beach Getaway',
@@ -31,7 +39,9 @@ export class TravelSeeder implements Seeder {
         maxCap: 10,
         isEndable: true,
         creatorUser: user,
-        trabelLocation: location.id,
+        travelLocation: location,
+        travelActivities: activityTravel,
+       
       },
       {
         travelTitle: 'Mountain Adventure',
@@ -41,7 +51,9 @@ export class TravelSeeder implements Seeder {
         maxCap: 8,
         isEndable: true,
         creatorUser: user,
-        trabelLocation: location.id,
+        travelLocation: location,
+        travelActivities: activityTravel,
+      
       },
       {
         travelTitle: 'City Exploration',
@@ -51,7 +63,9 @@ export class TravelSeeder implements Seeder {
         maxCap: 15,
         isEndable: false,
         creatorUser: user,
-        trabelLocation: location.id,
+        travelLocation: location,
+        travelActivities: activityTravel,
+        
       },
     ];
     await this.travelRepository.save(travels);

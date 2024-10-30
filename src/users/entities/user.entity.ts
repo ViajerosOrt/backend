@@ -39,24 +39,24 @@ export class User {
   userActivities: Activity[];
 
   @OneToMany(() => Travel, (travel) => travel.creatorUser)
-  @Field(() => Travel, { nullable: true })
-  travelsCreated: Travel[];
+  @Field(() => [Travel], { nullable: true })
+  travelsCreated?: Travel[];
 
   @ManyToMany(() => Travel, (travel) => travel.usersTravelers)
   @Field(() => [Travel], { nullable: true })
   @JoinTable()
-  joinsTravels: Travel[];
+  joinsTravels?: Travel[];
 
   @OneToMany(() => Review, (review) => review.createdUserBy)
   @Field(() => [Review], { nullable: true })
-  reviewsCreated: Review[];
+  reviewsCreated?: Review[];
 
   @OneToMany(() => Review, (review) => review.receivedUserBy)
   @Field(() => [Review], { nullable: true })
-  reviewsReceived: Review[];
+  reviewsReceived?: Review[];
 
   @OneToMany(() => Item, (item) => item.user)
   @Field(() => [Item], { nullable: true })
-  items: Item[];
+  items?: Item[];
 
 }
