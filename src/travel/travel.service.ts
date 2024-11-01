@@ -9,7 +9,6 @@ import { LocationService } from '../location/location.service';
 import { CreateLocationInput } from '../location/dto/create-location.input';
 import { ActivityService } from '../activity/activity.service';
 import { GraphQLError } from 'graphql';
-
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
   providers: [TravelService],
@@ -41,7 +40,7 @@ export class TravelService {
       await this.activityService.findActivitiesById(activityId);
 
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
 
     const today = new Date();
@@ -49,11 +48,11 @@ export class TravelService {
     const endDate = new Date(travel.finishDate);
 
     if (startDate < today) {
-      throw new Error('The start date must be set in the future.');
+      throw new GraphQLError('The start date must be set in the future.');
     }
 
     if (endDate < startDate) {
-      throw new Error(
+      throw new GraphQLError(
         'The end date must be set in the future of the start date.',
       );
     }
@@ -76,15 +75,15 @@ export class TravelService {
   async joinToTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
     if (!travel) {
-      throw new Error('There is no such trip');
+      throw new GraphQLError('There is no such trip');
     }
     const user = await this.userService.findById(userId);
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
 
     if (travel.usersTravelers.length == travel.maxCap) {
-      throw new Error('The trip is already full');
+      throw new GraphQLError('The trip is already full');
     }
 
     const isJoined = travel.usersTravelers.some(
@@ -104,24 +103,24 @@ export class TravelService {
     const travel = await this.findOne(travelId);
 
     if (!travel) {
-      throw new Error('There is no such trip');
+      throw new GraphQLError('There is no such trip');
     }
 
     const user = await this.userService.findById(userId);
 
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
 
     const isJoined = travel.usersTravelers.some(
       (traveler) => traveler.id === userId,
     );
     if (!isJoined) {
-      throw new Error('The user is not attached to this trip');
+      throw new GraphQLError('The user is not attached to this trip');
     }
 
     if (travel.creatorUser.id === userId) {
-      throw new Error('The creator of the trip cannot leave it');
+      throw new GraphQLError('The creator of the trip cannot leave it');
     }
 
     travel.usersTravelers = travel.usersTravelers.filter(

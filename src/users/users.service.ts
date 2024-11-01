@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { Travel } from '../travel/entities/travel.entity';
 import { ActivityService } from '../activity/activity.service';
 import { SignupUserInput } from '../auth/dto/signup-user.input';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class UsersService {
@@ -29,14 +30,14 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error('The user does not exist');
+      throw new GraphQLError('The user does not exist');
     }
 
     const activities =
       await this.activityService.findActivitiesById(activityId);
 
     if (activities == null) {
-      throw new Error('The activities does not exist');
+      throw new GraphQLError('The activities does not exist');
     }
 
     user.userActivities.push(...activities);
@@ -104,7 +105,7 @@ export class UsersService {
   }
 
   async deleteAll(): Promise<void> {
-    await this.userRepository.clear(); 
+    await this.userRepository.clear();
   }
 
 }

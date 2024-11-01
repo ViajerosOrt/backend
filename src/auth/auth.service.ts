@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignupUserInput } from './dto/signup-user.input';
 import * as bcrypt from 'bcrypt'
 import { AuthenticationError } from '@nestjs/apollo';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class AuthService {
@@ -57,7 +58,7 @@ export class AuthService {
     const user = await this.usersService.findByEmail(signupUserInput.email)
 
     if (user) {
-      throw new Error('User already exists')
+      throw new GraphQLError('User already exists')
     }
 
     // We store a hashed password
