@@ -81,7 +81,6 @@ export class TravelResolver {
 
 
   @Query(() => [Travel], { name: 'travels' })
-
   async findAll(
     @Context() context
   ) {
@@ -91,7 +90,6 @@ export class TravelResolver {
 
 
   @Query(() => Travel, { name: 'travel' })
-
   async findOne(
     @Args('id', { type: () => String }) id: string,
     @Context() context) {
