@@ -9,6 +9,7 @@ import { SignupUserInput } from '../auth/dto/signup-user.input';
 import { use } from 'passport';
 import { GraphQLError } from 'graphql';
 
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -61,7 +62,6 @@ export class UsersService {
     if (!user) {
       throw new GraphQLError(`User with ID ${id} not found`);
     }
-
     return user;
   }
 
@@ -126,5 +126,9 @@ export class UsersService {
 
   async save(user: User):Promise<void>{
     this.userRepository.save(user);
+
   }
+
+
+
 }

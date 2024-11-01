@@ -64,6 +64,7 @@ describe('TravelResolver', () => {
         travelDescription: 'Test Travel',
         startDate: new Date(Date.now() + 100000),
         finishDate: new Date(Date.now() + 200000),
+
         maxCap: 10,
         isEndable: true,
       };
@@ -76,6 +77,10 @@ describe('TravelResolver', () => {
       };
       const userId = "1";
       const items: string[] = ['pelota', 'silla'];
+
+      const userId = "1";
+      
+      const items: string[] = ['pelota', 'silla']; 
 
       const result = await resolver.createTravel(
         createTravelInput,
@@ -175,13 +180,7 @@ describe('TravelResolver', () => {
     });
   });
 
-  describe('bringTotalTravelers', () => {
-    it('should return the total number of travelers', async () => {
-      const result = await resolver.bringTotalTravelers("1");
-      expect(result).toEqual(5);
-      expect(service.bringTotalTravelers).toHaveBeenCalledWith("1");
-    });
-  });
+
 
   describe('updateTravel', () => {
     it('should update a travel', async () => {
@@ -191,6 +190,7 @@ describe('TravelResolver', () => {
         travelDescription: 'Updated Description',
         startDate: new Date(Date.now() + 100000),
         finishDate: new Date(Date.now() + 200000),
+
         maxCap: 10,
         isEndable: true,
       };

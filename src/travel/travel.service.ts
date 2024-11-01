@@ -12,6 +12,7 @@ import { Item } from 'src/item/entities/item.entity';
 import { ChecklistService } from '../checklist/checklist.service';
 import { GraphQLError } from 'graphql';
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
   providers: [TravelService],
@@ -180,6 +181,7 @@ export class TravelService {
     }
     if(travel.creatorUser.id != userId){
       throw new GraphQLError('Only the trip creator can add a checklist');
+
     }
 
     travel.checklist = await this.checklistService.removeItems(travel.checklist.id, itemsId)
@@ -212,6 +214,7 @@ export class TravelService {
 
   async findOne(id: string): Promise<Travel> {
     const travel =  await this.travelRepository.findOne({
+
       where: {
         id,
       },

@@ -9,7 +9,6 @@ export class ItemResolver {
   constructor(private readonly itemService: ItemService) {}
 
 
-
   @Query(() => [Item], { name: 'items' })
   findAll() {
     return this.itemService.findAll();

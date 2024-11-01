@@ -28,6 +28,7 @@ import { ChecklistSeeder } from "./checklist.seeder";
 
 
 
+
 @Module({
     
     imports: [
@@ -56,6 +57,7 @@ import { ChecklistSeeder } from "./checklist.seeder";
     ],
     providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService, ChecklistSeeder],
     exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService, ChecklistSeeder]
+
 })
 
 export class SeederModule {}

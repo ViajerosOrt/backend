@@ -30,6 +30,7 @@ export class ChecklistService {
 
     if (!items || items.length === 0) {
       throw new GraphQLError('Items must not be empty.');
+
     }
 
     const checklistIntput = new CreateChecklistInput();

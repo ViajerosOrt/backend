@@ -23,7 +23,6 @@ export class Travel {
   @Field(() => String)
   id: string;
 
-  @Column({ name: 'title' })
   @Field()
   travelTitle: string;
 
@@ -74,10 +73,12 @@ export class Travel {
 
   /******************************** */
 
+
   @ManyToOne(() => Location, (location) => location.locationTravels)
   @Field(() => Location)
   @JoinColumn({ name: 'location_id' })
   travelLocation: Location;
+
 
   /*************************** */
   @OneToOne(() => Checklist, (checklist) => checklist.travel)
@@ -89,4 +90,5 @@ export class Travel {
   get usersCount(): number {
     return this.usersTravelers ? this.usersTravelers.length : 0;
   }
+
 }

@@ -19,6 +19,7 @@ export class TravelSeeder implements Seeder {
     private readonly locationService: LocationService,
     private readonly userService: UsersService,
     private readonly activityService: ActivityService,
+
   ) {}
 
   async seed(): Promise<any> {
@@ -28,7 +29,7 @@ export class TravelSeeder implements Seeder {
     
     const user = await this.userService.findByEmail('fabricioSc@example.com');
 
- 
+
     const travels = [
       {
         travelTitle: 'Summer Beach Getaway',
@@ -41,6 +42,7 @@ export class TravelSeeder implements Seeder {
         travelLocation: location,
         travelActivities: await this.addActivity(),
         usersTravelers: [user]
+
        
       },
       {
@@ -54,6 +56,7 @@ export class TravelSeeder implements Seeder {
         travelLocation: location,
         travelActivities: await this.addActivity(),
         usersTravelers: [user]
+
       
       },
       {
@@ -74,6 +77,7 @@ export class TravelSeeder implements Seeder {
     user.travelsCreated = user.travelsCreated || []
     user.travelsCreated.push(...savedTravels)
     this.userService.save(user);
+
   }
 
   async drop(): Promise<any> {
@@ -89,7 +93,5 @@ export class TravelSeeder implements Seeder {
     return activityTravel
   }
   
-  
-
   
 }

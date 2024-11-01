@@ -89,6 +89,7 @@ export class TravelResolver {
     return this.travelService.findOne(id);
   }
 
+
   @Mutation(() => Travel)
   updateTravel(
     @Args('updateTravelInput') updateTravelInput: UpdateTravelInput,

@@ -9,6 +9,7 @@ import { TravelService } from '../travel/travel.service';
 import { error } from 'console';
 import { GraphQLError } from 'graphql';
 
+
 @Injectable()
 export class ReviewService {
 
@@ -34,6 +35,7 @@ export class ReviewService {
     }
     if (!travel) {
       throw new GraphQLError('Travel not found');
+
     }
 
     const review = this.reviewRepository.create({

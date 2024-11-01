@@ -48,6 +48,7 @@ type Travel {
   travelLocation: Location!
   checklist: Checklist
   usersCount: Int!
+
 }
 
 """
@@ -99,6 +100,8 @@ type Query {
   location(id: String!): Location!
   travels: [Travel!]!
   travel(id: String!): Travel!
+
+
   findAllTravelByUser(userId: String!): [Travel!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
@@ -128,6 +131,7 @@ type Mutation {
   createCheck(travel: String!, items: [String!]!): Checklist!
   updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
   removeChecklist(id: Int!): Checklist!
+  createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!, id: String!): Item!
   removeItem(id: Int!): Item!
   login(loginUserInput: LoginUserInput!): LoginResponse!
@@ -185,6 +189,12 @@ input UpdateTravelInput {
 input UpdateChecklistInput {
   name: String!
   id: String!
+}
+
+
+input CreateItemInput {
+  name: String!
+  isEndable: Boolean!
 }
 
 input UpdateItemInput {
