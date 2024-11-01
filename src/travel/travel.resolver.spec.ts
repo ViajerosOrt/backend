@@ -26,11 +26,13 @@ describe('TravelResolver', () => {
     finishDate: new Date(),
     maxCap: 10,
     isEndable: true,
-    creatorUser: "1",
+    creatorUser: { id: "1", name: 'Test User' }, // Ajustado para reflejar la relación con User
     usersTravelers: [],
     travelActivities: [],
     travelLocation: { id: "1" },
-    locationId: "1",
+    checklist: null, // Suponiendo que no se crea un checklist en el mock
+    usersCount: 0, // Inicializando usuarios contados
+    isJoined: false, // Estado de unión
   };
 
   const mockTravelService = {
@@ -75,8 +77,6 @@ describe('TravelResolver', () => {
         travelDescription: 'Test Travel',
         startDate: new Date(Date.now() + 100000),
         finishDate: new Date(Date.now() + 200000),
-
-
         maxCap: 10,
         isEndable: true,
       };
@@ -87,8 +87,6 @@ describe('TravelResolver', () => {
         address: 'test address',
         longLatPoint: '1245.12345',
       };
-
-
       const userId = "1";
 
       const items: string[] = ['pelota', 'silla'];
@@ -107,7 +105,6 @@ describe('TravelResolver', () => {
         createLocationInput,
         userId,
         items
-
       );
     });
   });
@@ -177,22 +174,31 @@ describe('TravelResolver', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of travels', async () => {
-      const result = await resolver.findAll(mockContext);
-      expect(result).toEqual([mockTravel]);
-      expect(service.findAll).toHaveBeenCalled();
+
+    it('should return an array of travels with user join status and count', async () => {
+      const userId = "1";
+      const travels = await resolver.findAll(userId);
+      expect(travels).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            ...mockTravel,
+            isJoined: mockTravel.usersTravelers.some(traveler => traveler.id === userId),
+            usersCount: mockTravel.usersTravelers.length,
+          }),
+        ])
+      );
+      expect(service.findAll).toHaveBeenCalledWith(userId); 
     });
   });
 
   describe('findOne', () => {
     it('should return a single travel', async () => {
-      const result = await resolver.findOne("1", mockContext);
+      const context = { req: { user: { userId: "1" } } }; 
+      const result = await resolver.findOne("1", context);
       expect(result).toEqual(mockTravel);
-      expect(service.findOne).toHaveBeenCalledWith("1");
+      expect(service.findOne).toHaveBeenCalledWith("1", "1"); 
     });
   });
-
-
 
   describe('updateTravel', () => {
     it('should update a travel', async () => {
@@ -202,8 +208,6 @@ describe('TravelResolver', () => {
         travelDescription: 'Updated Description',
         startDate: new Date(Date.now() + 100000),
         finishDate: new Date(Date.now() + 200000),
-
-
         maxCap: 10,
         isEndable: true,
       };

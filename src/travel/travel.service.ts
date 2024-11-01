@@ -216,7 +216,9 @@ export class TravelService {
     return travels.map(travel => ({
       ...travel,
       isJoined: travel.usersTravelers.some(traveler => traveler.id === userId),
+      usersCount: travel.usersTravelers.length
     }));
+
   }
 
   async findOne(id: string, userId?: string) {
@@ -230,6 +232,7 @@ export class TravelService {
     return {
       ...travel,
       isJoined: travel.usersTravelers.some(traveler => traveler.id === userId),
+      usersCount: travel.usersTravelers.length
     }
   }
 

@@ -33,7 +33,6 @@ type Checklist {
   travel: Travel!
 }
 
-
 type Travel {
   id: String!
   travelTitle: String!
@@ -48,8 +47,8 @@ type Travel {
   reviews: [Review!]
   travelLocation: Location!
   checklist: Checklist
-  usersCount: Int!
-
+  usersCount: Float
+  isJoined: Boolean
 }
 
 """
@@ -79,7 +78,6 @@ type User {
   reviewsCreated: [Review!]
   reviewsReceived: [Review!]
   items: [Item!]
-n
 }
 
 type AccessToken {
@@ -93,16 +91,6 @@ type LoginResponse {
   user: User!
 }
 
-type Checklist {
-  id: String!
-}
-
-type Thing {
-  id: String!
-  name: String!
-  state: Boolean!
-}
-
 type Query {
   activities: [Activity!]!
   activity(id: String!): Activity!
@@ -112,7 +100,6 @@ type Query {
   location(id: String!): Location!
   travels: [Travel!]!
   travel(id: String!): Travel!
-
   findAllTravelByUser(userId: String!): [Travel!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
@@ -120,7 +107,6 @@ type Query {
   review(id: String!): Review!
   getReviews: [Review!]!
   getReview(id: String!): Review!
-
 }
 
 type Mutation {
@@ -143,20 +129,12 @@ type Mutation {
   createCheck(travel: String!, items: [String!]!): Checklist!
   updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
   removeChecklist(id: Int!): Checklist!
-  createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!, id: String!): Item!
   removeItem(id: Int!): Item!
-
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(signupUserInput: SignupUserInput!): User!
   createReview(createReviewInput: CreateReviewInput!): Review!
   removeReview(id: String!): Review!
-  createChecklist(createChecklistInput: CreateChecklistInput!): Checklist!
-  updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
-  removeChecklist(id: Int!): Checklist!
-  createThing(createThingInput: CreateThingInput!): Thing!
-  updateThing(updateThingInput: UpdateThingInput!): Thing!
-  removeThing(id: Int!): Thing!
 }
 
 input CreateActivityInput {
@@ -210,17 +188,10 @@ input UpdateChecklistInput {
   id: String!
 }
 
-
-input CreateItemInput {
-  name: String!
-  isEndable: Boolean!
-}
-
 input UpdateItemInput {
   name: String!
   isEndable: Boolean
 }
-
 
 input LoginUserInput {
   email: String!

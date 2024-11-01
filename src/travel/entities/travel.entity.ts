@@ -87,6 +87,8 @@ export class Travel {
 
   /**************gets******************* */
  
+  @Field( { nullable: true })
+  usersCount: number;
 
   @Field( { nullable: true })
   isJoined: boolean;
