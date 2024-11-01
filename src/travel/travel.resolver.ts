@@ -17,7 +17,7 @@ export class TravelResolver {
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
-    @Args('createUserId', {type: () => String}) userId: string,
+    @Args('createUserId', { type: () => String }) userId: string,
     @Args('activitiesId', { type: () => [String] }) activityId: string[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput
   ) {
@@ -42,14 +42,19 @@ export class TravelResolver {
   }
 
   @Query(() => [Travel], { name: 'travels' })
-  async findAll() {
-    return await this.travelService.findAll();
-    
+  async findAll(
+    @Context() context
+  ) {
+    return await this.travelService.findAll(context.req.user.userId);
   }
 
+
+
   @Query(() => Travel, { name: 'travel' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.travelService.findOne(id);
+  async findOne(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context) {
+    return this.travelService.findOne(id, context.req.user.userId);
   }
 
   @Mutation(() => Travel)

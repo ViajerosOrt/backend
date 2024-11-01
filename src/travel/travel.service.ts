@@ -8,6 +8,7 @@ import { UsersService } from '../users/users.service';
 import { LocationService } from '../location/location.service';
 import { CreateLocationInput } from '../location/dto/create-location.input';
 import { ActivityService } from '../activity/activity.service';
+import { GraphQLError } from 'graphql';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
@@ -86,6 +87,13 @@ export class TravelService {
       throw new Error('The trip is already full');
     }
 
+    const isJoined = travel.usersTravelers.some(
+      (traveler) => traveler.id === userId,
+    );
+
+    if (isJoined) throw new GraphQLError('You already belong to the travel')
+
+
     travel.usersTravelers.push(user);
     user.joinsTravels.push(travel);
 
@@ -124,28 +132,39 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async findAll() {
-    return await this.travelRepository.find();
+  async findAll(userId?: string) {
+    const travels = await this.travelRepository.find({
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist', 'checklist.items', 'checklist.items.user', 'travelLocation'],
+    });
+
+    return travels.map(travel => ({
+      ...travel,
+      isJoined: travel.usersTravelers.some(traveler => traveler.id === userId),
+    }));
   }
 
-  async findOne(id: string): Promise<Travel> {
-    return await this.travelRepository.findOne({
+  async findOne(id: string, userId?: string): Promise<Travel> {
+    const travel = await this.travelRepository.findOne({
       where: {
         id,
       },
-      relations: ['usersTravelers', 'creatorUser', 'travelActivities'],
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist', 'checklist.items', 'checklist.items.user', 'travelLocation'],
     });
+
+    return {
+      ...travel,
+      isJoined: travel.usersTravelers.some(traveler => traveler.id === userId),
+    }
   }
 
-
   async findAllTravelByUser(userId: string): Promise<Travel[]> {
-      return await this.travelRepository.find({
-        where: {
-          usersTravelers: {
-            id: userId
-          }
+    return await this.travelRepository.find({
+      where: {
+        usersTravelers: {
+          id: userId
         }
       }
+    }
     )
   }
 

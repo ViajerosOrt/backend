@@ -23,12 +23,21 @@ import { ReviewModule } from './review/review.module';
 import { Checklist } from './checklist/entities/checklist.entity';
 import { ItemModule } from './item/item.module';
 import { Item } from './item/entities/item.entity';
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      formatError: (error: GraphQLError) => {
+        const graphQLFormattedError = {
+          message: error.message,
+          path: error.path,
+          code: error.extensions.code
+        };
+        return graphQLFormattedError;
+      }
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -37,7 +46,7 @@ import { Item } from './item/entities/item.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'database_viajeros',
-      entities: [User,  Activity, Location, Travel, Review, Checklist, Item],
+      entities: [User, Activity, Location, Travel, Review, Checklist, Item],
       synchronize: false,
     }),
     ConfigModule.forRoot({
@@ -56,4 +65,4 @@ import { Item } from './item/entities/item.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
