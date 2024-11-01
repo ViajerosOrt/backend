@@ -7,4 +7,5 @@ export class CreateItemInput {
 
   @Field()
   isEndable: boolean;
+
 }

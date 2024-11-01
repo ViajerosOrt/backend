@@ -12,5 +12,6 @@ import { ItemModule } from '../item/item.module';
   ],
   providers: [ChecklistResolver, ChecklistService],
   exports: [ChecklistService]
+
 })
 export class ChecklistModule {}

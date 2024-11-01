@@ -5,6 +5,7 @@ import { CreateChecklistInput } from './dto/create-checklist.input';
 import { UpdateChecklistInput } from './dto/update-checklist.input';
 import { Travel } from '../travel/entities/travel.entity';
 
+
 @Resolver(() => Checklist)
 export class ChecklistResolver {
   constructor(private readonly checklistService: ChecklistService) {}
@@ -14,6 +15,7 @@ export class ChecklistResolver {
     @Args('travel') travelId: string,
     @Args('items', {type: () => [String]}) items: string[]){
     return this.checklistService.create(travelId, items);
+
   }
 
   @Query(() => [Checklist], { name: 'checklist' })

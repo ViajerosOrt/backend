@@ -5,6 +5,7 @@ import { UserSeeder } from './user.seeder';
 import { TravelSeeder } from './travel.seeder';
 import { ChecklistSeeder } from './checklist.seeder';
 
+
 @Injectable()
 export class Seeder {
     
@@ -24,6 +25,7 @@ export class Seeder {
     await this.checklistSeeder.seed();
 
 
+
     console.log('Seeding completed for all entities!');
   }
 
@@ -33,5 +35,6 @@ export class Seeder {
     await this.locationSeeder.drop();
     await this.travelSeeder.drop();
     await this.checklistSeeder.drop();
+
   }
 }

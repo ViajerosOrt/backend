@@ -15,6 +15,7 @@ export class Item {
   name: string;
 
   @Column({ type: 'boolean', default: false, name: 'is_endable'})
+
   @Field()
   state: boolean;
 
@@ -27,4 +28,5 @@ export class Item {
   @Field(() => User, {nullable: true})
   @JoinColumn({ name: "user_id" }) 
   user?: User;
+
 }

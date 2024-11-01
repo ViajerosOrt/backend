@@ -20,6 +20,7 @@ describe('TravelResolver', () => {
     usersTravelers: [],
     travelActivities: [],
     travelLocation: { id: "1" },
+    locationId: "1",
   };
 
   const mockTravelService = {
@@ -65,6 +66,7 @@ describe('TravelResolver', () => {
         startDate: new Date(Date.now() + 100000),
         finishDate: new Date(Date.now() + 200000),
 
+
         maxCap: 10,
         isEndable: true,
       };
@@ -75,8 +77,7 @@ describe('TravelResolver', () => {
         address: 'test address',
         longLatPoint: '1245.12345',
       };
-      const userId = "1";
-      const items: string[] = ['pelota', 'silla'];
+  
 
       const userId = "1";
       
@@ -88,6 +89,7 @@ describe('TravelResolver', () => {
         activityIds,
         createLocationInput,
         items,
+
       );
       expect(result).toEqual(mockTravel);
       expect(service.create).toHaveBeenCalledWith(
@@ -96,6 +98,7 @@ describe('TravelResolver', () => {
         createLocationInput,
         userId,
         items
+
       );
     });
   });
@@ -190,6 +193,7 @@ describe('TravelResolver', () => {
         travelDescription: 'Updated Description',
         startDate: new Date(Date.now() + 100000),
         finishDate: new Date(Date.now() + 200000),
+
 
         maxCap: 10,
         isEndable: true,

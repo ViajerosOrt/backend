@@ -50,6 +50,7 @@ export class ItemService {
   }
 
 
+
   findAll() {
     return `This action returns all item`;
   }
@@ -61,6 +62,7 @@ export class ItemService {
       },
       relations:['user']
     });
+
   }
 
   update(id: string, updateItemInput: UpdateItemInput) {

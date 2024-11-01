@@ -82,6 +82,7 @@ export class ChecklistService {
       },
       relations: ['items'],
     });
+
   }
 
   update(id: string, updateChecklistInput: UpdateChecklistInput) {

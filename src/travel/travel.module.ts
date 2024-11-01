@@ -16,6 +16,7 @@ import { ChecklistModule } from '../checklist/checklist.module';
     ActivityModule,
     LocationModule, 
     ChecklistModule,
+
   ],
   providers: [TravelResolver, TravelService],
   exports: [TravelService],

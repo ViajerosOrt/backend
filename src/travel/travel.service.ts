@@ -13,6 +13,7 @@ import { ChecklistService } from '../checklist/checklist.service';
 import { GraphQLError } from 'graphql';
 
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
   providers: [TravelService],
@@ -36,6 +37,7 @@ export class TravelService {
     createLocationInput: CreateLocationInput,
     userId: string,
     items: string[]
+
   ): Promise<Travel> {
     const travel = this.travelRepository.create(createTravelInput);
     const user = await this.userService.createToTravel(
@@ -67,6 +69,7 @@ export class TravelService {
       await this.locationService.assignLocation(createLocationInput);
  
 
+
     travel.travelLocation = location;
     travel.creatorUser = user;
     travel.usersTravelers = travel.usersTravelers || [];
@@ -78,9 +81,6 @@ export class TravelService {
 
     return this.travelRepository.save(travel);
   }
-
-
-
 
   async joinToTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
@@ -95,6 +95,13 @@ export class TravelService {
     if (travel.usersTravelers.length == travel.maxCap) {
       throw new GraphQLError('The trip is already full');
     }
+
+    const isJoined = travel.usersTravelers.some(
+      (traveler) => traveler.id === userId,
+    );
+
+    if (isJoined) throw new GraphQLError('You already belong to the travel')
+
 
     travel.usersTravelers.push(user);
     user.joinsTravels.push(travel);
@@ -201,31 +208,29 @@ export class TravelService {
     return travel;
   }
 
-  async findAll():Promise<Travel[]> {
-    const travel = await this.travelRepository.find({
-      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist','checklist.items', 'checklist.items.user', 'travelLocation'],
+  async findAll(userId?: string){
+    const travels = await this.travelRepository.find({
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist', 'checklist.items', 'checklist.items.user', 'travelLocation'],
     });
-    const travelsWithUserCount = travel.map(travel => ({
+
+    return travels.map(travel => ({
       ...travel,
-      usersCount: travel.usersTravelers.length,
+      isJoined: travel.usersTravelers.some(traveler => traveler.id === userId),
     }));
-    return travelsWithUserCount
   }
 
-  async findOne(id: string): Promise<Travel> {
-    const travel =  await this.travelRepository.findOne({
-
+  async findOne(id: string, userId?: string) {
+    const travel = await this.travelRepository.findOne({
       where: {
         id,
       },
-      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist','checklist.items','checklist.items.user', 'travelLocation'],
+      relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist', 'checklist.items', 'checklist.items.user', 'travelLocation'],
     });
 
-    if(!travel){
-      throw new GraphQLError('this travel not exist');
+    return {
+      ...travel,
+      isJoined: travel.usersTravelers.some(traveler => traveler.id === userId),
     }
-
-    return travel;
   }
 
   async findAllTravelByUser(userId: string): Promise<Travel[]> {
@@ -237,6 +242,7 @@ export class TravelService {
         },
         relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist', 'travelLocation'],
       }
+
     )
   }
 

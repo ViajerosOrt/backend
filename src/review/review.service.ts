@@ -6,8 +6,8 @@ import { Review } from './entities/review.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { TravelService } from '../travel/travel.service';
-import { error } from 'console';
 import { GraphQLError } from 'graphql';
+
 
 
 @Injectable()
@@ -20,6 +20,7 @@ export class ReviewService {
     private travelService: TravelService,
   ) {}
 
+
   async create(createReviewInput: CreateReviewInput): Promise<Review> {
     const { userCreatorId, userReceiverId, travelId, stars, content } = createReviewInput;
 
@@ -31,11 +32,11 @@ export class ReviewService {
       throw new GraphQLError('User created by not found');
     }
     if(!receivedBy){
+
       throw new GraphQLError('User received by not found');
     }
     if (!travel) {
       throw new GraphQLError('Travel not found');
-
     }
 
     const review = this.reviewRepository.create({
@@ -54,6 +55,7 @@ export class ReviewService {
     return this.reviewRepository.find({ relations: ['createdBy', 'receivedBy'] });
   }
   
+
   async findOne(id: string): Promise<Review | undefined> {
     return this.reviewRepository.findOne({
       where: { id },

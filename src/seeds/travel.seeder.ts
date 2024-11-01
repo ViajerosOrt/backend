@@ -11,6 +11,7 @@ import { use } from 'passport';
 import { Activity } from 'src/activity/activity.entity';
 
 
+
 @Injectable()
 export class TravelSeeder implements Seeder {
   constructor(
@@ -29,7 +30,6 @@ export class TravelSeeder implements Seeder {
     
     const user = await this.userService.findByEmail('fabricioSc@example.com');
 
-
     const travels = [
       {
         travelTitle: 'Summer Beach Getaway',
@@ -44,6 +44,7 @@ export class TravelSeeder implements Seeder {
         usersTravelers: [user]
 
        
+
       },
       {
         travelTitle: 'Mountain Adventure',
@@ -58,6 +59,7 @@ export class TravelSeeder implements Seeder {
         usersTravelers: [user]
 
       
+
       },
       {
         travelTitle: 'City Exploration',
@@ -94,4 +96,5 @@ export class TravelSeeder implements Seeder {
   }
   
   
+
 }

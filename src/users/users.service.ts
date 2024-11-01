@@ -10,6 +10,7 @@ import { use } from 'passport';
 import { GraphQLError } from 'graphql';
 
 
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -48,6 +49,7 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     const users = await this.userRepository.find({
+
       relations: ['userActivities', 'reviewsCreated', 'reviewsReceived']
     });
     return users
@@ -58,6 +60,7 @@ export class UsersService {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'joinsTravels', 'userActivities', 'items'],
+
     });
     if (!user) {
       throw new GraphQLError(`User with ID ${id} not found`);
