@@ -8,10 +8,7 @@ import { UpdateItemInput } from './dto/update-item.input';
 export class ItemResolver {
   constructor(private readonly itemService: ItemService) {}
 
-  @Mutation(() => Item)
-  createItem(@Args('createItemInput') createItemInput: CreateItemInput) {
-    return this.itemService.create(createItemInput);
-  }
+
 
   @Query(() => [Item], { name: 'items' })
   findAll() {

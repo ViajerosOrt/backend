@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { TravelService } from '../travel/travel.service';
 import { error } from 'console';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class ReviewService {
@@ -26,13 +27,13 @@ export class ReviewService {
     const travel = await this.travelService.findOne(travelId);
 
     if(!createdBy){
-      throw new Error('User created by not found');
+      throw new GraphQLError('User created by not found');
     }
     if(!receivedBy){
-      throw new Error('User received by not found');
+      throw new GraphQLError('User received by not found');
     }
     if (!travel) {
-      throw new Error('Travel not found');
+      throw new GraphQLError('Travel not found');
     }
 
     const review = this.reviewRepository.create({

@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { Travel } from '../travel/entities/travel.entity';
 import { ActivityService } from '../activity/activity.service';
 import { SignupUserInput } from '../auth/dto/signup-user.input';
+import { use } from 'passport';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class UsersService {
@@ -29,14 +31,14 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new Error('The user does not exist');
+      throw new GraphQLError('The user does not exist');
     }
 
     const activities =
       await this.activityService.findActivitiesById(activityId);
 
     if (activities == null) {
-      throw new Error('The activities does not exist');
+      throw new GraphQLError('The activities does not exist');
     }
 
     user.userActivities.push(...activities);
@@ -44,9 +46,10 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return this.userRepository.find({
+    const users = await this.userRepository.find({
       relations: ['userActivities', 'reviewsCreated', 'reviewsReceived']
     });
+    return users
   }
 
   async findById(id: string): Promise<User> {
@@ -56,9 +59,9 @@ export class UsersService {
       relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'joinsTravels', 'userActivities', 'items'],
     });
     if (!user) {
-      throw new Error(`User with ID ${id} not found`);
+      throw new GraphQLError(`User with ID ${id} not found`);
     }
-    
+
     return user;
   }
 
@@ -75,7 +78,7 @@ export class UsersService {
 
     const user = await this.findById(userId);
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
     user.joinsTravels = user.joinsTravels || [];
     user.joinsTravels.push(travel);
@@ -86,7 +89,7 @@ export class UsersService {
 
     const user = await this.findById(userId);
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
     user.joinsTravels = user.joinsTravels || [];
     user.travelsCreated = user.travelsCreated || [];
@@ -121,4 +124,7 @@ export class UsersService {
     await this.userRepository.clear(); 
   }
 
+  async save(user: User):Promise<void>{
+    this.userRepository.save(user);
+  }
 }

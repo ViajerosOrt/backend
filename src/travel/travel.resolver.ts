@@ -79,8 +79,6 @@ export class TravelResolver {
   }
 
 
-
-
   @Query(() => [Travel], { name: 'travels' })
   async findAll() {
     return await this.travelService.findAll();
@@ -89,13 +87,6 @@ export class TravelResolver {
   @Query(() => Travel, { name: 'travel' })
   async findOne(@Args('id', { type: () => String }) id: string) {
     return this.travelService.findOne(id);
-  }
-
-  @Query(() => Int, { name: 'bringTotalTravelers' })
-  async bringTotalTravelers(@Args('id', { type: () => String }) id: string) {
-    const numero = this.travelService.bringTotalTravelers(id);
-    console.log(numero)
-    return numero
   }
 
   @Mutation(() => Travel)

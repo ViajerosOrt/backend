@@ -10,6 +10,7 @@ import { CreateLocationInput } from '../location/dto/create-location.input';
 import { ActivityService } from '../activity/activity.service';
 import { Item } from 'src/item/entities/item.entity';
 import { ChecklistService } from '../checklist/checklist.service';
+import { GraphQLError } from 'graphql';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
@@ -44,7 +45,7 @@ export class TravelService {
       await this.activityService.findActivitiesById(activityId);
 
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
 
     const today = new Date();
@@ -52,11 +53,11 @@ export class TravelService {
     const endDate = new Date(travel.finishDate);
 
     if (startDate < today) {
-      throw new Error('The start date must be set in the future.');
+      throw new GraphQLError('The start date must be set in the future.');
     }
 
     if (endDate < startDate) {
-      throw new Error(
+      throw new GraphQLError(
         'The end date must be set in the future of the start date.',
       );
     }
@@ -83,15 +84,15 @@ export class TravelService {
   async joinToTravel(userId: string, travelId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
     if (!travel) {
-      throw new Error('There is no such trip');
+      throw new GraphQLError('There is no such trip');
     }
     const user = await this.userService.findById(userId);
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
 
     if (travel.usersTravelers.length == travel.maxCap) {
-      throw new Error('The trip is already full');
+      throw new GraphQLError('The trip is already full');
     }
 
     travel.usersTravelers.push(user);
@@ -104,24 +105,24 @@ export class TravelService {
     const travel = await this.findOne(travelId);
 
     if (!travel) {
-      throw new Error('There is no such trip');
+      throw new GraphQLError('There is no such trip');
     }
 
     const user = await this.userService.findById(userId);
 
     if (!user) {
-      throw new Error('This user does not exist');
+      throw new GraphQLError('This user does not exist');
     }
 
     const isJoined = travel.usersTravelers.some(
       (traveler) => traveler.id === userId,
     );
     if (!isJoined) {
-      throw new Error('The user is not attached to this trip');
+      throw new GraphQLError('The user is not attached to this trip');
     }
 
     if (travel.creatorUser.id === userId) {
-      throw new Error('The creator of the trip cannot leave it');
+      throw new GraphQLError('The creator of the trip cannot leave it');
     }
 
     travel.usersTravelers = travel.usersTravelers.filter(
@@ -136,19 +137,19 @@ export class TravelService {
     const travel = await this.findOne(travelId)
 
     if(!travel){
-      throw new Error('this travel not exist');
+      throw new GraphQLError('this travel not exist');
     }
 
     if(travel.creatorUser.id != userId){
-      throw new Error('Only the trip creator can add a checklist');
+      throw new GraphQLError('Only the trip creator can add a checklist');
     }
     
     if(travel.checklist != null){
-      throw new Error('This trip already has a checklist');
+      throw new GraphQLError('This trip already has a checklist');
     }
 
     if(!items || items.length === 0){
-      throw new Error('the cheklist must have items');
+      throw new GraphQLError('the cheklist must have items');
     }
 
     
@@ -160,10 +161,10 @@ export class TravelService {
   async addItemToChecklist(travelId: string, userId: string, items: string[]):Promise<Travel>{
     const travel = await this.findOne(travelId);
     if(!travel){
-      throw new Error('this travel not exist');
+      throw new GraphQLError('this travel not exist');
     }
     if(travel.creatorUser.id != userId){
-      throw new Error('Only the creator can add items');
+      throw new GraphQLError('Only the creator can add items');
     }
 
     travel.checklist = await this.checklistService.addItems(travel.checklist.id, items);
@@ -175,10 +176,10 @@ export class TravelService {
   async removeItemToChecklist(travelId: string, userId: string, itemsId: string[]):Promise<Travel>{
     const travel = await this.findOne(travelId);
     if(!travel){
-      throw new Error('this travel not exist');
+      throw new GraphQLError('this travel not exist');
     }
     if(travel.creatorUser.id != userId){
-      throw new Error('Only the trip creator can add a checklist');
+      throw new GraphQLError('Only the trip creator can add a checklist');
     }
 
     travel.checklist = await this.checklistService.removeItems(travel.checklist.id, itemsId)
@@ -190,7 +191,7 @@ export class TravelService {
   async assignItemToUser(travelId: string, userId: string, itemId: string):Promise<Travel>{
     const travel = await this.findOne(travelId);
     if(!travel){
-      throw new Error('this travel not exist');
+      throw new GraphQLError('this travel not exist');
     }
 
     this.checklistService.assingItemToUser(travel.checklist.id,userId,itemId)
@@ -198,36 +199,31 @@ export class TravelService {
     return travel;
   }
 
-  async findAll() {
+  async findAll():Promise<Travel[]> {
     const travel = await this.travelRepository.find({
       relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist','checklist.items', 'checklist.items.user', 'travelLocation'],
     });
-
-    return travel
+    const travelsWithUserCount = travel.map(travel => ({
+      ...travel,
+      usersCount: travel.usersTravelers.length,
+    }));
+    return travelsWithUserCount
   }
 
   async findOne(id: string): Promise<Travel> {
-    return await this.travelRepository.findOne({
+    const travel =  await this.travelRepository.findOne({
       where: {
         id,
       },
       relations: ['usersTravelers', 'creatorUser', 'travelActivities', 'checklist','checklist.items','checklist.items.user', 'travelLocation'],
     });
-  }
 
-  async bringTotalTravelers(id: string): Promise<number> {
-    const travel = await this.travelRepository.findOne({
-      where: {
-        id,
-      },
-      relations: ['usersTravelers'],
-    });
     if(!travel){
-      throw new Error('this travel not exist');
+      throw new GraphQLError('this travel not exist');
     }
-    return travel ? travel.usersTravelers.length : 0;
-  }
 
+    return travel;
+  }
 
   async findAllTravelByUser(userId: string): Promise<Travel[]> {
       return await this.travelRepository.find({

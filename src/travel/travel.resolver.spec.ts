@@ -31,6 +31,11 @@ describe('TravelResolver', () => {
     joinToTravel: jest.fn().mockResolvedValue(mockTravel),
     leaveTravel: jest.fn().mockResolvedValue(mockTravel),
     findAllTravelByUser: jest.fn().mockResolvedValue([mockTravel]),
+    addChecklistToTravel: jest.fn().mockResolvedValue(mockTravel),
+    addItemToChecklist: jest.fn().mockResolvedValue(mockTravel),
+    removeItemToChecklist: jest.fn().mockResolvedValue(mockTravel),
+    assignItemToUser: jest.fn().mockResolvedValue(mockTravel),
+    bringTotalTravelers: jest.fn().mockResolvedValue(5),
   };
 
   beforeEach(async () => {
@@ -57,23 +62,20 @@ describe('TravelResolver', () => {
       const createTravelInput: CreateTravelInput = {
         travelTitle: 'New Travel',
         travelDescription: 'Test Travel',
-        startDate: new Date(Date.now() + 100000), // Fecha futura
-        finishDate: new Date(Date.now() + 200000), // Fecha futura
+        startDate: new Date(Date.now() + 100000),
+        finishDate: new Date(Date.now() + 200000),
         maxCap: 10,
         isEndable: true,
       };
       const activityIds = ["1", "2", "3"];
-
       const createLocationInput = {
         name: 'Test Location',
         state: 'test State',
         address: 'test address',
         longLatPoint: '1245.12345',
       };
-
       const userId = "1";
-      
-      const items: string[] = ['pelota', 'silla']; 
+      const items: string[] = ['pelota', 'silla'];
 
       const result = await resolver.createTravel(
         createTravelInput,
@@ -88,8 +90,72 @@ describe('TravelResolver', () => {
         activityIds,
         createLocationInput,
         userId,
-        items 
+        items
       );
+    });
+  });
+
+  describe('joinToTravel', () => {
+    it('should allow user to join a travel', async () => {
+      const travelId = "1";
+      const context = { req: { user: { userId: "1" } } };
+      const result = await resolver.joinToTravel(travelId, context);
+      expect(result).toEqual(mockTravel);
+      expect(service.joinToTravel).toHaveBeenCalledWith("1", travelId);
+    });
+  });
+
+  describe('leaveTravel', () => {
+    it('should allow user to leave a travel', async () => {
+      const travelId = "1";
+      const context = { req: { user: { userId: "1" } } };
+      const result = await resolver.leaveTravel(travelId, context);
+      expect(result).toEqual(mockTravel);
+      expect(service.leaveTravel).toHaveBeenCalledWith("1", travelId);
+    });
+  });
+
+  describe('addChecklistToTravel', () => {
+    it('should add checklist items to travel', async () => {
+      const travelId = "1";
+      const items = ['item1', 'item2'];
+      const context = { req: { user: { userId: "1" } } };
+      const result = await resolver.addChecklistToTravel(travelId, context, items);
+      expect(result).toEqual(mockTravel);
+      expect(service.addChecklistToTravel).toHaveBeenCalledWith(travelId, "1", items);
+    });
+  });
+
+  describe('addItemsToChecklist', () => {
+    it('should add items to checklist', async () => {
+      const travelId = "1";
+      const items = ['item3'];
+      const context = { req: { user: { userId: "1" } } };
+      const result = await resolver.addItemsToChecklist(travelId, context, items);
+      expect(result).toEqual(mockTravel);
+      expect(service.addItemToChecklist).toHaveBeenCalledWith(travelId, "1", items);
+    });
+  });
+
+  describe('removeItemsToChecklist', () => {
+    it('should remove items from checklist', async () => {
+      const travelId = "1";
+      const items = ['item1'];
+      const context = { req: { user: { userId: "1" } } };
+      const result = await resolver.removeItemsToChecklist(travelId, context, items);
+      expect(result).toEqual(mockTravel);
+      expect(service.removeItemToChecklist).toHaveBeenCalledWith(travelId, "1", items);
+    });
+  });
+
+  describe('assignItemToUser', () => {
+    it('should assign an item to a user', async () => {
+      const travelId = "1";
+      const itemId = 'item1';
+      const context = { req: { user: { userId: "1" } } };
+      const result = await resolver.assignItemToUser(travelId, context, itemId);
+      expect(result).toEqual(mockTravel);
+      expect(service.assignItemToUser).toHaveBeenCalledWith(travelId, "1", itemId);
     });
   });
 
@@ -109,14 +175,22 @@ describe('TravelResolver', () => {
     });
   });
 
+  describe('bringTotalTravelers', () => {
+    it('should return the total number of travelers', async () => {
+      const result = await resolver.bringTotalTravelers("1");
+      expect(result).toEqual(5);
+      expect(service.bringTotalTravelers).toHaveBeenCalledWith("1");
+    });
+  });
+
   describe('updateTravel', () => {
     it('should update a travel', async () => {
       const updateTravelInput: UpdateTravelInput = {
         id: "1",
         travelTitle: 'Updated Travel',
         travelDescription: 'Updated Description',
-        startDate: new Date(Date.now() + 100000), 
-        finishDate: new Date(Date.now() + 200000), 
+        startDate: new Date(Date.now() + 100000),
+        finishDate: new Date(Date.now() + 200000),
         maxCap: 10,
         isEndable: true,
       };
@@ -129,9 +203,18 @@ describe('TravelResolver', () => {
 
   describe('removeTravel', () => {
     it('should remove a travel', async () => {
-      const result = await resolver.removeTravel("1"); 
+      const result = await resolver.removeTravel("1");
       expect(result).toEqual(true);
       expect(service.remove).toHaveBeenCalledWith("1");
+    });
+  });
+
+  describe('findAllTravelByUser', () => {
+    it('should return all travels by a specific user', async () => {
+      const userId = "1";
+      const result = await resolver.findAllTravelByUser(userId);
+      expect(result).toEqual([mockTravel]);
+      expect(service.findAllTravelByUser).toHaveBeenCalledWith(userId);
     });
   });
 });

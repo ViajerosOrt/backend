@@ -6,6 +6,9 @@ import { Travel } from '../travel/entities/travel.entity';
 import { LocationService } from '../location/location.service';
 import { UsersService } from '../users/users.service';
 import { ActivityService } from '../activity/activity.service';
+import { User } from '../users/entities/user.entity';
+import { use } from 'passport';
+import { Activity } from 'src/activity/activity.entity';
 
 
 @Injectable()
@@ -15,7 +18,7 @@ export class TravelSeeder implements Seeder {
     private readonly travelRepository: Repository<Travel>,
     private readonly locationService: LocationService,
     private readonly userService: UsersService,
-    private readonly activityService: ActivityService
+    private readonly activityService: ActivityService,
   ) {}
 
   async seed(): Promise<any> {
@@ -25,11 +28,7 @@ export class TravelSeeder implements Seeder {
     
     const user = await this.userService.findByEmail('fabricioSc@example.com');
 
-    const activitys = await this.activityService.findAll()
-    const activityTravel = [];
-    for(let i= 0; i < 3; i++ ){
-      activityTravel.push(activitys[Math.floor(Math.random() * activitys.length)])
-    }
+ 
     const travels = [
       {
         travelTitle: 'Summer Beach Getaway',
@@ -40,7 +39,8 @@ export class TravelSeeder implements Seeder {
         isEndable: true,
         creatorUser: user,
         travelLocation: location,
-        travelActivities: activityTravel,
+        travelActivities: await this.addActivity(),
+        usersTravelers: [user]
        
       },
       {
@@ -52,7 +52,8 @@ export class TravelSeeder implements Seeder {
         isEndable: true,
         creatorUser: user,
         travelLocation: location,
-        travelActivities: activityTravel,
+        travelActivities: await this.addActivity(),
+        usersTravelers: [user]
       
       },
       {
@@ -64,15 +65,31 @@ export class TravelSeeder implements Seeder {
         isEndable: false,
         creatorUser: user,
         travelLocation: location,
-        travelActivities: activityTravel,
+        travelActivities: await this.addActivity(),
+        usersTravelers: [user]
         
       },
     ];
-    await this.travelRepository.save(travels);
+    const savedTravels = await this.travelRepository.save(travels);
+    user.travelsCreated = user.travelsCreated || []
+    user.travelsCreated.push(...savedTravels)
+    this.userService.save(user);
   }
 
   async drop(): Promise<any> {
     await this.travelRepository.delete({});
   }
 
+  async addActivity():Promise<Activity[]>{
+    const activitys = await this.activityService.findAll()
+    const activityTravel = [];
+    for(let i= 0; i < 3; i++ ){
+      activityTravel.push(activitys[Math.floor(Math.random() * activitys.length)])
+    }
+    return activityTravel
+  }
+  
+  
+
+  
 }
