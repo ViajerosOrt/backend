@@ -83,4 +83,7 @@ export class Travel {
   @OneToOne(() => Checklist, (checklist) => checklist.travel)
   @Field(() => Checklist, { nullable: true })
   checklist: Checklist;
+
+  @Field()
+  isJoined: boolean;
 }
