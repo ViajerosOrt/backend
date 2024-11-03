@@ -18,12 +18,12 @@ export class TravelResolver {
   @Mutation(() => Travel)
   createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
-    @Args('userId', {type: () => String}) userId: string,
     @Args('activityId', { type: () => [String] }) activityId: string[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput,
-    @Args('items', {type: () => [String]}) items: string[],
+    @Args('items', { type: () => [String] }) items: string[],
+    @Context() context,
   ) {
-    return this.travelService.create(createTravelInput, activityId, createLocationInput, userId, items);
+    return this.travelService.create(createTravelInput, activityId, createLocationInput, context.req.user.userId, items);
 
 
   }
@@ -44,39 +44,39 @@ export class TravelResolver {
     return this.travelService.leaveTravel(context.req.user.userId, travelId);
   }
 
-  @Mutation(() => Travel, {name: 'addChecklistToTravel'})
+  @Mutation(() => Travel, { name: 'addChecklistToTravel' })
   async addChecklistToTravel(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
-    @Args('items', {type: () => [String]}) items: string[],
-  ){
+    @Args('items', { type: () => [String] }) items: string[],
+  ) {
     return await this.travelService.addChecklistToTravel(id, context.req.user.userId, items);
   }
 
-  @Mutation(() => Travel, {name: 'addItemsToChecklist'})
+  @Mutation(() => Travel, { name: 'addItemsToChecklist' })
   async addItemsToChecklist(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
-    @Args('items', {type: () => [String]}) items: string[],
-  ){
-    return await this.travelService.addItemToChecklist(id,context.req.user.userId, items );
+    @Args('items', { type: () => [String] }) items: string[],
+  ) {
+    return await this.travelService.addItemToChecklist(id, context.req.user.userId, items);
   }
 
-  @Mutation(() => Travel, {name: 'removeItemsToChecklist'})
+  @Mutation(() => Travel, { name: 'removeItemsToChecklist' })
   async removeItemsToChecklist(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
-    @Args('items', {type: () => [String]}) items: string[],
-  ){
-    return await this.travelService.removeItemToChecklist(id,context.req.user.userId, items );
+    @Args('items', { type: () => [String] }) items: string[],
+  ) {
+    return await this.travelService.removeItemToChecklist(id, context.req.user.userId, items);
   }
-  @Mutation(() => Travel, {name: 'assignItemToUser'})
+  @Mutation(() => Travel, { name: 'assignItemToUser' })
   async assignItemToUser(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
-    @Args('itemId', {type: () => String}) itemId: string,
-  ){
-    return await this.travelService.assignItemToUser(id,context.req.user.userId, itemId );
+    @Args('itemId', { type: () => String }) itemId: string,
+  ) {
+    return await this.travelService.assignItemToUser(id, context.req.user.userId, itemId);
   }
 
 

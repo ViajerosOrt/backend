@@ -8,6 +8,16 @@ describe('TravelResolver', () => {
   let resolver: TravelResolver;
   let service: TravelService;
 
+  const userId = "1";
+
+  const mockContext = {
+    req: {
+      user: {
+        userId,
+      },
+    },
+  };
+
   const mockTravel = {
     id: "1",
     travelTitle: 'Test Travel',
@@ -77,19 +87,18 @@ describe('TravelResolver', () => {
         address: 'test address',
         longLatPoint: '1245.12345',
       };
-  
+
 
       const userId = "1";
-      
-      const items: string[] = ['pelota', 'silla']; 
+
+      const items: string[] = ['pelota', 'silla'];
 
       const result = await resolver.createTravel(
         createTravelInput,
-        userId,
         activityIds,
         createLocationInput,
         items,
-
+        mockContext
       );
       expect(result).toEqual(mockTravel);
       expect(service.create).toHaveBeenCalledWith(
@@ -169,7 +178,7 @@ describe('TravelResolver', () => {
 
   describe('findAll', () => {
     it('should return an array of travels', async () => {
-      const result = await resolver.findAll();
+      const result = await resolver.findAll(mockContext);
       expect(result).toEqual([mockTravel]);
       expect(service.findAll).toHaveBeenCalled();
     });
@@ -177,7 +186,7 @@ describe('TravelResolver', () => {
 
   describe('findOne', () => {
     it('should return a single travel', async () => {
-      const result = await resolver.findOne("1");
+      const result = await resolver.findOne("1", mockContext);
       expect(result).toEqual(mockTravel);
       expect(service.findOne).toHaveBeenCalledWith("1");
     });
