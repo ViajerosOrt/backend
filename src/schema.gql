@@ -47,8 +47,6 @@ type Travel {
   reviews: [Review!]
   travelLocation: Location!
   checklist: Checklist
-  usersCount: Float
-  isJoined: Boolean
 }
 
 """
@@ -80,6 +78,24 @@ type User {
   items: [Item!]
 }
 
+type TravelDto {
+  id: String!
+  travelTitle: String!
+  travelDescription: String
+  startDate: DateTime!
+  finishDate: DateTime!
+  maxCap: Int
+  isEndable: Boolean!
+  creatorUser: User!
+  usersTravelers: [User!]
+  travelActivities: [Activity!]
+  reviews: [Review!]
+  travelLocation: Location!
+  checklist: Checklist
+  isJoined: Boolean
+  usersCount: Int
+}
+
 type AccessToken {
   validForSeconds: Int!
   validUntil: String!
@@ -98,9 +114,9 @@ type Query {
   userById(id: String!): User!
   user(email: String!): User!
   location(id: String!): Location!
-  travels: [Travel!]!
-  travel(id: String!): Travel!
-  findAllTravelByUser(userId: String!): [Travel!]!
+  travels: [TravelDto!]!
+  travel(id: String!): TravelDto!
+  findAllTravelByUser: [TravelDto!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!
@@ -117,7 +133,7 @@ type Mutation {
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
-  createTravel(createTravelInput: CreateTravelInput!, userId: String!, activityId: [String!]!, createLocationInput: CreateLocationInput!, items: [String!]!): Travel!
+  createTravel(createTravelInput: CreateTravelInput!, activityId: [String!]!, createLocationInput: CreateLocationInput!, items: [String!]!): Travel!
   joinToTravel(travelId: String!): Travel!
   leaveTravel(travelId: String!): Travel!
   addChecklistToTravel(id: String!, items: [String!]!): Travel!

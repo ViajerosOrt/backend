@@ -41,7 +41,7 @@ export class TravelSeeder implements Seeder {
         creatorUser: user,
         travelLocation: location,
         travelActivities: await this.addActivity(),
-        usersTravelers: [user]
+        usersTravelers: []
 
        
 
@@ -56,7 +56,7 @@ export class TravelSeeder implements Seeder {
         creatorUser: user,
         travelLocation: location,
         travelActivities: await this.addActivity(),
-        usersTravelers: [user]
+        usersTravelers: []
 
       
 
@@ -71,11 +71,18 @@ export class TravelSeeder implements Seeder {
         creatorUser: user,
         travelLocation: location,
         travelActivities: await this.addActivity(),
-        usersTravelers: [user]
+        usersTravelers: []
         
       },
     ];
+    for(const travel of travels){
+      travel.usersTravelers = travel.usersTravelers || [];
+      travel.usersTravelers.push(user);
+
+    }
+
     const savedTravels = await this.travelRepository.save(travels);
+    console.log(savedTravels)
     user.travelsCreated = user.travelsCreated || []
     user.travelsCreated.push(...savedTravels)
     this.userService.save(user);

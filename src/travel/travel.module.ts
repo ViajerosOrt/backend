@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
 import { LocationModule } from '../location/location.module';
 import { ActivityModule } from '../activity/activity.module';
 import { ChecklistModule } from '../checklist/checklist.module';
+import { TravelTransformer } from './travel.transformer';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { ChecklistModule } from '../checklist/checklist.module';
     ChecklistModule,
 
   ],
-  providers: [TravelResolver, TravelService],
+  providers: [TravelResolver, TravelService, TravelTransformer],
   exports: [TravelService],
 })
 export class TravelModule {}

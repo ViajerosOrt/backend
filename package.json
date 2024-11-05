@@ -27,7 +27,6 @@
     "migration:revert": "npm run typeorm -- -d ./src/config/typeorm.ts migration:revert",
     "migration:revert-ts": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d ./src/config/typeorm.ts",
     "migration:generate-ts": "npx typeorm migration:generate ./dist/src/migrations/InitialMigration -d ./dist/src/config/typeorm.js"
-
   },
   "dependencies": {
     "@apollo/server": "^4.11.0",
@@ -40,6 +39,7 @@
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^8.0.1",
     "@nestjs/typeorm": "^10.0.2",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
@@ -55,6 +55,7 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.7",
+    "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
     "uuid": "^10.0.0"
   },

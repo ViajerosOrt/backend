@@ -50,7 +50,7 @@ export class UsersService {
   async findAll(): Promise<User[]> {
     const users = await this.userRepository.find({
 
-      relations: ['userActivities', 'reviewsCreated', 'reviewsReceived']
+      relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'joinsTravels', 'userActivities', 'items']
     });
     return users
   }

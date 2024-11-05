@@ -6,14 +6,18 @@ import { UpdateTravelInput } from './dto/update-travel.input';
 import { CreateLocationInput } from '../location/dto/create-location.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Item } from '../item/entities/item.entity';
+import { TravelDto } from './dto/travel.dto.reolver';
+import { TravelTransformer } from './travel.transformer';
 
 
 
 @Resolver(() => Travel)
 @UseGuards(JwtAuthGuard)
 export class TravelResolver {
-  constructor(private readonly travelService: TravelService) { }
+  constructor(
+    private readonly travelService: TravelService,
+    private readonly travelTransformer: TravelTransformer
+  ) { }
 
   @Mutation(() => Travel)
   createTravel(
@@ -80,20 +84,22 @@ export class TravelResolver {
   }
 
 
-  @Query(() => [Travel], { name: 'travels' })
+  @Query(() => [TravelDto], { name: 'travels' })
   async findAll(
     @Context() context
   ) {
-    return await this.travelService.findAll(context.req.user.userId);
+    const travels =  await this.travelService.findAll(context.req.user.userId);
+    return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
 
 
 
-  @Query(() => Travel, { name: 'travel' })
+  @Query(() => TravelDto, { name: 'travel' })
   async findOne(
     @Args('id', { type: () => String }) id: string,
     @Context() context) {
-    return this.travelService.findOne(id, context.req.user.userId);
+    const travel = await this.travelService.findOne(id, context.req.user.userId);
+    return await this.travelTransformer.toDto(travel, context.req.user.userId)
   }
 
 
@@ -109,8 +115,9 @@ export class TravelResolver {
     return this.travelService.remove(id);
   }
 
-  @Query(() => [Travel], { name: 'findAllTravelByUser' })
-  findAllTravelByUser(@Args('userId', { type: () => String }) userId: string) {
-    return this.travelService.findAllTravelByUser(userId);
+  @Query(() => [TravelDto], { name: 'findAllTravelByUser' })
+  async findAllTravelByUser(@Context() context) {
+    const travels = await this.travelService.findAllTravelByUser(context.req.user.userId);
+    return this.travelTransformer.toDTOs(travels, context.req.user.userId)
   }
 }
