@@ -97,6 +97,7 @@ describe('TravelResolver', () => {
         createLocationInput,
         items,
         mockContext
+
       );
       expect(result).toEqual(mockTravel);
       expect(service.create).toHaveBeenCalledWith(
@@ -178,6 +179,7 @@ describe('TravelResolver', () => {
     it('should return an array of travels with user join status and count', async () => {
       const context = { req: { user: { userId: "1" } } };
       const travels = await resolver.findAll(context);
+
       expect(travels).toEqual(
         expect.arrayContaining([
           expect.objectContaining({

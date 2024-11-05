@@ -47,6 +47,7 @@ type Travel {
   reviews: [Review!]
   travelLocation: Location!
   checklist: Checklist
+
 }
 
 """
@@ -76,7 +77,7 @@ type User {
   reviewsCreated: [Review!]
   reviewsReceived: [Review!]
   items: [Item!]
-}
+
 
 type TravelDto {
   id: String!
@@ -94,6 +95,7 @@ type TravelDto {
   checklist: Checklist
   isJoined: Boolean
   usersCount: Int
+
 }
 
 type AccessToken {
@@ -117,6 +119,7 @@ type Query {
   travels: [TravelDto!]!
   travel(id: String!): TravelDto!
   findAllTravelByUser: [TravelDto!]!
+
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!

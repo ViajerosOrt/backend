@@ -232,6 +232,7 @@ export class TravelService {
     });
 
     return travels;
+
   }
 
   async findOne(id: string, userId?: string):Promise<Travel> {
@@ -252,6 +253,7 @@ export class TravelService {
 
     if (!travel) {
       throw new GraphQLError('this travel not exist');
+
     }
     return travel;
   }
