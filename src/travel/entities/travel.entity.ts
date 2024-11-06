@@ -85,9 +85,7 @@ export class Travel {
   @Field(() => Checklist, { nullable: true })
   checklist: Checklist;
 
-  /**************gets******************* */
  
-  @Field( { nullable: true })
-  usersCount: number;
+
 
 }

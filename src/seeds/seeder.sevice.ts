@@ -19,15 +19,10 @@ export class Seeder {
 
   async seed(): Promise<any> {
     await this.activitySeeder.seed();
-    console.log("a")
     await this.userSeeder.seed();
-    console.log("b")
     await this.locationSeeder.seed();
-    console.log("c")
     await this.travelSeeder.seed();
-    console.log("d")
     await this.checklistSeeder.seed();
-    console.log("e")
 
 
 
