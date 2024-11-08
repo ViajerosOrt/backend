@@ -3,8 +3,11 @@ import { ReviewService } from './review.service';
 import { Review } from './entities/review.entity';
 import { CreateReviewInput } from './dto/create-review.input';
 import { UpdateReviewInput } from './dto/update-review.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Resolver(() => Review)
+@UseGuards(JwtAuthGuard)
 export class ReviewResolver {
   constructor(private readonly reviewService: ReviewService) {}
 
@@ -19,7 +22,7 @@ export class ReviewResolver {
     return this.reviewService.create(createReviewInput, context.req.user.id, userReceiverId, travelId);
   }
 
-  @Query(() => [Review], { name: 'review' })
+  @Query(() => [Review], { name: 'reviews' })
   findAll() {
     return this.reviewService.findAll();
   }

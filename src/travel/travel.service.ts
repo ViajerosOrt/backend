@@ -244,6 +244,8 @@ export class TravelService {
         'checklist.items',
         'checklist.items.user',
         'travelLocation',
+        'reviews',
+        'reviews.createdUserBy'
       ],
     });
 
@@ -264,6 +266,7 @@ export class TravelService {
         'checklist.items',
         'checklist.items.user',
         'travelLocation',
+        'reviews'
       ],
     });
 
@@ -335,5 +338,9 @@ export class TravelService {
 
   remove(id: string) {
     return `This action removes a #${id} travel`;
+  }
+
+  async save(travel: Travel):Promise<void>{
+    this.travelRepository.save(travel);
   }
 }

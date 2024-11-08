@@ -30,6 +30,7 @@ export class TravelSeeder implements Seeder {
     
     const user = await this.userService.findByEmail('fabricioSc@example.com');
 
+
     const travels = [
       {
         travelTitle: 'Summer Beach Getaway',
@@ -78,12 +79,15 @@ export class TravelSeeder implements Seeder {
     for(const travel of travels){
       travel.usersTravelers = travel.usersTravelers || [];
       travel.usersTravelers.push(user);
-
     }
 
     const savedTravels = await this.travelRepository.save(travels);
-    user.travelsCreated = user.travelsCreated || []
-    user.travelsCreated.push(...savedTravels)
+
+    user.travelsCreated = user.travelsCreated || [];
+    user.travelsCreated.push(...savedTravels);
+    user.joinsTravels = user.joinsTravels || [];
+    user.joinsTravels.push(...savedTravels)
+
     this.userService.save(user);
 
   }

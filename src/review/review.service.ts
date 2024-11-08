@@ -45,14 +45,14 @@ export class ReviewService {
   }
   
   async findAll(): Promise<Review[]> {
-    return this.reviewRepository.find({ relations: ['createdBy', 'receivedBy'] });
+    return this.reviewRepository.find({ relations: ['createdUserBy', 'receivedUserBy', 'travel'] });
   }
   
 
   async findOne(id: string): Promise<Review | undefined> {
     return this.reviewRepository.findOne({
       where: { id },
-      relations: ['createdBy', 'receivedBy'],
+      relations: ['createdUserBy', 'receivedUserBy', 'travel'],
     });
   }
 

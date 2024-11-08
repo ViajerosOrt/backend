@@ -120,6 +120,7 @@ type Query {
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!
+  reviews: [Review!]!
   review(id: String!): Review!
   getReviews: [Review!]!
   getReview(id: String!): Review!
@@ -149,7 +150,7 @@ type Mutation {
   removeItem(id: Int!): Item!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(signupUserInput: SignupUserInput!): User!
-  createReview(createReviewInput: CreateReviewInput!): Review!
+  createReview(createReviewInput: CreateReviewInput!, userReceiverId: String!, travelId: String!): Review!
   removeReview(id: String!): Review!
 }
 
@@ -225,7 +226,4 @@ input SignupUserInput {
 input CreateReviewInput {
   stars: Int!
   content: String!
-  travelId: String!
-  userReceiverId: String!
-  userCreatorId: String!
 }

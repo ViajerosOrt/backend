@@ -4,6 +4,7 @@ import { LocationSeeder } from './location.seeder';
 import { UserSeeder } from './user.seeder';
 import { TravelSeeder } from './travel.seeder';
 import { ChecklistSeeder } from './checklist.seeder';
+import { ReviewSeeder } from './review.seeder';
 
 
 @Injectable()
@@ -14,7 +15,9 @@ export class Seeder {
     private readonly locationSeeder: LocationSeeder,
     private readonly userSeeder: UserSeeder,
     private readonly travelSeeder: TravelSeeder,
-    private readonly checklistSeeder: ChecklistSeeder
+    private readonly checklistSeeder: ChecklistSeeder,
+    private readonly reviewSeeder: ReviewSeeder
+
   ) {}
 
   async seed(): Promise<any> {
@@ -23,6 +26,7 @@ export class Seeder {
     await this.locationSeeder.seed();
     await this.travelSeeder.seed();
     await this.checklistSeeder.seed();
+    await this.reviewSeeder.seed();
 
 
 
@@ -35,6 +39,6 @@ export class Seeder {
     await this.locationSeeder.drop();
     await this.travelSeeder.drop();
     await this.checklistSeeder.drop();
-
+    await this.reviewSeeder.drop();
   }
 }
