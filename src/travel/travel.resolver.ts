@@ -104,10 +104,12 @@ export class TravelResolver {
 
 
   @Mutation(() => Travel)
-  updateTravel(
+  async updateTravel(
     @Args('updateTravelInput') updateTravelInput: UpdateTravelInput,
+    @Context() context,
+    @Args('activityId', { type: () => [String] }) activityId: string[],
   ) {
-    return this.travelService.update(updateTravelInput.id, updateTravelInput);
+    return this.travelService.update(updateTravelInput.id, updateTravelInput, activityId, context.req.user.userId);
   }
 
   @Mutation(() => Travel)

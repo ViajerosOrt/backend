@@ -8,9 +8,9 @@ import { UsersService } from '../users/users.service';
 import { LocationService } from '../location/location.service';
 import { CreateLocationInput } from '../location/dto/create-location.input';
 import { ActivityService } from '../activity/activity.service';
-import { Item } from '../item/entities/item.entity';
 import { ChecklistService } from '../checklist/checklist.service';
 import { GraphQLError } from 'graphql';
+import { Review } from '../review/entities/review.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
@@ -35,10 +35,12 @@ export class TravelService {
     userId: string,
     items: string[],
   ): Promise<Travel> {
+    
     const travel = this.travelRepository.create(createTravelInput);
     const user = await this.userService.createToTravel(travel, userId);
-    const activities =
-      await this.activityService.findActivitiesById(activityId);
+
+    const uniqueActivityIds = [...new Set(activityId)];
+    const activities = await this.activityService.findActivitiesById(uniqueActivityIds);
 
     if (!user) {
       throw new GraphQLError('This user does not exist');
@@ -69,7 +71,12 @@ export class TravelService {
     travel.usersTravelers.push(user);
 
     const saveTravel = await this.travelRepository.save(travel);
-    return await this.addChecklistToTravel(saveTravel.id, user.id, items);
+
+    if(items.length !== 0){
+      return await this.addChecklistToTravel(saveTravel.id, user.id, items);
+    }
+    
+    return saveTravel;
   }
 
   async joinToTravel(userId: string, travelId: string): Promise<Travel> {
@@ -214,8 +221,17 @@ export class TravelService {
     }
 
     this.checklistService.assingItemToUser(travel.checklist.id, userId, itemId);
-    console.log(travel.checklist);
     return travel;
+  }
+
+  async assignReview(review: Review, travelId: string):Promise<Travel>{
+    const travel = await this.findOne(travelId);
+    if (!travel) {
+      throw new GraphQLError('this travel not exist');
+    }
+    travel.reviews = travel.reviews || []
+    travel.reviews.push(review);
+    return this.travelRepository.save(travel)
   }
 
   async findAll(userId?: string): Promise<Travel[]> {
@@ -276,8 +292,45 @@ export class TravelService {
     return travels
   }
 
-  update(id: string, updateTravelInput: UpdateTravelInput) {
-    return `This action updates a #${id} travel`;
+  async update(id: string, updateTravelInput: UpdateTravelInput, activityId: string[], userId: string): Promise<Travel> {
+    
+    const travel = await this.findOne(id);
+
+    
+    if (!travel) {
+      throw new GraphQLError('this travel not exist');
+    }
+    
+    if (travel.creatorUser.id !== userId) {
+      throw new GraphQLError('The creator of the trip cannot update');
+    }
+
+    const uniqueActivityIds = [...new Set(activityId)];
+    const activities = await this.activityService.findActivitiesById(uniqueActivityIds);
+
+    if(travel.usersTravelers.length >= updateTravelInput.maxCap){
+      throw new GraphQLError('There are already more travelers joined than the amount you want to add');
+    }
+
+    const today = new Date();
+    const newStartDate = new Date(updateTravelInput.startDate);
+    const newEndDate = new Date(updateTravelInput.finishDate);
+
+    if (newStartDate < today) {
+      throw new GraphQLError('The start date must be set in the future.');
+    }
+
+    if (newEndDate < newStartDate) {
+      throw new GraphQLError(
+        'The end date must be set in the future of the start date.',
+      );
+    }
+
+    Object.assign(travel, updateTravelInput);
+
+    travel.travelActivities = activities;
+
+    return this.travelRepository.save(travel);
   }
 
   remove(id: string) {

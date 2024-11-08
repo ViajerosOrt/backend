@@ -82,7 +82,6 @@ export class TravelSeeder implements Seeder {
     }
 
     const savedTravels = await this.travelRepository.save(travels);
-    console.log(savedTravels)
     user.travelsCreated = user.travelsCreated || []
     user.travelsCreated.push(...savedTravels)
     this.userService.save(user);

@@ -15,9 +15,12 @@ import { Checklist } from '../checklist/entities/checklist.entity';
 import { Item } from '../item/entities/item.entity';
 import { ChecklistModule } from '../checklist/checklist.module';
 import { ItemModule } from '../item/item.module';
+import { TravelModule } from './travel.module';
+import { TravelTransformer } from './travel.transformer';
 
 describe('TravelService', () => {
   let service: TravelService;
+  let resolver: TravelResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -40,9 +43,10 @@ describe('TravelService', () => {
         ChecklistModule,
         ItemModule
       ],
-      providers: [TravelResolver, TravelService],
+      providers: [TravelResolver, TravelService, TravelTransformer],
     }).compile();
 
+    resolver = module.get<TravelResolver>(TravelResolver);
     service = module.get<TravelService>(TravelService);
   });
 

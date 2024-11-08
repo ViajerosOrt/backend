@@ -8,6 +8,7 @@ import { ActivityService } from '../activity/activity.service';
 import { SignupUserInput } from '../auth/dto/signup-user.input';
 import { use } from 'passport';
 import { GraphQLError } from 'graphql';
+import { Review } from '../review/entities/review.entity';
 
 
 
@@ -106,6 +107,24 @@ export class UsersService {
     user.joinsTravels = user.joinsTravels.filter(travel => travel.id !== travel.id);
     this.userRepository.save(user);
 
+  }
+  async assignReview(review: Review, userId: string):Promise<User>{
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new GraphQLError('this user not exist');
+    }
+    user.reviewsCreated = user.reviewsCreated || []
+    user.reviewsCreated.push(review);
+    return this.userRepository.save(user)
+  }
+  async receiveReview(review: Review, userId: string):Promise<User>{
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new GraphQLError('this user not exist');
+    }
+    user.reviewsReceived = user.reviewsReceived || []
+    user.reviewsReceived.push(review);
+    return this.userRepository.save(user)
   }
 
   async update(id: string, updateUserInput: UpdateUserInput): Promise<User> {

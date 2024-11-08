@@ -3,6 +3,24 @@ import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateTravelInput extends PartialType(CreateTravelInput) {
-  @Field(() => String)
+  @Field()
   id: string;
+
+  @Field()
+  travelTitle: string;
+
+  @Field({ nullable: true })
+  travelDescription: string;
+
+  @Field()
+  startDate: Date;
+
+  @Field()
+  finishDate: Date;
+
+  @Field(() => Int, { nullable: true })
+  maxCap: number;
+
+  @Field()
+  isEndable: boolean;
 }

@@ -140,7 +140,7 @@ type Mutation {
   addItemsToChecklist(id: String!, items: [String!]!): Travel!
   removeItemsToChecklist(id: String!, items: [String!]!): Travel!
   assignItemToUser(id: String!, itemId: String!): Travel!
-  updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
+  updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): Travel!
   removeTravel(id: String!): Travel!
   createCheck(travel: String!, items: [String!]!): Checklist!
   updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
@@ -190,12 +190,12 @@ input CreateTravelInput {
 }
 
 input UpdateTravelInput {
-  travelTitle: String
+  travelTitle: String!
   travelDescription: String
-  startDate: DateTime
-  finishDate: DateTime
-  maxCap: Float
-  isEndable: Boolean
+  startDate: DateTime!
+  finishDate: DateTime!
+  maxCap: Int
+  isEndable: Boolean!
   id: String!
 }
 
