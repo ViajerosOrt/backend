@@ -25,6 +25,7 @@ import { Checklist } from "../checklist/entities/checklist.entity";
 import { ItemModule } from "../item/item.module";
 import { ChecklistModule } from "../checklist/checklist.module";
 import { ChecklistSeeder } from "./checklist.seeder";
+import { ReviewSeeder } from "./review.seeder";
 
 
 
@@ -55,8 +56,8 @@ import { ChecklistSeeder } from "./checklist.seeder";
         ItemModule,
         ChecklistModule
     ],
-    providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService, ChecklistSeeder],
-    exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService, ChecklistSeeder]
+    providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService, ChecklistSeeder, ReviewSeeder],
+    exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService, ChecklistSeeder,  ReviewSeeder]
 
 
 })

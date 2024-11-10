@@ -43,11 +43,11 @@ export class ChecklistService {
   }
 
   async addItems(checklistId: string, items: string[]): Promise<Checklist> {
-    const newItems = await this.itemService.createAllItems(items);
     const checklist = await this.findOne(checklistId);
     if(!checklist){
       throw new GraphQLError('No checklist found');
     }
+    const newItems = await this.itemService.createAllItems(items);
     checklist.items = checklist.items || [];
     checklist.items.push(...newItems);
     return this.checklistRepository.save(checklist);

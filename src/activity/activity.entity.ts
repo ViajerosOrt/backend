@@ -11,7 +11,7 @@ export class Activity {
   @Field(() => String)
   id: string;
 
-  @Column()
+  @Column({name: 'activity_name'})
   @Field()
   activityName: string;
 

@@ -1,19 +1,28 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Context } from '@nestjs/graphql';
 import { ReviewService } from './review.service';
 import { Review } from './entities/review.entity';
 import { CreateReviewInput } from './dto/create-review.input';
 import { UpdateReviewInput } from './dto/update-review.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Resolver(() => Review)
+@UseGuards(JwtAuthGuard)
 export class ReviewResolver {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Mutation(() => Review)
-  createReview(@Args('createReviewInput') createReviewInput: CreateReviewInput): Promise<Review> {
-    return this.reviewService.create(createReviewInput);
+  createReview(
+    @Args('createReviewInput') createReviewInput: CreateReviewInput,
+    @Context() context,
+    @Args('userReceiverId', { type: () => String }) userReceiverId: string,
+    @Args('travelId', { type: () => String }) travelId: string,
+    
+  ): Promise<Review> {
+    return this.reviewService.create(createReviewInput, context.req.user.id, userReceiverId, travelId);
   }
 
-  @Query(() => [Review], { name: 'review' })
+  @Query(() => [Review], { name: 'reviews' })
   findAll() {
     return this.reviewService.findAll();
   }

@@ -33,7 +33,6 @@ type Checklist {
   travel: Travel!
 }
 
-
 type Travel {
   id: String!
   travelTitle: String!
@@ -48,8 +47,6 @@ type Travel {
   reviews: [Review!]
   travelLocation: Location!
   checklist: Checklist
-  usersCount: Int!
-
 }
 
 """
@@ -79,7 +76,24 @@ type User {
   reviewsCreated: [Review!]
   reviewsReceived: [Review!]
   items: [Item!]
-n
+}
+
+type TravelDto {
+  id: String!
+  travelTitle: String!
+  travelDescription: String
+  startDate: DateTime!
+  finishDate: DateTime!
+  maxCap: Int
+  isEndable: Boolean!
+  creatorUser: User!
+  usersTravelers: [User!]
+  travelActivities: [Activity!]
+  reviews: [Review!]
+  travelLocation: Location!
+  checklist: Checklist
+  isJoined: Boolean
+  usersCount: Int
 }
 
 type AccessToken {
@@ -93,16 +107,6 @@ type LoginResponse {
   user: User!
 }
 
-type Checklist {
-  id: String!
-}
-
-type Thing {
-  id: String!
-  name: String!
-  state: Boolean!
-}
-
 type Query {
   activities: [Activity!]!
   activity(id: String!): Activity!
@@ -110,17 +114,16 @@ type Query {
   userById(id: String!): User!
   user(email: String!): User!
   location(id: String!): Location!
-  travels: [Travel!]!
-  travel(id: String!): Travel!
-
-  findAllTravelByUser(userId: String!): [Travel!]!
+  travels: [TravelDto!]!
+  travel(id: String!): TravelDto!
+  findAllTravelByUser: [TravelDto!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!
+  reviews: [Review!]!
   review(id: String!): Review!
   getReviews: [Review!]!
   getReview(id: String!): Review!
-
 }
 
 type Mutation {
@@ -131,32 +134,24 @@ type Mutation {
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
-  createTravel(createTravelInput: CreateTravelInput!, userId: String!, activityId: [String!]!, createLocationInput: CreateLocationInput!, items: [String!]!): Travel!
+  createTravel(createTravelInput: CreateTravelInput!, activityId: [String!]!, createLocationInput: CreateLocationInput!, items: [String!]!): Travel!
   joinToTravel(travelId: String!): Travel!
   leaveTravel(travelId: String!): Travel!
   addChecklistToTravel(id: String!, items: [String!]!): Travel!
   addItemsToChecklist(id: String!, items: [String!]!): Travel!
   removeItemsToChecklist(id: String!, items: [String!]!): Travel!
   assignItemToUser(id: String!, itemId: String!): Travel!
-  updateTravel(updateTravelInput: UpdateTravelInput!): Travel!
+  updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): Travel!
   removeTravel(id: String!): Travel!
   createCheck(travel: String!, items: [String!]!): Checklist!
   updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
   removeChecklist(id: Int!): Checklist!
-  createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!, id: String!): Item!
   removeItem(id: Int!): Item!
-
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(signupUserInput: SignupUserInput!): User!
-  createReview(createReviewInput: CreateReviewInput!): Review!
+  createReview(createReviewInput: CreateReviewInput!, userReceiverId: String!, travelId: String!): Review!
   removeReview(id: String!): Review!
-  createChecklist(createChecklistInput: CreateChecklistInput!): Checklist!
-  updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
-  removeChecklist(id: Int!): Checklist!
-  createThing(createThingInput: CreateThingInput!): Thing!
-  updateThing(updateThingInput: UpdateThingInput!): Thing!
-  removeThing(id: Int!): Thing!
 }
 
 input CreateActivityInput {
@@ -196,12 +191,12 @@ input CreateTravelInput {
 }
 
 input UpdateTravelInput {
-  travelTitle: String
+  travelTitle: String!
   travelDescription: String
-  startDate: DateTime
-  finishDate: DateTime
-  maxCap: Float
-  isEndable: Boolean
+  startDate: DateTime!
+  finishDate: DateTime!
+  maxCap: Int
+  isEndable: Boolean!
   id: String!
 }
 
@@ -210,17 +205,10 @@ input UpdateChecklistInput {
   id: String!
 }
 
-
-input CreateItemInput {
-  name: String!
-  isEndable: Boolean!
-}
-
 input UpdateItemInput {
   name: String!
   isEndable: Boolean
 }
-
 
 input LoginUserInput {
   email: String!
@@ -238,7 +226,4 @@ input SignupUserInput {
 input CreateReviewInput {
   stars: Int!
   content: String!
-  travelId: String!
-  userReceiverId: String!
-  userCreatorId: String!
 }

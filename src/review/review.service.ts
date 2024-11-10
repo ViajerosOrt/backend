@@ -21,9 +21,7 @@ export class ReviewService {
   ) {}
 
 
-  async create(createReviewInput: CreateReviewInput): Promise<Review> {
-    const { userCreatorId, userReceiverId, travelId, stars, content } = createReviewInput;
-
+  async create(createReviewInput: CreateReviewInput, userCreatorId: string,userReceiverId: string, travelId: string ): Promise<Review> {
     const createdBy = await this.userService.findById(userCreatorId);
     const receivedBy = await this.userService.findById(userReceiverId);
     const travel = await this.travelService.findOne(travelId);
@@ -39,27 +37,22 @@ export class ReviewService {
       throw new GraphQLError('Travel not found');
     }
 
-    const review = this.reviewRepository.create({
-      stars: stars.toString(),
-      content,
-    });
-
-    review.createdUserBy = createdBy;
-    review.receivedUserBy = receivedBy;
-    review.travel = travel;
-  
+    const review = await this.reviewRepository.create(createReviewInput);
+    review.createdUserBy = await this.userService.assignReview(review,userCreatorId);
+    review.receivedUserBy = await this.userService.receiveReview(review, userReceiverId);
+    review.travel = await this.travelService.assignReview(review, travelId);
     return this.reviewRepository.save(review);
   }
   
   async findAll(): Promise<Review[]> {
-    return this.reviewRepository.find({ relations: ['createdBy', 'receivedBy'] });
+    return this.reviewRepository.find({ relations: ['createdUserBy', 'receivedUserBy', 'travel'] });
   }
   
 
   async findOne(id: string): Promise<Review | undefined> {
     return this.reviewRepository.findOne({
       where: { id },
-      relations: ['createdBy', 'receivedBy'],
+      relations: ['createdUserBy', 'receivedUserBy', 'travel'],
     });
   }
 
