@@ -52,11 +52,20 @@ export class UserSeeder implements Seeder {
   }
 
   async addActivity():Promise<Activity[]>{
-    const activitys = await this.activityService.findAll()
+    const activities = await this.activityService.findAll()
     const activityTravel = [];
-    for(let i= 0; i < 3; i++ ){
-      activityTravel.push(activitys[Math.floor(Math.random() * activitys.length)])
+    const activitesFiltered = new Set<string>();
+
+    while (activityTravel.length < 3) {
+      const rActivity = activities[Math.floor(Math.random() * activities.length)];
+
+      if(!activitesFiltered.has(rActivity.id)){
+        activityTravel.push(rActivity);
+        activitesFiltered.add(rActivity.id);
+
+      }
     }
+
     return activityTravel
   }
   
