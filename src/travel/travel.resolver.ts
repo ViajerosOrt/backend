@@ -19,76 +19,100 @@ export class TravelResolver {
     private readonly travelTransformer: TravelTransformer
   ) { }
 
-  @Mutation(() => Travel)
-  createTravel(
+  @Mutation(() => TravelDto)
+  async createTravel(
     @Args('createTravelInput') createTravelInput: CreateTravelInput,
     @Args('activityId', { type: () => [String] }) activityId: string[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput,
     @Args('items', { type: () => [String] }) items: string[],
     @Context() context,
   ) {
-    return this.travelService.create(createTravelInput, activityId, createLocationInput, context.req.user.userId, items);
-
-
+    const travel = await this.travelService.create(createTravelInput, activityId, createLocationInput, context.req.user.userId, items);
+    return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => Travel)
+  @Mutation(() => TravelDto)
   async joinToTravel(
     @Args('travelId', { type: () => String }) travelId: string,
     @Context() context
   ) {
-    return this.travelService.joinToTravel(context.req.user.userId, travelId);
+    const travel = await this.travelService.joinToTravel(context.req.user.userId, travelId);
+    return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => Travel)
+  @Mutation(() => TravelDto)
   async leaveTravel(
     @Args('travelId', { type: () => String }) travelId: string,
     @Context() context
   ) {
-    return this.travelService.leaveTravel(context.req.user.userId, travelId);
+    const travel = await this.travelService.leaveTravel(context.req.user.userId, travelId);
+    return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => Travel, { name: 'addChecklistToTravel' })
+  @Mutation(() => TravelDto, {name: 'expelFromTravel'})
+  async expelFromTravel(
+    @Context() context,
+    @Args('bannedUserId', { type: () => String }) bannedUserId: string,
+    @Args('travelId', { type: () => String }) travelId: string,
+  ){
+    const travel = await this.travelService.expelFromTravel(context.req.user.userId, bannedUserId, travelId);
+    return this.travelTransformer.toDto(travel);
+  }
+
+  @Mutation(() => TravelDto, { name: 'addChecklistToTravel' })
   async addChecklistToTravel(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
     @Args('items', { type: () => [String] }) items: string[],
   ) {
-    return await this.travelService.addChecklistToTravel(id, context.req.user.userId, items);
+    const travel = await this.travelService.addChecklistToTravel(id, context.req.user.userId, items);
+    return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => Travel, { name: 'addItemsToChecklist' })
+  @Mutation(() => TravelDto, { name: 'addItemsToChecklist' })
   async addItemsToChecklist(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
     @Args('items', { type: () => [String] }) items: string[],
   ) {
-    return await this.travelService.addItemToChecklist(id, context.req.user.userId, items);
+    const travel = await this.travelService.addItemToChecklist(id, context.req.user.userId, items);
+    return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => Travel, { name: 'removeItemsToChecklist' })
+  @Mutation(() => TravelDto, { name: 'removeItemsToChecklist' })
   async removeItemsToChecklist(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
     @Args('items', { type: () => [String] }) items: string[],
   ) {
-    return await this.travelService.removeItemToChecklist(id, context.req.user.userId, items);
+    const travel = await this.travelService.removeItemToChecklist(id, context.req.user.userId, items);
+    return this.travelTransformer.toDto(travel);
   }
-  @Mutation(() => Travel, { name: 'assignItemToUser' })
+
+  @Mutation(() => TravelDto, { name: 'assignItemToUser' })
   async assignItemToUser(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
     @Args('itemId', { type: () => String }) itemId: string,
   ) {
-    return await this.travelService.assignItemToUser(id, context.req.user.userId, itemId);
+    const travel = await this.travelService.assignItemToUser(id, context.req.user.userId, itemId);
+    return this.travelTransformer.toDto(travel);
   }
 
+  @Mutation(() => TravelDto, {name: 'removeItemToUser'})
+  async removeItemToUser(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context,
+  ){
+    const travel = await this.travelService.removeItemToUser(id, context.req.user.userId)
+    return this.travelTransformer.toDto(travel)
+  }
 
   @Query(() => [TravelDto], { name: 'travels' })
   async findAll(
     @Context() context
   ) {
-    const travels =  await this.travelService.findAll(context.req.user.userId);
+    const travels =  await this.travelService.findAll();
     return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
 
@@ -103,13 +127,14 @@ export class TravelResolver {
   }
 
 
-  @Mutation(() => Travel)
+  @Mutation(() => TravelDto)
   async updateTravel(
     @Args('updateTravelInput') updateTravelInput: UpdateTravelInput,
     @Context() context,
     @Args('activityId', { type: () => [String] }) activityId: string[],
   ) {
-    return this.travelService.update(updateTravelInput.id, updateTravelInput, activityId, context.req.user.userId);
+    const travel = await this.travelService.update(updateTravelInput.id, updateTravelInput, activityId, context.req.user.userId);
+    return this.travelTransformer.toDto(travel);
   }
 
   @Mutation(() => Travel)
@@ -121,5 +146,14 @@ export class TravelResolver {
   async findAllTravelByUser(@Context() context) {
     const travels = await this.travelService.findAllTravelByUser(context.req.user.userId);
     return this.travelTransformer.toDTOs(travels, context.req.user.userId)
+  }
+
+  @Query(() => [TravelDto], {name: 'findTravelsByDateRange'})
+  async findTravelsByDateRange(
+    @Args('startDate', { type: () => Date, nullable: true }) startDate?: Date,
+    @Args('endDate', { type: () => Date, nullable: true }) endDate?: Date,
+  ){
+    const travels = await this.travelService.findTravelsByDateRange(startDate, endDate);
+    return this.travelTransformer.toDTOs(travels)
   }
 }

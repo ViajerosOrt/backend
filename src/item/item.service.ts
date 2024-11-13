@@ -46,8 +46,26 @@ export class ItemService {
     const item = await this.findOne(itemId);
     item.user = user
     item.state = true
-    this.itemRepository.save(item)
+    this.userService.assingItem(await this.itemRepository.save(item), user.id)
   }
+
+  async removeUser(itemsId: string[], userId: string):Promise<void>{
+    const user = await this.userService.findById(userId);
+    if (!user) {
+      throw new GraphQLError('This user does not exist');
+    }
+    for(const itemId of itemsId){
+      const item = await this.findOne(itemId);
+      if (!item) {
+        throw new GraphQLError(`Item with id ${itemId} does not exist`);
+      }
+      item.user = null;
+      item.state = false;
+      this.userService.removeItem(item, user);
+      this.itemRepository.save(item)
+    }
+  }
+
 
 
 

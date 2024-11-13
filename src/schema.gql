@@ -117,6 +117,7 @@ type Query {
   travels: [TravelDto!]!
   travel(id: String!): TravelDto!
   findAllTravelByUser: [TravelDto!]!
+  findTravelsByDateRange(startDate: DateTime, endDate: DateTime): [TravelDto!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!
@@ -134,14 +135,16 @@ type Mutation {
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
-  createTravel(createTravelInput: CreateTravelInput!, activityId: [String!]!, createLocationInput: CreateLocationInput!, items: [String!]!): Travel!
-  joinToTravel(travelId: String!): Travel!
-  leaveTravel(travelId: String!): Travel!
-  addChecklistToTravel(id: String!, items: [String!]!): Travel!
-  addItemsToChecklist(id: String!, items: [String!]!): Travel!
-  removeItemsToChecklist(id: String!, items: [String!]!): Travel!
-  assignItemToUser(id: String!, itemId: String!): Travel!
-  updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): Travel!
+  createTravel(createTravelInput: CreateTravelInput!, activityId: [String!]!, createLocationInput: CreateLocationInput!, items: [String!]!): TravelDto!
+  joinToTravel(travelId: String!): TravelDto!
+  leaveTravel(travelId: String!): TravelDto!
+  expelFromTravel(bannedUserId: String!, travelId: String!): TravelDto!
+  addChecklistToTravel(id: String!, items: [String!]!): TravelDto!
+  addItemsToChecklist(id: String!, items: [String!]!): TravelDto!
+  removeItemsToChecklist(id: String!, items: [String!]!): TravelDto!
+  assignItemToUser(id: String!, itemId: String!): TravelDto!
+  removeItemToUser(id: String!): TravelDto!
+  updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): TravelDto!
   removeTravel(id: String!): Travel!
   createCheck(travel: String!, items: [String!]!): Checklist!
   updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!

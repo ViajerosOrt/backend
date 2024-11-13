@@ -9,6 +9,7 @@ import { SignupUserInput } from '../auth/dto/signup-user.input';
 import { use } from 'passport';
 import { GraphQLError } from 'graphql';
 import { Review } from '../review/entities/review.entity';
+import { Item } from '../item/entities/item.entity';
 
 
 
@@ -104,7 +105,7 @@ export class UsersService {
 
   async leaveTravel(travel: Travel, user: User) {
 
-    user.joinsTravels = user.joinsTravels.filter(travel => travel.id !== travel.id);
+    user.joinsTravels = user.joinsTravels.filter(trav => trav.id !== travel.id);
     this.userRepository.save(user);
 
   }
@@ -117,6 +118,7 @@ export class UsersService {
     user.reviewsCreated.push(review);
     return this.userRepository.save(user)
   }
+
   async receiveReview(review: Review, userId: string):Promise<User>{
     const user = await this.findById(userId);
     if (!user) {
@@ -125,6 +127,21 @@ export class UsersService {
     user.reviewsReceived = user.reviewsReceived || []
     user.reviewsReceived.push(review);
     return this.userRepository.save(user)
+  }
+
+  async assingItem(item: Item, userId: string):Promise<void>{
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new GraphQLError('this user not exist');
+    }
+    user.items = user.items || [];
+    user.items.push(item);
+    this.userRepository.save(user)
+  }
+
+  async removeItem(item: Item, user: User):Promise<void>{
+    user.items = user.items.filter(it => it.id !== item.id)
+    this.userRepository.save(user);
   }
 
   async update(id: string, updateUserInput: UpdateUserInput): Promise<User> {
