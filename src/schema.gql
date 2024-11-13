@@ -117,7 +117,7 @@ type Query {
   travels: [TravelDto!]!
   travel(id: String!): TravelDto!
   findAllTravelByUser: [TravelDto!]!
-  findTravelsByDateRange(startDate: DateTime, endDate: DateTime): [TravelDto!]!
+  findTravelsByDateRange(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!]): [TravelDto!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!

@@ -110,9 +110,13 @@ export class TravelResolver {
 
   @Query(() => [TravelDto], { name: 'travels' })
   async findAll(
-    @Context() context
+    @Context() context,
+    @Args('startDate', { type: () => Date, nullable: true }) startDate?: Date,
+    @Args('endDate', { type: () => Date, nullable: true }) endDate?: Date,
+    @Args('travelName', { type: () => String, nullable: true }) travelName?: string,
+    @Args('activityIds', { type: () => [String], nullable: true }) activityIds?: string[],
   ) {
-    const travels =  await this.travelService.findAll();
+    const travels =  await this.travelService.findAll(startDate, endDate, travelName, activityIds);
     return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
 
@@ -148,12 +152,4 @@ export class TravelResolver {
     return this.travelTransformer.toDTOs(travels, context.req.user.userId)
   }
 
-  @Query(() => [TravelDto], {name: 'findTravelsByDateRange'})
-  async findTravelsByDateRange(
-    @Args('startDate', { type: () => Date, nullable: true }) startDate?: Date,
-    @Args('endDate', { type: () => Date, nullable: true }) endDate?: Date,
-  ){
-    const travels = await this.travelService.findTravelsByDateRange(startDate, endDate);
-    return this.travelTransformer.toDTOs(travels)
-  }
 }

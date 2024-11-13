@@ -289,21 +289,35 @@ export class TravelService {
     return this.travelRepository.save(travel)
   }
 
-  async findAll(): Promise<Travel[]> {
-    const travels = await this.travelRepository.find({
-      relations: [
-        'usersTravelers',
-        'creatorUser',
-        'travelActivities',
-        'checklist',
-        'checklist.items',
-        'checklist.items.user',
-        'travelLocation',
-        'reviews',
-        'reviews.createdUserBy'
-      ],
-    });
+  async findAll(startDate?: Date, endDate?: Date, travelName?: string, activityIds?: string[]): Promise<Travel[]> {
+    const query = await this.travelRepository.createQueryBuilder('travel')
 
+    query
+    .leftJoinAndSelect('travel.usersTravelers', 'usersTravelers')
+    .leftJoinAndSelect('travel.creatorUser', 'creatorUser')
+    .leftJoinAndSelect('travel.travelActivities', 'travelActivities')
+    .leftJoinAndSelect('travel.checklist', 'checklist')
+    .leftJoinAndSelect('checklist.items', 'items')
+    .leftJoinAndSelect('items.user', 'itemUser')
+    .leftJoinAndSelect('travel.travelLocation', 'travelLocation')
+    .leftJoinAndSelect('travel.reviews', 'reviews')
+    .leftJoinAndSelect('reviews.createdUserBy', 'createdUserBy')
+
+    if(activityIds && activityIds.length > 0){
+      query.andWhere('travelActivities.id In (:...activityIds)', {activityIds})
+    }
+
+    if(startDate){
+      query.andWhere('travel.startDate >= :startDate', {startDate})
+    }
+    if(endDate){
+      query.andWhere('travel.finishDate <= :endDate', {endDate})
+    }
+    if(travelName){
+      query.andWhere('travel.travelTitle LIKE :travelName', {travelName: `%{name}%`})
+    }
+ 
+    const travels = await query.getMany()
     return travels;
 
   }
@@ -395,30 +409,7 @@ export class TravelService {
     return `This action removes a #${id} travel`;
   }
 
-  async findTravelsByDateRange( startDate?: Date, endDate?: Date):Promise<Travel[]>{
-    const query = await this.travelRepository.createQueryBuilder('travel')
-
-    query
-    .leftJoinAndSelect('travel.usersTravelers', 'usersTravelers')
-    .leftJoinAndSelect('travel.creatorUser', 'creatorUser')
-    .leftJoinAndSelect('travel.travelActivities', 'travelActivities')
-    .leftJoinAndSelect('travel.checklist', 'checklist')
-    .leftJoinAndSelect('checklist.items', 'items')
-    .leftJoinAndSelect('items.user', 'itemUser')
-    .leftJoinAndSelect('travel.travelLocation', 'travelLocation')
-    .leftJoinAndSelect('travel.reviews', 'reviews')
-    .leftJoinAndSelect('reviews.createdUserBy', 'createdUserBy')
-
-    if(startDate){
-      query.andWhere('travel.startDate >= :startDate', {startDate})
-    }
-    if(endDate){
-      query.andWhere('travel.finishDate <= :endDate', {endDate})
-    }
-    const travels = await query.getMany()
-    return travels;
-  }
-
+ 
 
   async save(travel: Travel):Promise<void>{
     this.travelRepository.save(travel);
