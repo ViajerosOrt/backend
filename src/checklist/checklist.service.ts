@@ -71,6 +71,33 @@ export class ChecklistService {
     this.itemService.addUser(itemId, userId);
   }
 
+  async removeItemToUser(checklistId: string,userId: string):Promise<void>{
+    const checklist = await this.findOne(checklistId);
+    if(!checklist){
+      throw new GraphQLError('No checklist found');
+    }
+
+    const removedItem = checklist.items
+    .filter(item => item.user && item.user.id === userId)
+    .map(item => item.id)
+
+
+    if(removedItem.length === 0){
+      throw new GraphQLError('The user does not have any items');
+    }
+
+    this.itemService.removeUser(removedItem, userId);
+  }
+
+  async hasItem(checklistId: string,userId: string):Promise<boolean>{
+    const checklist = await this.findOne(checklistId);
+    if(!checklist){
+      throw new GraphQLError('No checklist found');
+    }
+    const removedItem = checklist.items.filter(item =>  item.user.id === userId)
+    return removedItem.length > 0;
+  }
+
   findAll() {
     return `This action returns all checklist`;
   }
@@ -80,7 +107,7 @@ export class ChecklistService {
       where: {
         id,
       },
-      relations: ['items'],
+      relations: ['items', 'items.user'],
     });
 
   }

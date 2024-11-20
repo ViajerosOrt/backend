@@ -129,6 +129,10 @@ export class TravelService {
       throw new GraphQLError('The creator of the trip cannot leave it');
     }
 
+
+    if(this.hasItem(travel.id, userId)){
+      await this.removeItemToUser(travel.id, userId);
+    }
     travel.usersTravelers = travel.usersTravelers.filter(
       (traveler) => traveler.id !== userId,
     );
@@ -136,6 +140,40 @@ export class TravelService {
     await this.userService.leaveTravel(travel, user);
     return this.travelRepository.save(travel);
   }
+
+  async expelFromTravel(createdUserId: string, bannedUserId: string,travelId: string):Promise<Travel>{
+    const travel = await this.findOne(travelId);
+
+    if (!travel) {
+      throw new GraphQLError('There is no such trip');
+    }
+
+    const createdUser = await this.userService.findById(createdUserId);
+
+    if (!createdUser) {
+      throw new GraphQLError('This user does not exist');
+    }
+    const bannerUser = await this.userService.findById(bannedUserId);
+
+    if (!bannerUser) {
+      throw new GraphQLError('This user does not exist');
+    }
+
+    if (travel.creatorUser.id !== createdUser.id) {
+      throw new GraphQLError('Only the creator can ban users');
+    }
+
+    if(this.hasItem(travel.id, bannerUser.id)){
+      await this.removeItemToUser(travel.id,  bannerUser.id);
+    }
+    travel.usersTravelers = travel.usersTravelers.filter(
+      (traveler) => traveler.id !==  bannerUser.id,
+    );
+
+    await this.userService.leaveTravel(travel,  bannerUser);
+    return this.travelRepository.save(travel);
+
+  } 
 
   async addChecklistToTravel(
     travelId: string,
@@ -221,7 +259,24 @@ export class TravelService {
     }
 
     this.checklistService.assingItemToUser(travel.checklist.id, userId, itemId);
-    return travel;
+    return this.travelRepository.save(travel);
+  }
+
+  async removeItemToUser(travelId: string, userId: string):Promise<Travel>{
+    const travel = await this.findOne(travelId);
+    if (!travel) {
+      throw new GraphQLError('this travel not exist');
+    }
+    this.checklistService.removeItemToUser(travel.checklist.id, userId);
+    return this.travelRepository.save(travel);
+  }
+
+  async hasItem(travelId: string, userId: string):Promise<boolean>{
+    const travel = await this.findOne(travelId);
+    if (!travel) {
+      throw new GraphQLError('this travel not exist');
+    }
+    return this.checklistService.hasItem(travelId, userId)
   }
 
   async assignReview(review: Review, travelId: string):Promise<Travel>{
@@ -234,21 +289,35 @@ export class TravelService {
     return this.travelRepository.save(travel)
   }
 
-  async findAll(userId?: string): Promise<Travel[]> {
-    const travels = await this.travelRepository.find({
-      relations: [
-        'usersTravelers',
-        'creatorUser',
-        'travelActivities',
-        'checklist',
-        'checklist.items',
-        'checklist.items.user',
-        'travelLocation',
-        'reviews',
-        'reviews.createdUserBy'
-      ],
-    });
+  async findAll(startDate?: Date, endDate?: Date, travelName?: string, activityIds?: string[]): Promise<Travel[]> {
+    const query = await this.travelRepository.createQueryBuilder('travel')
 
+    query
+    .leftJoinAndSelect('travel.usersTravelers', 'usersTravelers')
+    .leftJoinAndSelect('travel.creatorUser', 'creatorUser')
+    .leftJoinAndSelect('travel.travelActivities', 'travelActivities')
+    .leftJoinAndSelect('travel.checklist', 'checklist')
+    .leftJoinAndSelect('checklist.items', 'items')
+    .leftJoinAndSelect('items.user', 'itemUser')
+    .leftJoinAndSelect('travel.travelLocation', 'travelLocation')
+    .leftJoinAndSelect('travel.reviews', 'reviews')
+    .leftJoinAndSelect('reviews.createdUserBy', 'createdUserBy')
+
+    if(activityIds && activityIds.length > 0){
+      query.andWhere('travelActivities.id In (:...activityIds)', {activityIds})
+    }
+
+    if(startDate){
+      query.andWhere('travel.startDate >= :startDate', {startDate})
+    }
+    if(endDate){
+      query.andWhere('travel.finishDate <= :endDate', {endDate})
+    }
+    if(travelName){
+      query.andWhere('travel.travelTitle LIKE :travelName', {travelName: `%{name}%`})
+    }
+ 
+    const travels = await query.getMany()
     return travels;
 
   }
@@ -339,6 +408,8 @@ export class TravelService {
   remove(id: string) {
     return `This action removes a #${id} travel`;
   }
+
+ 
 
   async save(travel: Travel):Promise<void>{
     this.travelRepository.save(travel);
