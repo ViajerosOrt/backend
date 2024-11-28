@@ -25,9 +25,10 @@ export class TravelResolver {
     @Args('activityId', { type: () => [String] }) activityId: string[],
     @Args('createLocationInput') createLocationInput: CreateLocationInput,
     @Args('items', { type: () => [String] }) items: string[],
+    @Args('transportId', { type: () => String, nullable: true }) transportId: string,
     @Context() context,
   ) {
-    const travel = await this.travelService.create(createTravelInput, activityId, createLocationInput, context.req.user.userId, items);
+    const travel = await this.travelService.create(createTravelInput, activityId, createLocationInput, context.req.user.userId, items,transportId);
     return this.travelTransformer.toDto(travel);
   }
 
@@ -115,8 +116,9 @@ export class TravelResolver {
     @Args('endDate', { type: () => Date, nullable: true }) endDate?: Date,
     @Args('travelName', { type: () => String, nullable: true }) travelName?: string,
     @Args('activityIds', { type: () => [String], nullable: true }) activityIds?: string[],
+    @Args('transportId', { type: () => String, nullable: true }) transportId?: string,
   ) {
-    const travels =  await this.travelService.findAll(startDate, endDate, travelName, activityIds);
+    const travels =  await this.travelService.findAll(startDate, endDate, travelName, activityIds, transportId);
     return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
 

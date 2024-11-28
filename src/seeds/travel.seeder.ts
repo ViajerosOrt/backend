@@ -8,7 +8,9 @@ import { UsersService } from '../users/users.service';
 import { ActivityService } from '../activity/activity.service';
 import { User } from '../users/entities/user.entity';
 import { use } from 'passport';
-import { Activity } from 'src/activity/activity.entity';
+import { Activity } from '../activity/activity.entity';
+import { Transport } from '../transport/entities/transport.entity';
+import { TransportService } from '../transport/transport.service';
 
 
 
@@ -20,7 +22,7 @@ export class TravelSeeder implements Seeder {
     private readonly locationService: LocationService,
     private readonly userService: UsersService,
     private readonly activityService: ActivityService,
-
+    private readonly transportService: TransportService,
   ) {}
 
   async seed(): Promise<any> {
@@ -42,10 +44,9 @@ export class TravelSeeder implements Seeder {
         creatorUser: user,
         travelLocation: location,
         travelActivities: await this.addActivity(),
-        usersTravelers: []
-
-       
-
+        usersTravelers: [],
+        transport: await this.addTransport(),
+        country: 'Brazil'
       },
       {
         travelTitle: 'Mountain Adventure',
@@ -57,9 +58,9 @@ export class TravelSeeder implements Seeder {
         creatorUser: user,
         travelLocation: location,
         travelActivities: await this.addActivity(),
-        usersTravelers: []
-
-      
+        usersTravelers: [],
+        transport: await this.addTransport(),
+        country: 'Suiza'
 
       },
       {
@@ -72,8 +73,9 @@ export class TravelSeeder implements Seeder {
         creatorUser: user,
         travelLocation: location,
         travelActivities: await this.addActivity(),
-        usersTravelers: []
-        
+        usersTravelers: [],
+        transport: await this.addTransport(),
+        country: 'EEUU'
       },
     ];
     for(const travel of travels){
@@ -112,6 +114,11 @@ export class TravelSeeder implements Seeder {
     }
 
     return activityTravel
+  }
+
+  async addTransport():Promise<Transport>{
+    const transports =  await this.transportService.findAll();
+    return transports[Math.floor(Math.random() * transports.length)];
   }
 
 }

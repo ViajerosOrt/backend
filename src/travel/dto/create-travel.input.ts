@@ -23,4 +23,7 @@ export class CreateTravelInput {
   @Field()
   isEndable: boolean;
 
+  @Field()
+  country: string;
+
 }
