@@ -23,4 +23,7 @@ export class UpdateTravelInput extends PartialType(CreateTravelInput) {
 
   @Field()
   isEndable: boolean;
+
+  @Field()
+  country: string;
 }

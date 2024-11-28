@@ -15,6 +15,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Checklist } from '../../checklist/entities/checklist.entity';
+import { Transport } from '../../transport/entities/transport.entity';
 
 @Entity()
 @ObjectType()
@@ -46,6 +47,10 @@ export class Travel {
   @Column({ type: 'boolean', default: true, name: 'is_endable' })
   @Field()
   isEndable: boolean;
+
+  @Column({ nullable: true, name: 'country' })
+  @Field({ nullable: true })
+  country: string;
 
   //********************************** */
 
@@ -79,13 +84,14 @@ export class Travel {
   @JoinColumn({ name: 'location_id' })
   travelLocation: Location;
 
-
   /*************************** */
   @OneToOne(() => Checklist, (checklist) => checklist.travel)
   @Field(() => Checklist, { nullable: true })
   checklist: Checklist;
 
- 
-
-
+  //*********************************** */
+  
+  @ManyToOne(() => Transport, (transport) => transport.travels)
+  @Field(() => Transport, { nullable: true })
+  transport: Transport;
 }

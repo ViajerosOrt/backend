@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Seeder } from 'nestjs-seeder';
 import { Checklist } from '../checklist/entities/checklist.entity';
 import { TravelService } from '../travel/travel.service';
 import { Item } from '../item/entities/item.entity';
@@ -10,7 +11,7 @@ import { Travel } from '../travel/entities/travel.entity';
 
 
 @Injectable()
-export class ChecklistSeeder {
+export class ChecklistSeeder implements Seeder{
   constructor(
     @InjectRepository(Checklist)
     private readonly checklistRepository: Repository<Checklist>,
