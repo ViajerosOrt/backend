@@ -17,6 +17,8 @@ import { ChecklistModule } from '../checklist/checklist.module';
 import { ItemModule } from '../item/item.module';
 import { TravelModule } from './travel.module';
 import { TravelTransformer } from './travel.transformer';
+import { Transport } from 'src/transport/entities/transport.entity';
+import { TransportModule } from 'src/transport/transport.module';
 
 describe('TravelService', () => {
   let service: TravelService;
@@ -32,7 +34,7 @@ describe('TravelService', () => {
           username: 'postgres',
           password: 'postgres',
           database: 'database_viajeros',
-          entities: [User,  Activity, Location, Travel, Review, Item, Checklist],
+          entities: [User,  Activity, Location, Travel, Review, Item, Checklist, Transport],
           synchronize: false,
         }),
         TypeOrmModule.forFeature([Travel]),
@@ -41,7 +43,8 @@ describe('TravelService', () => {
         LocationModule,
         ReviewModule,
         ChecklistModule,
-        ItemModule
+        ItemModule,
+        TransportModule
       ],
       providers: [TravelResolver, TravelService, TravelTransformer],
     }).compile();

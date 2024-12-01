@@ -9,6 +9,7 @@ import { LocationModule } from '../location/location.module';
 import { ActivityModule } from '../activity/activity.module';
 import { ChecklistModule } from '../checklist/checklist.module';
 import { TravelTransformer } from './travel.transformer';
+import { TransportModule } from '../transport/transport.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { TravelTransformer } from './travel.transformer';
     ActivityModule,
     LocationModule, 
     ChecklistModule,
-
+    TransportModule
   ],
   providers: [TravelResolver, TravelService, TravelTransformer],
   exports: [TravelService],

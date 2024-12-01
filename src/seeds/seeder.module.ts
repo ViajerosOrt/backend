@@ -26,6 +26,9 @@ import { ItemModule } from "../item/item.module";
 import { ChecklistModule } from "../checklist/checklist.module";
 import { ChecklistSeeder } from "./checklist.seeder";
 import { ReviewSeeder } from "./review.seeder";
+import { Transport } from "../transport/entities/transport.entity";
+import { TransportModule } from "../transport/transport.module";
+import { TransportSeeder } from "./transport.seeder";
 
 
 
@@ -40,13 +43,13 @@ import { ReviewSeeder } from "./review.seeder";
         username: 'postgres',
         password: 'postgres',
         database: 'database_viajeros',
-        entities: [User,  Activity, Location, Travel, Review, Item, Checklist],
+        entities: [User,  Activity, Location, Travel, Review, Item, Checklist, Transport],
         synchronize: false,
       }),
         ConfigModule.forRoot({
             isGlobal: true, 
           }),
-        TypeOrmModule.forFeature([Activity, Location, User, Travel, Review, Item, Checklist]),
+        TypeOrmModule.forFeature([Activity, Location, User, Travel, Review, Item, Checklist, Transport]),
         ActivityModule,
         UsersModule,
         LocationModule,
@@ -54,10 +57,11 @@ import { ReviewSeeder } from "./review.seeder";
         AuthModule,
         ReviewModule,
         ItemModule,
-        ChecklistModule
+        ChecklistModule,
+        TransportModule
     ],
-    providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService, ChecklistSeeder, ReviewSeeder],
-    exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService, ChecklistSeeder,  ReviewSeeder]
+    providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService, ChecklistSeeder, ReviewSeeder, TransportSeeder],
+    exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService, ChecklistSeeder,  ReviewSeeder, TransportSeeder]
 
 
 })

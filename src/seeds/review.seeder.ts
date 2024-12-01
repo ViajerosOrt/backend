@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Review } from '../review/entities/review.entity';
 import { Repository } from 'typeorm';
+import { Seeder } from 'nestjs-seeder';
 import { UsersService } from '../users/users.service';
 import { TravelService } from '../travel/travel.service';
 
 @Injectable()
-export class ReviewSeeder {
+export class ReviewSeeder implements Seeder{
   constructor(
     @InjectRepository(Review)
     private reviewRepository: Repository<Review>,

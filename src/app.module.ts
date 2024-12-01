@@ -24,6 +24,8 @@ import { Checklist } from './checklist/entities/checklist.entity';
 import { ItemModule } from './item/item.module';
 import { Item } from './item/entities/item.entity';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { TransportModule } from './transport/transport.module';
+import { Transport } from './transport/entities/transport.entity';
 
 @Module({
   imports: [
@@ -46,12 +48,12 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
       username: 'postgres',
       password: 'postgres',
       database: 'database_viajeros',
-      entities: [User, Activity, Location, Travel, Review, Checklist, Item],
+      entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport],
       synchronize: false,
 
     }),
     ConfigModule.forRoot({
-      isGlobal: true, // Make ConfigModule available globally
+      isGlobal: true, 
     }),
     SeederModule,
     ActivityModule,
@@ -62,6 +64,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
     ChecklistModule,
     ReviewModule,
     ItemModule,
+    TransportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
