@@ -36,13 +36,14 @@ export class TransportService {
     return transport;
   }
 
-  async addTravel(transportId: string, travel: Travel):Promise<Transport>{
+  /*
+  async addTravelToTransport(transportId: string, travel: Travel):Promise<Transport>{
     const transport = await this.findOne(transportId);
     transport.travels = transport.travels || [];
     transport.travels.push(travel);
     return this.transportRepository.save(transport)
     //not used 
-  }
+  } */
 
   update(id: number, updateTransportInput: UpdateTransportInput) {
     return `This action updates a #${id} transport`;

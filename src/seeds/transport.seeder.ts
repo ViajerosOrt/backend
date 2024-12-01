@@ -13,11 +13,11 @@ export class TransportSeeder implements Seeder {
 
   async seed(): Promise<any> {
     const transports = [
-      { name: 'avión' },
-      { name: 'barco' },
-      { name: 'auto' },
-      { name: 'moto' },
-      { name: 'tren' },
+      { name: 'Plane' },
+      { name: 'Ship' },
+      { name: 'Car' },
+      { name: 'Motorbike' },
+      { name: 'Train' },
     ];
 
     await this.transportRepository.save(transports);
