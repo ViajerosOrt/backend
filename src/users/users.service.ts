@@ -61,9 +61,11 @@ export class UsersService {
 
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'joinsTravels', 'userActivities', 'items'],
+      relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'travelsCreated.travelActivities', 'joinsTravels', 'userActivities', 'items'],
 
     });
+
+    console.log(user, "user???")
     if (!user) {
       throw new GraphQLError(`User with ID ${id} not found`);
     }
@@ -109,7 +111,7 @@ export class UsersService {
     this.userRepository.save(user);
 
   }
-  async assignReview(review: Review, userId: string):Promise<User>{
+  async assignReview(review: Review, userId: string): Promise<User> {
     const user = await this.findById(userId);
     if (!user) {
       throw new GraphQLError('this user not exist');
@@ -119,7 +121,7 @@ export class UsersService {
     return this.userRepository.save(user)
   }
 
-  async receiveReview(review: Review, userId: string):Promise<User>{
+  async receiveReview(review: Review, userId: string): Promise<User> {
     const user = await this.findById(userId);
     if (!user) {
       throw new GraphQLError('this user not exist');
@@ -129,7 +131,7 @@ export class UsersService {
     return this.userRepository.save(user)
   }
 
-  async assingItem(item: Item, userId: string):Promise<void>{
+  async assingItem(item: Item, userId: string): Promise<void> {
     const user = await this.findById(userId);
     if (!user) {
       throw new GraphQLError('this user not exist');
@@ -139,7 +141,7 @@ export class UsersService {
     this.userRepository.save(user)
   }
 
-  async removeItem(item: Item, user: User):Promise<void>{
+  async removeItem(item: Item, user: User): Promise<void> {
     user.items = user.items.filter(it => it.id !== item.id)
     this.userRepository.save(user);
   }
@@ -152,6 +154,12 @@ export class UsersService {
 
     Object.assign(user, updateUserInput);
 
+    if (updateUserInput.activitiesIds) {
+      const uniqueActivityIds = [...new Set(updateUserInput.activitiesIds)];
+      const activities = await this.activityService.findActivitiesById(uniqueActivityIds);
+      user.userActivities = activities
+    }
+
     return this.userRepository.save(user);
   }
 
@@ -160,10 +168,10 @@ export class UsersService {
   }
 
   async deleteAll(): Promise<void> {
-    await this.userRepository.clear(); 
+    await this.userRepository.clear();
   }
 
-  async save(user: User):Promise<void>{
+  async save(user: User): Promise<void> {
     this.userRepository.save(user);
 
   }

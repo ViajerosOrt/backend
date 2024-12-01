@@ -18,9 +18,9 @@ describe('UsersResolver', () => {
     userActivities: [],
     travelsCreated: [],
     joinsTravels: [],
-    reviewsCreated:[],
-    reviewsReceived:[],
-    items:[],
+    reviewsCreated: [],
+    reviewsReceived: [],
+    items: [],
   }
 
   const mockContext = {
@@ -69,9 +69,9 @@ describe('UsersResolver', () => {
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],
-        reviewsCreated:[],
-        reviewsReceived:[],
-        items:[],
+        reviewsCreated: [],
+        reviewsReceived: [],
+        items: [],
       };
 
       jest.spyOn(service, 'addActivity').mockResolvedValue(result);
@@ -93,9 +93,9 @@ describe('UsersResolver', () => {
           userActivities: [],
           travelsCreated: [],
           joinsTravels: [],
-          reviewsCreated:[],
-          reviewsReceived:[],
-          items:[],
+          reviewsCreated: [],
+          reviewsReceived: [],
+          items: [],
         },
       ];
 
@@ -121,9 +121,9 @@ describe('UsersResolver', () => {
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],
-        reviewsCreated:[],
-        reviewsReceived:[],
-        items:[],
+        reviewsCreated: [],
+        reviewsReceived: [],
+        items: [],
       }
 
       jest.spyOn(service, 'findById').mockResolvedValue(result);
@@ -137,7 +137,8 @@ describe('UsersResolver', () => {
       const updateUserInput: UpdateUserInput = {
         name: 'Update name',
         password: '987654321',
-        description: "des"
+        description: "des",
+        activitiesIds: []
       };
 
       const userId = "1";

@@ -181,6 +181,7 @@ input UpdateUserInput {
   password: String!
   birthDate: DateTime
   description: String
+  activitiesIds: [String!]
 }
 
 input CreateLocationInput {
