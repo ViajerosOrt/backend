@@ -114,10 +114,9 @@ type Query {
   userById(id: String!): User!
   user(email: String!): User!
   location(id: String!): Location!
-  travels: [TravelDto!]!
+  travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!]): [TravelDto!]!
   travel(id: String!): TravelDto!
   findAllTravelByUser: [TravelDto!]!
-  findTravelsByDateRange(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!]): [TravelDto!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!
@@ -167,6 +166,7 @@ input UpdateUserInput {
   password: String!
   birthDate: DateTime
   description: String
+  activitiesIds: [String!]
 }
 
 input CreateLocationInput {

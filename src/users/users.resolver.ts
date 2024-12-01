@@ -35,7 +35,7 @@ export class UsersResolver {
   @Query(() => User, { name: 'userById' })
   @UseGuards(JwtAuthGuard)
   async findById(@Args('id', { type: () => String }) id: string): Promise<User> {
-    const user =  await this.usersService.findById(id);
+    const user = await this.usersService.findById(id);
     return user;
 
   }

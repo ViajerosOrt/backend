@@ -19,4 +19,7 @@ export class UpdateUserInput extends PartialType(SignupUserInput) {
   @MaxLength(200)
   @Field({ nullable: true })
   description: string
+
+  @Field(() => [String], { nullable: true })
+  activitiesIds: string[];
 }
