@@ -65,7 +65,6 @@ export class UsersService {
 
     });
 
-    console.log(user, "user???")
     if (!user) {
       throw new GraphQLError(`User with ID ${id} not found`);
     }
