@@ -117,8 +117,9 @@ export class TravelResolver {
     @Args('travelName', { type: () => String, nullable: true }) travelName?: string,
     @Args('activityIds', { type: () => [String], nullable: true }) activityIds?: string[],
     @Args('transportId', { type: () => String, nullable: true }) transportId?: string,
+    @Args('countryName', { type: () => String, nullable: true }) countryName?: string,
   ) {
-    const travels =  await this.travelService.findAll(startDate, endDate, travelName, activityIds, transportId);
+    const travels =  await this.travelService.findAll(startDate, endDate, travelName, activityIds, transportId, countryName);
     return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
 
