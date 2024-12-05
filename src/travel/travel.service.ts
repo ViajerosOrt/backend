@@ -346,6 +346,7 @@ export class TravelService {
 
     }
 
+
     const travels = await query.getMany()
     return travels;
 

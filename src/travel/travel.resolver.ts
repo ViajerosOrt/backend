@@ -122,6 +122,7 @@ export class TravelResolver {
   ) {
     const travels = await this.travelService.findAll(startDate, endDate, travelName, activityIds, transportId, countryName, creatorId);
 
+
     return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
 
