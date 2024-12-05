@@ -343,6 +343,7 @@ export class TravelService {
 
     if (creatorId) {
       query.andWhere('creatorUser.id = :userId', { creatorId })
+
     }
 
     const travels = await query.getMany()
