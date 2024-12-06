@@ -28,6 +28,7 @@ describe('TravelResolver', () => {
     finishDate: new Date(),
     maxCap: 10,
     isEndable: true,
+     country: 'Uruguay',
     creatorUser: { id: "1", name: 'Test User' },
     usersTravelers: [],
     travelActivities: [],
@@ -35,6 +36,7 @@ describe('TravelResolver', () => {
     checklist: null,
     usersCount: 0,
     isJoined: false,
+    transport: {id: '1'}
   };
 
   const mockTravelService = {
@@ -83,6 +85,7 @@ describe('TravelResolver', () => {
         finishDate: new Date(Date.now() + 200000),
         maxCap: 10,
         isEndable: true,
+        country: 'Uruguay'
       };
       const activityIds = ["1", "2", "3"];
       const createLocationInput = {
@@ -92,12 +95,14 @@ describe('TravelResolver', () => {
         longLatPoint: '1245.12345',
       };
       const items: string[] = ['pelota', 'silla'];
+      const transportId = '1'
 
       const result = await resolver.createTravel(
         createTravelInput,
         activityIds,
         createLocationInput,
         items,
+        transportId,
         mockContext
       );
 
@@ -107,7 +112,8 @@ describe('TravelResolver', () => {
         activityIds,
         createLocationInput,
         userId,
-        items
+        items,
+        transportId
       );
     });
   });
@@ -170,22 +176,79 @@ describe('TravelResolver', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return an array of TravelDto with user join status and count', async () => {
-      const travels = await resolver.findAll(mockContext);
-
-      expect(travels).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            ...mockTravelDto,
-            isJoined: mockTravelDto.usersTravelers.some(traveler => traveler.id === userId),
-            usersCount: mockTravelDto.usersTravelers.length,
-          }),
-        ])
+  describe('TravelResolver - findAll', () => {
+    it('should return an array of TravelDto with correct filters applied', async () => {
+      const mockTravels = [
+        {
+          id: '1',
+          travelTitle: 'Test Travel',
+          travelDescription: 'Test Description',
+          startDate: new Date(),
+          finishDate: new Date(),
+          maxCap: 10,
+          isEndable: true,
+          country: 'Test Country',
+          usersTravelers: [{ id: '123' }],
+          creatorUser: { id: 'creator123' },
+          travelActivities: [{ id: 'activity1' }],
+          checklist: null,
+          travelLocation: { id: 'location1' },
+          reviews: [],
+          isJoined: false,
+          usersCount: 1,
+        },
+      ];
+  
+      const mockService = {
+        findAll: jest.fn().mockResolvedValue(mockTravels),
+      };
+  
+      const mockTransformer = {
+        toDTOs: jest.fn().mockResolvedValue(mockTravels),
+      };
+  
+      const mockContext = {
+        req: {
+          user: {
+            userId: '123',
+          },
+        },
+      };
+  
+      const resolver = new TravelResolver(mockService as any, mockTransformer as any);
+  
+      const startDate = new Date('2023-01-01');
+      const endDate = new Date('2023-12-31');
+      const travelName = 'Test';
+      const activityIds = ['activity1'];
+      const transportId = 'transport1';
+      const countryName = 'Test Country';
+  
+      const result = await resolver.findAll(
+        mockContext,
+        startDate,
+        endDate,
+        travelName,
+        activityIds,
+        transportId,
+        countryName,
       );
-      expect(service.findAll).toHaveBeenCalledWith(userId);
+  
+      expect(mockService.findAll).toHaveBeenCalledWith(
+        startDate,
+        endDate,
+        travelName,
+        activityIds,
+        transportId,
+        countryName,
+      );
+  
+      expect(mockTransformer.toDTOs).toHaveBeenCalledWith(mockTravels, mockContext.req.user.userId);
+  
+      expect(result).toEqual(mockTravels);
     });
   });
+  
 
   describe('findOne', () => {
     it('should return a single TravelDto', async () => {
@@ -205,6 +268,7 @@ describe('TravelResolver', () => {
         finishDate: new Date(Date.now() + 200000),
         maxCap: 10,
         isEndable: true,
+        country: 'Uruguay'
       };
       const activityIds = ["1", "2", "3"];
 
