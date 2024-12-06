@@ -37,6 +37,7 @@ describe('TravelResolver', () => {
     usersCount: 0,
     isJoined: false,
     transport: { id: '1' }
+
   };
 
   const mockTravelService = {
@@ -206,6 +207,7 @@ describe('TravelResolver', () => {
         toDTOs: jest.fn().mockResolvedValue(mockTravels),
       };
 
+
       const mockContext = {
         req: {
           user: {
@@ -222,7 +224,6 @@ describe('TravelResolver', () => {
       const activityIds = ['activity1'];
       const transportId = 'transport1';
       const countryName = 'Test Country';
-
       const result = await resolver.findAll(
         mockContext,
         startDate,
@@ -232,7 +233,6 @@ describe('TravelResolver', () => {
         transportId,
         countryName,
       );
-
       expect(mockService.findAll).toHaveBeenCalledWith(
         startDate,
         endDate,
@@ -247,6 +247,7 @@ describe('TravelResolver', () => {
       expect(result).toEqual(mockTravels);
     });
   });
+  
 
 
   describe('findOne', () => {
