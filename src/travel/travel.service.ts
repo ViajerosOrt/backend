@@ -339,6 +339,7 @@ export class TravelService {
       query.andWhere('travel.country = :countryName', {countryName})
     }
 
+
     const travels = await query.getMany()
     return travels;
 
