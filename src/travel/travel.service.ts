@@ -301,7 +301,7 @@ export class TravelService {
     return this.travelRepository.save(travel)
   }
 
-  async findAll(startDate?: Date, endDate?: Date, travelName?: string, activityIds?: string[], transportId?: string): Promise<Travel[]> {
+  async findAll(startDate?: Date, endDate?: Date, travelName?: string, activityIds?: string[], transportId?: string, countryName?: string): Promise<Travel[]> {
     const query = await this.travelRepository.createQueryBuilder('travel')
 
     query
@@ -333,6 +333,12 @@ export class TravelService {
     if (transportId) {
       query.andWhere('transport.id = :transportId', { transportId })
     }
+
+
+    if(countryName){
+      query.andWhere('travel.country = :countryName', {countryName})
+    }
+
 
     const travels = await query.getMany()
     return travels;

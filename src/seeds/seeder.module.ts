@@ -16,7 +16,7 @@ import { UsersModule } from "../users/users.module";
 import { LocationModule } from "../location/location.module";
 import { TravelModule } from "../travel/travel.module";
 import { AuthModule } from "../auth/auth.module";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ActivityService } from "../activity/activity.service";
 import { Review } from "../review/entities/review.entity";
 import { ReviewModule } from "../review/review.module";
@@ -36,15 +36,19 @@ import { TransportSeeder } from "./transport.seeder";
 @Module({
     
     imports: [
-      TypeOrmModule.forRoot({
-        type: 'postgres',
-        host: 'localhost',
-        port: 5432,
-        username: 'postgres',
-        password: 'postgres',
-        database: 'database_viajeros',
-        entities: [User,  Activity, Location, Travel, Review, Item, Checklist, Transport],
-        synchronize: false,
+      TypeOrmModule.forRootAsync({
+        imports:[ConfigModule],
+        useFactory: async (configService: ConfigService) => ({
+          type: 'postgres',
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USERNAME'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_DATABASE'),
+          entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport],
+          synchronize: false,
+        }),
+        inject: [ConfigService]
       }),
         ConfigModule.forRoot({
             isGlobal: true, 

@@ -19,6 +19,7 @@ import { TravelModule } from './travel.module';
 import { TravelTransformer } from './travel.transformer';
 import { Transport } from 'src/transport/entities/transport.entity';
 import { TransportModule } from 'src/transport/transport.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('TravelService', () => {
   let service: TravelService;
@@ -27,15 +28,19 @@ describe('TravelService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: 'localhost',
-          port: 5432,
-          username: 'postgres',
-          password: 'postgres',
-          database: 'database_viajeros',
-          entities: [User,  Activity, Location, Travel, Review, Item, Checklist, Transport],
-          synchronize: false,
+        TypeOrmModule.forRootAsync({
+          imports:[ConfigModule],
+          useFactory: async (configService: ConfigService) => ({
+            type: 'postgres',
+            host: configService.get<string>('DB_HOST'),
+            port: configService.get<number>('DB_PORT'),
+            username: configService.get<string>('DB_USERNAME'),
+            password: configService.get<string>('DB_PASSWORD'),
+            database: configService.get<string>('DB_DATABASE'),
+            entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport],
+            synchronize: false,
+          }),
+          inject: [ConfigService]
         }),
         TypeOrmModule.forFeature([Travel]),
         UsersModule,

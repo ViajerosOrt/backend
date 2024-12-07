@@ -15,7 +15,7 @@ import { Activity } from './activity/activity.entity';
 import typeorm from './config/typeorm';
 import { Location } from './location/entities/location.entity';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SeederModule } from './seeds/seeder.module';
 import { ChecklistModule } from './checklist/checklist.module';
 import { Review } from './review/entities/review.entity';
@@ -26,6 +26,7 @@ import { Item } from './item/entities/item.entity';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { TransportModule } from './transport/transport.module';
 import { Transport } from './transport/entities/transport.entity';
+
 
 @Module({
   imports: [
@@ -41,17 +42,21 @@ import { Transport } from './transport/entities/transport.entity';
         return graphQLFormattedError;
       }
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'database_viajeros',
-      entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport],
-      synchronize: false,
-
+    TypeOrmModule.forRootAsync({
+      imports:[ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport],
+        synchronize: false,
+      }),
+      inject: [ConfigService]
     }),
+
     ConfigModule.forRoot({
       isGlobal: true, 
     }),
