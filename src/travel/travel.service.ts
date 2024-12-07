@@ -301,9 +301,9 @@ export class TravelService {
     return this.travelRepository.save(travel)
   }
 
-  async findAll(startDate?: Date, endDate?: Date, travelName?: string, activityIds?: string[], transportId?: string, countryName?: string): Promise<Travel[]> {
+  async findAll(startDate?: Date, endDate?: Date, travelName?: string, activityIds?: string[], transportId?: string, countryName?: string, creatorId?: string): Promise<Travel[]> {
     const query = await this.travelRepository.createQueryBuilder('travel')
-
+    console.log(travelName)
     query
       .leftJoinAndSelect('travel.usersTravelers', 'usersTravelers')
       .leftJoinAndSelect('travel.creatorUser', 'creatorUser')
@@ -326,19 +326,24 @@ export class TravelService {
     if (endDate) {
       query.andWhere('travel.finishDate <= :endDate', { endDate })
     }
+
     if (travelName) {
-      query.andWhere('travel.travelTitle LIKE :travelName', { travelName: `%{name}%` })
+      query.andWhere('travel.title LIKE :travelName', { travelName: `%${travelName}%` });
     }
+
 
     if (transportId) {
       query.andWhere('transport.id = :transportId', { transportId })
     }
 
 
-    if(countryName){
-      query.andWhere('travel.country = :countryName', {countryName})
+    if (countryName) {
+      query.andWhere('travel.country = :countryName', { countryName })
     }
 
+    if (creatorId) {
+      query.andWhere('creatorUser.id = :userId', { creatorId })
+    }
 
     const travels = await query.getMany()
     return travels;
@@ -368,27 +373,6 @@ export class TravelService {
 
     }
     return travel;
-  }
-
-  async findAllTravelByUser(userId: string): Promise<Travel[]> {
-    const query = await this.travelRepository.createQueryBuilder('travel');
-    query
-      .leftJoinAndSelect('travel.usersTravelers', 'usersTravelers')
-      .leftJoinAndSelect('travel.creatorUser', 'creatorUser')
-      .leftJoinAndSelect('travel.travelActivities', 'travelActivities')
-      .leftJoinAndSelect('travel.checklist', 'checklist')
-      .leftJoinAndSelect('checklist.items', 'items')
-      .leftJoinAndSelect('items.user', 'itemUser')
-      .leftJoinAndSelect('travel.travelLocation', 'travelLocation')
-      .leftJoinAndSelect('travel.reviews', 'reviews')
-      .leftJoinAndSelect('reviews.createdUserBy', 'createdUserBy')
-      .leftJoinAndSelect('travel.transport', 'transport')
-
-    query.andWhere('creatorUser.id = :userId', { userId })
-
-    const travels = await query.getMany()
-    return travels;
-
   }
 
   async update(id: string, updateTravelInput: UpdateTravelInput, activityId: string[], userId: string): Promise<Travel> {
