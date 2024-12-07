@@ -17,6 +17,7 @@ export class ReviewSeeder implements Seeder{
 
   async seed() {
     const user = await this.userService.findByEmail('fabricioSc@example.com');
+    const userReviewed = await this.userService.findByEmail('francoBoe@example.com');
     const travels = await this.travelService.findAll();
     const travel = travels[0];
 
@@ -25,17 +26,38 @@ export class ReviewSeeder implements Seeder{
       return;
     }
 
-    const review = this.reviewRepository.create({
+    const travelReview = this.reviewRepository.create({
       stars: '5',
       content: 'Great travel experience!',
       createdUserBy: user,
       travel: travel,
+      type: 'TRAVEL',
     });
 
+    const userReview = this.reviewRepository.create({
+      stars: '5',
+      content: 'very good travel companion',
+      createdUserBy: user,
+      receivedUserBy: userReviewed,
+      travel: travel,
+      type: 'USER',
+    })
+
     travel.reviews = travel.reviews || [];
-    travel.reviews.push(review)
+    travel.reviews.push(travelReview)
+    
+    userReviewed.reviewsReceived = userReviewed.reviewsReceived || []
+    userReviewed.reviewsReceived.push(userReview)
+
+    user.reviewsCreated = user.reviewsCreated || []
+    user.reviewsCreated.push(travelReview)
+    user.reviewsCreated.push(userReview)
+
     await this.travelService.save(travel)
-    await this.reviewRepository.save(review);
+    await this.userService.save(user)
+    await this.userService.save(userReviewed)
+    await this.reviewRepository.save(travelReview);
+    await this.reviewRepository.save(userReview);
   }
 
   async drop() {

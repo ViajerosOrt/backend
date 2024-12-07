@@ -66,9 +66,10 @@ type Review {
   id: String!
   stars: String!
   content: String!
+  type: String
   createdUserBy: User!
-  receivedUserBy: User!
-  travel: Travel!
+  receivedUserBy: User
+  travel: Travel
 }
 
 type User {
@@ -78,6 +79,8 @@ type User {
   password: String!
   birthDate: DateTime!
   description: String
+  instagram: String
+  whatsapp: String
   userActivities: [Activity!]
   travelsCreated: [Travel!]
   joinsTravels: [Travel!]
@@ -180,6 +183,8 @@ input UpdateUserInput {
   password: String!
   birthDate: DateTime
   description: String
+  instagram: String
+  whatsapp: String
   activitiesIds: [String!]
 }
 
@@ -249,6 +254,8 @@ input SignupUserInput {
   password: String!
   birthDate: DateTime!
   description: String
+  instagram: String
+  whatsapp: String
 }
 
 input CreateReviewInput {

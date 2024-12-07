@@ -32,4 +32,13 @@ export class SignupUserInput {
   @Field({ nullable: true })
   description: string
 
+  @Field({ nullable: true })
+  instagram: string
+
+  @Field({ nullable: true })
+  whatsapp: string
+
+  @Field({ nullable: true })
+  country: string;
+
 }

@@ -22,26 +22,22 @@ export class ReviewService {
 
 
   async create(createReviewInput: CreateReviewInput, userCreatorId: string,userReceiverId: string, travelId: string ): Promise<Review> {
-    const createdBy = await this.userService.findById(userCreatorId);
-    const receivedBy = await this.userService.findById(userReceiverId);
-    const travel = await this.travelService.findOne(travelId);
+    const review = this.reviewRepository.create(createReviewInput);
 
-    if(!createdBy){
-      throw new GraphQLError('User created by not found');
-    }
-    if(!receivedBy){
-
-      throw new GraphQLError('User received by not found');
-    }
-    if (!travel) {
-      throw new GraphQLError('Travel not found');
+    review.createdUserBy = await this.userService.assignReview(review, userCreatorId);
+    
+    if(userReceiverId && travelId){
+      review.travel = await this.travelService.assignReview(review, travelId, userCreatorId, userReceiverId);
+      review.receivedUserBy = await this.userService.receiveReview(review, userReceiverId);
+      review.type = 'USER';
     }
 
-    const review = await this.reviewRepository.create(createReviewInput);
-    review.createdUserBy = await this.userService.assignReview(review,userCreatorId);
-    review.receivedUserBy = await this.userService.receiveReview(review, userReceiverId);
-    review.travel = await this.travelService.assignReview(review, travelId);
-    return this.reviewRepository.save(review);
+    if (!userReceiverId) {
+      review.travel = await this.travelService.assignReview(review, travelId);
+      review.type = 'TRAVEL';
+    }
+
+    return this.reviewRepository.save(review)
   }
   
   async findAll(): Promise<Review[]> {
@@ -54,6 +50,18 @@ export class ReviewService {
       where: { id },
       relations: ['createdUserBy', 'receivedUserBy', 'travel'],
     });
+  }
+
+  async update(idReview: string, updateReviewInput: UpdateReviewInput, userId: string):Promise<Review>{
+    const review = await this.findOne(idReview);
+
+    if(review.createdUserBy.id !== userId){
+      throw new GraphQLError('The creator of the review cannot update');
+    }
+
+    Object.assign(review, updateReviewInput)
+    return this.reviewRepository.save(review)
+
   }
 
   async remove(id: string): Promise<void> {

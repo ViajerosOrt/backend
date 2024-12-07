@@ -33,6 +33,18 @@ export class User {
   @Field({ nullable: true })
   description: string
 
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  instagram: string
+
+  @Column({type: 'varchar', nullable: true })
+  @Field({ nullable: true })
+  whatsapp: string
+
+  @Column({ nullable: true, name: 'country' })
+  @Field({ nullable: true })
+  country: string;
+
   @ManyToMany(() => Activity, (activity) => activity.userActivities)
   @Field(() => [Activity], { nullable: true })
   @JoinTable()

@@ -25,6 +25,9 @@ export class UserSeeder implements Seeder {
         birthDate: new Date('2002-01-01'),
         description: 'First user for seeder',
         userActivities: await this.addActivity(),
+        instagram: 'fabriscar22',
+        whatsapp: '+59897418914',
+        country: 'Uruguay',
       },
       {
         name: 'Franco Borreli',
@@ -33,6 +36,9 @@ export class UserSeeder implements Seeder {
         birthDate: new Date('2002-05-10'),
         description: 'Second user for seeder',
         userActivities: await this.addActivity(),
+        instagram: 'francobor_',
+        whatsapp: '+59896799173',
+        country: 'Uruguay',
       },
       {
         name: 'Bruno Lapaz',
@@ -41,6 +47,9 @@ export class UserSeeder implements Seeder {
         birthDate: new Date('2001-11-20'),
         description: 'Third user for seeder',
         userActivities: await this.addActivity(),
+        instagram: 'brunnaries',
+        whatsapp: '+59894136832',
+        country: 'Uruguay',
       },
     ];  
     
@@ -62,7 +71,6 @@ export class UserSeeder implements Seeder {
       if(!activitesFiltered.has(rActivity.id)){
         activityTravel.push(rActivity);
         activitesFiltered.add(rActivity.id);
-
       }
     }
 
