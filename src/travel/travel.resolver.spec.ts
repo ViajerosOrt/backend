@@ -28,7 +28,7 @@ describe('TravelResolver', () => {
     finishDate: new Date(),
     maxCap: 10,
     isEndable: true,
-     country: 'Uruguay',
+    country: 'Uruguay',
     creatorUser: { id: "1", name: 'Test User' },
     usersTravelers: [],
     travelActivities: [],
@@ -36,7 +36,7 @@ describe('TravelResolver', () => {
     checklist: null,
     usersCount: 0,
     isJoined: false,
-    transport: {id: '1'}
+    transport: { id: '1' }
   };
 
   const mockTravelService = {
@@ -47,7 +47,6 @@ describe('TravelResolver', () => {
     remove: jest.fn().mockResolvedValue(true),
     joinToTravel: jest.fn().mockResolvedValue(mockTravelDto),
     leaveTravel: jest.fn().mockResolvedValue(mockTravelDto),
-    findAllTravelByUser: jest.fn().mockResolvedValue([mockTravelDto]),
     addChecklistToTravel: jest.fn().mockResolvedValue(mockTravelDto),
     addItemToChecklist: jest.fn().mockResolvedValue(mockTravelDto),
     removeItemToChecklist: jest.fn().mockResolvedValue(mockTravelDto),
@@ -198,15 +197,15 @@ describe('TravelResolver', () => {
           usersCount: 1,
         },
       ];
-  
+
       const mockService = {
         findAll: jest.fn().mockResolvedValue(mockTravels),
       };
-  
+
       const mockTransformer = {
         toDTOs: jest.fn().mockResolvedValue(mockTravels),
       };
-  
+
       const mockContext = {
         req: {
           user: {
@@ -214,16 +213,16 @@ describe('TravelResolver', () => {
           },
         },
       };
-  
+
       const resolver = new TravelResolver(mockService as any, mockTransformer as any);
-  
+
       const startDate = new Date('2023-01-01');
       const endDate = new Date('2023-12-31');
       const travelName = 'Test';
       const activityIds = ['activity1'];
       const transportId = 'transport1';
       const countryName = 'Test Country';
-  
+
       const result = await resolver.findAll(
         mockContext,
         startDate,
@@ -233,7 +232,7 @@ describe('TravelResolver', () => {
         transportId,
         countryName,
       );
-  
+
       expect(mockService.findAll).toHaveBeenCalledWith(
         startDate,
         endDate,
@@ -242,13 +241,13 @@ describe('TravelResolver', () => {
         transportId,
         countryName,
       );
-  
+
       expect(mockTransformer.toDTOs).toHaveBeenCalledWith(mockTravels, mockContext.req.user.userId);
-  
+
       expect(result).toEqual(mockTravels);
     });
   });
-  
+
 
   describe('findOne', () => {
     it('should return a single TravelDto', async () => {
@@ -275,26 +274,19 @@ describe('TravelResolver', () => {
       const result = await resolver.updateTravel(updateTravelInput, mockContext, activityIds);
       expect(result).toEqual(mockTravelDto);
       expect(mockTravelService.update).toHaveBeenCalledWith(
-        "1", 
-        updateTravelInput, 
-        activityIds, 
-        userId 
+        "1",
+        updateTravelInput,
+        activityIds,
+        userId
       );
-  })});
+    })
+  });
 
   describe('removeTravel', () => {
     it('should remove a travel and return boolean', async () => {
       const result = await resolver.removeTravel("1");
       expect(result).toEqual(true);
       expect(service.remove).toHaveBeenCalledWith("1");
-    });
-  });
-
-  describe('findAllTravelByUser', () => {
-    it('should return all TravelDto by a specific user', async () => {
-      const result = await resolver.findAllTravelByUser(mockContext);
-      expect(result).toEqual([mockTravelDto]);
-      expect(service.findAllTravelByUser).toHaveBeenCalledWith(userId);
     });
   });
 });

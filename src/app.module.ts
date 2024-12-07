@@ -23,7 +23,7 @@ import { ReviewModule } from './review/review.module';
 import { Checklist } from './checklist/entities/checklist.entity';
 import { ItemModule } from './item/item.module';
 import { Item } from './item/entities/item.entity';
-import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { GraphQLError } from 'graphql';
 import { TransportModule } from './transport/transport.module';
 import { Transport } from './transport/entities/transport.entity';
 
@@ -43,7 +43,7 @@ import { Transport } from './transport/entities/transport.entity';
       }
     }),
     TypeOrmModule.forRootAsync({
-      imports:[ConfigModule],
+      imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get<string>('DB_HOST'),
@@ -58,7 +58,7 @@ import { Transport } from './transport/entities/transport.entity';
     }),
 
     ConfigModule.forRoot({
-      isGlobal: true, 
+      isGlobal: true,
     }),
     SeederModule,
     ActivityModule,

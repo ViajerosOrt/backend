@@ -124,9 +124,8 @@ type Query {
   userById(id: String!): User!
   user(email: String!): User!
   location(id: String!): Location!
-  travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String): [TravelDto!]!
+  travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String, countryName: String, creatorId: String): [TravelDto!]!
   travel(id: String!): TravelDto!
-  findAllTravelByUser: [TravelDto!]!
   checklist(id: String!): Checklist!
   items: [Item!]!
   item(id: String!): Item!

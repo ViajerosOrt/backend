@@ -28,7 +28,7 @@ export class TravelResolver {
     @Args('transportId', { type: () => String, nullable: true }) transportId: string,
     @Context() context,
   ) {
-    const travel = await this.travelService.create(createTravelInput, activityId, createLocationInput, context.req.user.userId, items,transportId);
+    const travel = await this.travelService.create(createTravelInput, activityId, createLocationInput, context.req.user.userId, items, transportId);
     return this.travelTransformer.toDto(travel);
   }
 
@@ -50,12 +50,12 @@ export class TravelResolver {
     return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => TravelDto, {name: 'expelFromTravel'})
+  @Mutation(() => TravelDto, { name: 'expelFromTravel' })
   async expelFromTravel(
     @Context() context,
     @Args('bannedUserId', { type: () => String }) bannedUserId: string,
     @Args('travelId', { type: () => String }) travelId: string,
-  ){
+  ) {
     const travel = await this.travelService.expelFromTravel(context.req.user.userId, bannedUserId, travelId);
     return this.travelTransformer.toDto(travel);
   }
@@ -100,11 +100,11 @@ export class TravelResolver {
     return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => TravelDto, {name: 'removeItemToUser'})
+  @Mutation(() => TravelDto, { name: 'removeItemToUser' })
   async removeItemToUser(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
-  ){
+  ) {
     const travel = await this.travelService.removeItemToUser(id, context.req.user.userId)
     return this.travelTransformer.toDto(travel)
   }
@@ -118,8 +118,9 @@ export class TravelResolver {
     @Args('activityIds', { type: () => [String], nullable: true }) activityIds?: string[],
     @Args('transportId', { type: () => String, nullable: true }) transportId?: string,
     @Args('countryName', { type: () => String, nullable: true }) countryName?: string,
+    @Args('creatorId', { type: () => String, nullable: true }) creatorId?: string,
   ) {
-    const travels =  await this.travelService.findAll(startDate, endDate, travelName, activityIds, transportId, countryName);
+    const travels = await this.travelService.findAll(startDate, endDate, travelName, activityIds, transportId, countryName, creatorId);
     return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
 
@@ -148,11 +149,4 @@ export class TravelResolver {
   removeTravel(@Args('id', { type: () => String }) id: string) {
     return this.travelService.remove(id);
   }
-
-  @Query(() => [TravelDto], { name: 'findAllTravelByUser' })
-  async findAllTravelByUser(@Context() context) {
-    const travels = await this.travelService.findAllTravelByUser(context.req.user.userId);
-    return this.travelTransformer.toDTOs(travels, context.req.user.userId)
-  }
-
 }
