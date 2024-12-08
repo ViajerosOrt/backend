@@ -3,6 +3,9 @@ import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateReviewInput extends PartialType(CreateReviewInput) {
-  @Field(() => Int)
-  id: number;
+  @Field()
+  stars: string;
+
+  @Field()
+  content: string;
 }

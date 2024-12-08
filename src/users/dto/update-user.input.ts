@@ -15,10 +15,18 @@ export class UpdateUserInput extends PartialType(SignupUserInput) {
   @Field()
   password: string;
 
-
   @MaxLength(200)
   @Field({ nullable: true })
   description: string
+
+  @Field({ nullable: true })
+  instagram: string
+
+  @Field({ nullable: true })
+  whatsapp: string
+  
+  @Field({ nullable: true })
+  country: string;
 
   @Field(() => [String], { nullable: true })
   activitiesIds: string[];

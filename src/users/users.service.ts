@@ -11,15 +11,13 @@ import { GraphQLError } from 'graphql';
 import { Review } from '../review/entities/review.entity';
 import { Item } from '../item/entities/item.entity';
 
-
-
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private activityService: ActivityService,
-  ) { }
+  ) {}
 
   create(createUserInput: SignupUserInput): Promise<User> {
     const user = this.userRepository.create(createUserInput);
@@ -50,19 +48,49 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    const users = await this.userRepository.find({
+    const query = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.userActivities', 'userActivities')
+      .leftJoinAndSelect('user.travelsCreated', 'travelsCreated')
+      .leftJoinAndSelect('travelsCreated.usersTravelers', 'usersTravelers')
+      .leftJoinAndSelect('user.joinsTravels', 'joinsTravels')
+      .leftJoinAndSelect('user.reviewsCreated', 'reviewsCreated')
+      .leftJoinAndSelect('user.reviewsReceived', 'reviewsReceived')
+      .leftJoinAndSelect(
+        'reviewsCreated.receivedUserBy',
+        'receivedUserBy',
+        'reviewsCreated.type = :type',
+        { type: 'USER' }
+      )
+      .leftJoinAndSelect('reviewsCreated.travel', 'travelReviewsCreated')
+      .leftJoinAndSelect('reviewsReceived.createdUserBy', 'createdUserBy')
+      .leftJoinAndSelect('reviewsReceived.travel', 'travelReviewsReceived')
+      .leftJoinAndSelect('user.items', 'items');
 
-      relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'joinsTravels', 'userActivities', 'items']
-    });
-    return users
+
+
+    const users = await query.getMany();
+    return users;
   }
 
   async findById(id: string): Promise<User> {
-
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['travelsCreated', 'travelsCreated.usersTravelers', 'travelsCreated.travelActivities', 'joinsTravels', 'userActivities', 'items'],
-
+      relations: [
+        'travelsCreated',
+        'travelsCreated.usersTravelers',
+        'travelsCreated.travelActivities',
+        'joinsTravels',
+        'joinsTravels.usersTravelers',
+        'joinsTravels.travelActivities',
+        'reviewsCreated',
+        'reviewsCreated.receivedUserBy',
+        'reviewsCreated.travel',
+        'reviewsReceived',
+        'reviewsReceived.createdUserBy',
+        'userActivities',
+        'items',
+      ],
     });
 
     if (!user) {
@@ -76,12 +104,11 @@ export class UsersService {
       where: {
         email: email,
       },
-      relations: ['travelsCreated', 'joinsTravels', 'userActivities']
+      relations: ['travelsCreated', 'joinsTravels', 'userActivities'],
     });
   }
 
   async joinToTravel(travel: Travel, userId: string): Promise<User> {
-
     const user = await this.findById(userId);
     if (!user) {
       throw new GraphQLError('This user does not exist');
@@ -92,7 +119,6 @@ export class UsersService {
   }
 
   async createToTravel(travel: Travel, userId: string): Promise<User> {
-
     const user = await this.findById(userId);
     if (!user) {
       throw new GraphQLError('This user does not exist');
@@ -105,29 +131,29 @@ export class UsersService {
   }
 
   async leaveTravel(travel: Travel, user: User) {
-
-    user.joinsTravels = user.joinsTravels.filter(trav => trav.id !== travel.id);
+    user.joinsTravels = user.joinsTravels.filter(
+      (trav) => trav.id !== travel.id,
+    );
     this.userRepository.save(user);
-
   }
   async assignReview(review: Review, userId: string): Promise<User> {
     const user = await this.findById(userId);
     if (!user) {
-      throw new GraphQLError('this user not exist');
+      throw new GraphQLError('This user not exist');
     }
-    user.reviewsCreated = user.reviewsCreated || []
+    user.reviewsCreated = user.reviewsCreated || [];
     user.reviewsCreated.push(review);
-    return this.userRepository.save(user)
+    return this.userRepository.save(user);
   }
 
   async receiveReview(review: Review, userId: string): Promise<User> {
     const user = await this.findById(userId);
     if (!user) {
-      throw new GraphQLError('this user not exist');
+      throw new GraphQLError('This user not exist');
     }
-    user.reviewsReceived = user.reviewsReceived || []
+    user.reviewsReceived = user.reviewsReceived || [];
     user.reviewsReceived.push(review);
-    return this.userRepository.save(user)
+    return this.userRepository.save(user);
   }
 
   async assingItem(item: Item, userId: string): Promise<void> {
@@ -137,11 +163,11 @@ export class UsersService {
     }
     user.items = user.items || [];
     user.items.push(item);
-    this.userRepository.save(user)
+    this.userRepository.save(user);
   }
 
   async removeItem(item: Item, user: User): Promise<void> {
-    user.items = user.items.filter(it => it.id !== item.id)
+    user.items = user.items.filter((it) => it.id !== item.id);
     this.userRepository.save(user);
   }
 
@@ -155,8 +181,9 @@ export class UsersService {
 
     if (updateUserInput.activitiesIds) {
       const uniqueActivityIds = [...new Set(updateUserInput.activitiesIds)];
-      const activities = await this.activityService.findActivitiesById(uniqueActivityIds);
-      user.userActivities = activities
+      const activities =
+        await this.activityService.findActivitiesById(uniqueActivityIds);
+      user.userActivities = activities;
     }
 
     return this.userRepository.save(user);
@@ -172,9 +199,5 @@ export class UsersService {
 
   async save(user: User): Promise<void> {
     this.userRepository.save(user);
-
   }
-
-
-
 }

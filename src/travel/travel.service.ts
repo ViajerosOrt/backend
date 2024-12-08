@@ -12,6 +12,7 @@ import { ChecklistService } from '../checklist/checklist.service';
 import { GraphQLError } from 'graphql';
 import { Review } from '../review/entities/review.entity';
 import { TransportService } from '../transport/transport.service';
+import { use } from 'passport';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
@@ -291,11 +292,18 @@ export class TravelService {
     return this.checklistService.hasItem(travelId, userId)
   }
 
-  async assignReview(review: Review, travelId: string): Promise<Travel> {
+  async assignReview(review: Review, travelId: string, userCreatorId?: string, userReceiverId?: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
     if (!travel) {
-      throw new GraphQLError('this travel not exist');
+      throw new GraphQLError('This travel not exist');
     }
+
+    const userIdsInTravel  = travel.usersTravelers.map(user => user.id)
+
+    if(userCreatorId && userReceiverId && (!userIdsInTravel.includes(userCreatorId) || !userIdsInTravel.includes(userReceiverId))){
+      throw new GraphQLError('Both users must have been in the same travel to leave a review');
+    }
+
     travel.reviews = travel.reviews || []
     travel.reviews.push(review);
     return this.travelRepository.save(travel)
@@ -343,7 +351,9 @@ export class TravelService {
 
     if (creatorId) {
       query.andWhere('creatorUser.id = :userId', { creatorId })
+
     }
+
 
     const travels = await query.getMany()
     return travels;
