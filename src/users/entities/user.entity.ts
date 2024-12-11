@@ -5,6 +5,8 @@ import { Travel } from '../../travel/entities/travel.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Item } from '../../item/entities/item.entity';
+import { Chat } from '../../chat/entities/chat.entity';
+import { Message } from '../../message/entities/message.entity';
 
 @Entity('users')
 @ObjectType()
@@ -70,6 +72,15 @@ export class User {
   @OneToMany(() => Item, (item) => item.user)
   @Field(() => [Item], { nullable: true })
   items?: Item[];
+
+
+  @ManyToMany(() => Chat, (chat) => chat.users)
+  @Field(() => [Chat], {nullable: true})
+  chats: Chat[];
+
+  @OneToMany(() => Message, (message) => message.user)
+  @Field(() => [Message], {nullable: true})
+  messages: Message[];
 
 
 }
