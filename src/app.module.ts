@@ -26,6 +26,9 @@ import { Item } from './item/entities/item.entity';
 import { GraphQLError } from 'graphql';
 import { TransportModule } from './transport/transport.module';
 import { Transport } from './transport/entities/transport.entity';
+import { GatewayModule } from './gateway/gateway.module';
+import { ChatModule } from './chat/chat.module';
+import { MessageModule } from './message/message.module';
 
 
 @Module({
@@ -70,6 +73,9 @@ import { Transport } from './transport/entities/transport.entity';
     ReviewModule,
     ItemModule,
     TransportModule,
+    GatewayModule,
+    ChatModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

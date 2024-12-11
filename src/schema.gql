@@ -81,6 +81,7 @@ type User {
   description: String
   instagram: String
   whatsapp: String
+  country: String
   userActivities: [Activity!]
   travelsCreated: [Travel!]
   joinsTravels: [Travel!]
@@ -185,6 +186,7 @@ input UpdateUserInput {
   description: String
   instagram: String
   whatsapp: String
+  country: String
   activitiesIds: [String!]
 }
 
@@ -256,6 +258,7 @@ input SignupUserInput {
   description: String
   instagram: String
   whatsapp: String
+  country: String
 }
 
 input CreateReviewInput {
