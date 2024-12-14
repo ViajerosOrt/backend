@@ -18,15 +18,15 @@ export class ReviewService {
     private reviewRepository: Repository<Review>,
     private userService: UsersService,
     private travelService: TravelService,
-  ) {}
+  ) { }
 
 
-  async create(createReviewInput: CreateReviewInput, userCreatorId: string,userReceiverId: string, travelId: string ): Promise<Review> {
+  async create(createReviewInput: CreateReviewInput, userCreatorId: string, userReceiverId: string, travelId: string): Promise<Review> {
     const review = this.reviewRepository.create(createReviewInput);
 
     review.createdUserBy = await this.userService.assignReview(review, userCreatorId);
-    
-    if(userReceiverId && travelId){
+
+    if (userReceiverId && travelId) {
       review.travel = await this.travelService.assignReview(review, travelId, userCreatorId, userReceiverId);
       review.receivedUserBy = await this.userService.receiveReview(review, userReceiverId);
       review.type = 'USER';
@@ -39,11 +39,11 @@ export class ReviewService {
 
     return this.reviewRepository.save(review)
   }
-  
+
   async findAll(): Promise<Review[]> {
     return this.reviewRepository.find({ relations: ['createdUserBy', 'receivedUserBy', 'travel'] });
   }
-  
+
 
   async findOne(id: string): Promise<Review | undefined> {
     return this.reviewRepository.findOne({
@@ -52,10 +52,10 @@ export class ReviewService {
     });
   }
 
-  async update(idReview: string, updateReviewInput: UpdateReviewInput, userId: string):Promise<Review>{
+  async update(idReview: string, updateReviewInput: UpdateReviewInput, userId: string): Promise<Review> {
     const review = await this.findOne(idReview);
 
-    if(review.createdUserBy.id !== userId){
+    if (review.createdUserBy.id !== userId) {
       throw new GraphQLError('The creator of the review cannot update');
     }
 

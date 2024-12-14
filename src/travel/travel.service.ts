@@ -298,9 +298,9 @@ export class TravelService {
       throw new GraphQLError('This travel not exist');
     }
 
-    const userIdsInTravel  = travel.usersTravelers.map(user => user.id)
+    const userIdsInTravel = travel.usersTravelers.map(user => user.id)
 
-    if(userCreatorId && userReceiverId && (!userIdsInTravel.includes(userCreatorId) || !userIdsInTravel.includes(userReceiverId))){
+    if (userCreatorId && userReceiverId && (!userIdsInTravel.includes(userCreatorId) || !userIdsInTravel.includes(userReceiverId))) {
       throw new GraphQLError('Both users must have been in the same travel to leave a review');
     }
 
@@ -311,7 +311,6 @@ export class TravelService {
 
   async findAll(startDate?: Date, endDate?: Date, travelName?: string, activityIds?: string[], transportId?: string, countryName?: string, creatorId?: string): Promise<Travel[]> {
     const query = await this.travelRepository.createQueryBuilder('travel')
-    console.log(travelName)
     query
       .leftJoinAndSelect('travel.usersTravelers', 'usersTravelers')
       .leftJoinAndSelect('travel.creatorUser', 'creatorUser')

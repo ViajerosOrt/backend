@@ -9,7 +9,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @Resolver(() => Review)
 @UseGuards(JwtAuthGuard)
 export class ReviewResolver {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(private readonly reviewService: ReviewService) { }
 
   @Mutation(() => Review)
   createReview(
@@ -17,9 +17,9 @@ export class ReviewResolver {
     @Context() context,
     @Args('userReceiverId', { type: () => String }) userReceiverId: string,
     @Args('travelId', { type: () => String }) travelId: string,
-    
+
   ): Promise<Review> {
-    return this.reviewService.create(createReviewInput, context.req.user.id, userReceiverId, travelId);
+    return this.reviewService.create(createReviewInput, context.req.user.userId, userReceiverId, travelId);
   }
 
   @Query(() => [Review], { name: 'reviews' })
@@ -32,7 +32,7 @@ export class ReviewResolver {
     return this.reviewService.findOne(id);
   }
 
-  
+
 
   @Mutation(() => Review)
   removeReview(@Args('id', { type: () => String }) id: string) {
