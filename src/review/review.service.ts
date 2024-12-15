@@ -48,7 +48,7 @@ export class ReviewService {
   async findOne(id: string): Promise<Review | undefined> {
     return this.reviewRepository.findOne({
       where: { id },
-      relations: ['createdUserBy', 'receivedUserBy', 'travel'],
+      relations: ['createdUserBy', 'receivedUserBy', 'travel', 'travel.usersTravelers'],
     });
   }
 
@@ -56,7 +56,7 @@ export class ReviewService {
     const review = await this.findOne(idReview);
 
     if (review.createdUserBy.id !== userId) {
-      throw new GraphQLError('The creator of the review cannot update');
+      throw new GraphQLError('The user cannot update the review because he is not the creator');
     }
 
     Object.assign(review, updateReviewInput)
@@ -64,9 +64,9 @@ export class ReviewService {
 
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<Review> {
+    const review = await this.findOne(id);
     await this.reviewRepository.delete(id);
+    return review;
   }
-
-
 }

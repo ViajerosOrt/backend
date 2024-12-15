@@ -49,4 +49,13 @@ export class ReviewResolver {
   async getReview(@Args('id') id: string): Promise<Review> {
     return this.reviewService.findOne(id);
   }
+
+  @Mutation(() => Review)
+  updateReview(
+    @Args('id') id: string,
+    @Args('updateReviewInput') updateReviewInput: UpdateReviewInput,
+    @Context() context
+  ): Promise<Review> {
+    return this.reviewService.update(id, updateReviewInput, context.req.user.userId);
+  }
 }

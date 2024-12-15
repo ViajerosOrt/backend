@@ -81,6 +81,7 @@ type User {
   description: String
   instagram: String
   whatsapp: String
+  country: String
   userActivities: [Activity!]
   travelsCreated: [Travel!]
   joinsTravels: [Travel!]
@@ -171,6 +172,7 @@ type Mutation {
   signup(signupUserInput: SignupUserInput!): User!
   createReview(createReviewInput: CreateReviewInput!, userReceiverId: String!, travelId: String!): Review!
   removeReview(id: String!): Review!
+  updateReview(id: String!, updateReviewInput: UpdateReviewInput!): Review!
 }
 
 input CreateActivityInput {
@@ -185,6 +187,7 @@ input UpdateUserInput {
   description: String
   instagram: String
   whatsapp: String
+  country: String
   activitiesIds: [String!]
 }
 
@@ -256,9 +259,15 @@ input SignupUserInput {
   description: String
   instagram: String
   whatsapp: String
+  country: String
 }
 
 input CreateReviewInput {
   stars: Int!
+  content: String!
+}
+
+input UpdateReviewInput {
+  stars: String!
   content: String!
 }
