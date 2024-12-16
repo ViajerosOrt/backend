@@ -13,5 +13,6 @@ import { MyGateway } from '../gateway/gateway';
   ],
   providers: [MessageResolver, MessageService, MyGateway],
   exports:[MessageService]
+
 })
 export class MessageModule {}

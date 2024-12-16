@@ -53,8 +53,9 @@ export class ChatService {
         'messages.user'
       ]
     });
-  }
 
+  }
+  
   update(id: number, updateChatInput: UpdateChatInput) {
     return `This action updates a #${id} chat`;
   }
