@@ -12,7 +12,10 @@ import { ChecklistService } from '../checklist/checklist.service';
 import { GraphQLError } from 'graphql';
 import { Review } from '../review/entities/review.entity';
 import { TransportService } from '../transport/transport.service';
-import { use } from 'passport';
+import { ChatService } from '../chat/chat.service';
+import { MyGateway } from '../gateway/gateway';
+import { CreateMessageInput } from '../message/dto/create-message.input';
+import { User } from '../users/entities/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
@@ -28,7 +31,9 @@ export class TravelService {
     private activityService: ActivityService,
     private locationService: LocationService,
     private checklistService: ChecklistService,
-    private transportService: TransportService
+    private transportService: TransportService,
+    private chatService: ChatService,
+    private readonly gateway: MyGateway
   ) { }
 
   async create(
@@ -82,6 +87,13 @@ export class TravelService {
     travel.usersTravelers.push(user);
     travel.transport = transport;
 
+    //*************CHAT************** *//
+    const chat = await this.chatService.create();
+    chat.travel = travel;
+    travel.chat = await this.chatService.addUserToChat(chat.id, user);
+
+    this.gateway.joinRoom(user.id, travel.chat.id, user.name);
+    //******************************* *//
 
     const saveTravel = await this.travelRepository.save(travel);
 
@@ -115,6 +127,11 @@ export class TravelService {
     travel.usersTravelers.push(user);
     user.joinsTravels.push(travel);
 
+
+    //************CHAT************** *//
+    this.gateway.joinRoom(user.id, travel.chat.id, user.name);
+    console.log('sasasasa')
+    //***************************** *//
     return this.travelRepository.save(travel);
   }
 
@@ -322,6 +339,9 @@ export class TravelService {
       .leftJoinAndSelect('travel.reviews', 'reviews')
       .leftJoinAndSelect('reviews.createdUserBy', 'createdUserBy')
       .leftJoinAndSelect('travel.transport', 'transport')
+      .leftJoinAndSelect('travel.chat', 'chat')
+      .leftJoinAndSelect('chat.messages', 'messages')
+
 
     if (activityIds && activityIds.length > 0) {
       query.andWhere('travelActivities.id In (:...activityIds)', { activityIds })
@@ -373,7 +393,9 @@ export class TravelService {
         'checklist.items.user',
         'travelLocation',
         'reviews',
-        'transport'
+        'transport',
+        'chat',
+        'chat.messages'
       ],
     });
 
@@ -429,9 +451,21 @@ export class TravelService {
     return `This action removes a #${id} travel`;
   }
 
-
-
   async save(travel: Travel): Promise<void> {
     this.travelRepository.save(travel);
   }
+
+  //********CHAT************ *//
+  /*
+  async sendMessage(createMessageInput: CreateMessageInput, user: User, travelId: string):Promise<any>{
+    const travel = await this.findOne(travelId);
+
+    if(!travel.usersTravelers.some(us => us.id === user.id)){
+      throw new GraphQLError('You dont belong on this journey');
+    }
+
+    return await this.chatService.sendMenssage(createMessageInput, travel.chat.id, user);
+  }
+  */
+  //************************ *//
 }

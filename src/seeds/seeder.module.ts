@@ -29,6 +29,10 @@ import { ReviewSeeder } from "./review.seeder";
 import { Transport } from "../transport/entities/transport.entity";
 import { TransportModule } from "../transport/transport.module";
 import { TransportSeeder } from "./transport.seeder";
+import { Chat } from "../chat/entities/chat.entity";
+import { Message } from "../message/entities/message.entity";
+import { ChatModule } from "../chat/chat.module";
+import { MessageModule } from "../message/message.module";
 
 
 
@@ -45,7 +49,7 @@ import { TransportSeeder } from "./transport.seeder";
           username: configService.get<string>('DB_USERNAME'),
           password: configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DB_DATABASE'),
-          entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport],
+          entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport, Chat, Message],
           synchronize: false,
         }),
         inject: [ConfigService]
@@ -53,7 +57,7 @@ import { TransportSeeder } from "./transport.seeder";
         ConfigModule.forRoot({
             isGlobal: true, 
           }),
-        TypeOrmModule.forFeature([Activity, Location, User, Travel, Review, Item, Checklist, Transport]),
+        TypeOrmModule.forFeature([Activity, Location, User, Travel, Review, Item, Checklist, Transport,Chat, Message]),
         ActivityModule,
         UsersModule,
         LocationModule,
@@ -62,7 +66,9 @@ import { TransportSeeder } from "./transport.seeder";
         ReviewModule,
         ItemModule,
         ChecklistModule,
-        TransportModule
+        TransportModule,
+        ChatModule,
+        MessageModule
     ],
     providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService, ChecklistSeeder, ReviewSeeder, TransportSeeder],
     exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService, ChecklistSeeder,  ReviewSeeder, TransportSeeder]

@@ -1,4 +1,4 @@
-import { Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Message } from '../../message/entities/message.entity';
 import { Travel } from '../../travel/entities/travel.entity';
 import { User } from '../../users/entities/user.entity';
@@ -13,7 +13,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-
+@ObjectType()
 @Entity()
 export class Chat {
   @PrimaryGeneratedColumn('uuid')

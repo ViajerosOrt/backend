@@ -10,6 +10,9 @@ import { use } from 'passport';
 import { GraphQLError } from 'graphql';
 import { Review } from '../review/entities/review.entity';
 import { Item } from '../item/entities/item.entity';
+import { CreateMessageInput } from '../message/dto/create-message.input';
+import { Message } from '../message/entities/message.entity';
+import { ChatService } from '../chat/chat.service';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +20,7 @@ export class UsersService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private activityService: ActivityService,
+    private chatService: ChatService
   ) {}
 
   create(createUserInput: SignupUserInput): Promise<User> {
@@ -200,4 +204,29 @@ export class UsersService {
   async save(user: User): Promise<void> {
     this.userRepository.save(user);
   }
+
+  //**********CHAT********** *//
+  async sendMessage(createMessageInput: CreateMessageInput, userId:string, chatId: string):Promise<Message>{
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new GraphQLError('this user not exist');
+    }
+
+    const chat = await this.chatService.findOne(chatId);
+
+    const travel = user.joinsTravels.find(tr => tr.id === chat.travel.id);
+
+    if (!travel) {
+      throw new GraphQLError('The user is not part of this travel');
+    }
+
+    if(!travel.usersTravelers.some(us => us.id === user.id)){
+      throw new GraphQLError('You dont belong on this journey');
+    }
+
+    return await this.chatService.sendMenssage(createMessageInput, chatId, user)
+  }
+
+
+  //*********************** *//
 }

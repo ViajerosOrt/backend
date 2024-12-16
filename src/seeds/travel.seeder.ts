@@ -11,6 +11,8 @@ import { use } from 'passport';
 import { Activity } from '../activity/activity.entity';
 import { Transport } from '../transport/entities/transport.entity';
 import { TransportService } from '../transport/transport.service';
+import { Chat } from '../chat/entities/chat.entity';
+import { ChatService } from '../chat/chat.service';
 
 
 
@@ -23,6 +25,7 @@ export class TravelSeeder implements Seeder {
     private readonly userService: UsersService,
     private readonly activityService: ActivityService,
     private readonly transportService: TransportService,
+    private readonly chatService: ChatService
   ) {}
 
   async seed(): Promise<any> {
@@ -46,7 +49,8 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'Brazil'
+        country: 'Brazil',
+        chat: await this.addChat()
       },
       {
         travelTitle: 'Mountain Adventure',
@@ -60,7 +64,8 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'Suiza'
+        country: 'Suiza',
+        chat: await this.addChat()
 
       },
       {
@@ -75,7 +80,8 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'EEUU'
+        country: 'EEUU',
+        chat: await this.addChat()
       },
     ];
     for(const travel of travels){
@@ -121,4 +127,8 @@ export class TravelSeeder implements Seeder {
     return transports[Math.floor(Math.random() * transports.length)];
   }
 
+  async addChat():Promise<Chat>{
+    const chat =  await this.chatService.create()
+    return chat
+  }
 }

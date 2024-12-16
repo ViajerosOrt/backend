@@ -39,6 +39,26 @@ type Transport {
   travels: [Travel!]
 }
 
+type Message {
+  id: String!
+  content: String!
+  createdAt: DateTime!
+  chat: Chat!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Chat {
+  id: String!
+  travel: Travel!
+  users: [User!]
+  messages: [Message!]
+}
+
 type Travel {
   id: String!
   travelTitle: String!
@@ -55,12 +75,8 @@ type Travel {
   travelLocation: Location!
   checklist: Checklist
   transport: Transport
+  chat: Chat!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Review {
   id: String!
@@ -88,6 +104,8 @@ type User {
   reviewsCreated: [Review!]
   reviewsReceived: [Review!]
   items: [Item!]
+  chats: [Chat!]
+  messages: [Message!]
 }
 
 type TravelDto {
@@ -106,6 +124,7 @@ type TravelDto {
   travelLocation: Location!
   checklist: Checklist
   transport: Transport
+  chat: Chat!
   isJoined: Boolean
   usersCount: Int
 }
@@ -127,6 +146,8 @@ type Query {
   users: [User!]!
   userById(id: String!): User!
   user(email: String!): User!
+  chat(id: String!): Chat!
+  message(id: Int!): Message!
   location(id: String!): Location!
   travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String, countryName: String, creatorId: String): [TravelDto!]!
   travel(id: String!): TravelDto!
@@ -146,6 +167,13 @@ type Mutation {
   addActivities(activitiesIds: [String!]!): User!
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
+  sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
+  createChat(createChatInput: CreateChatInput!): Chat!
+  updateChat(updateChatInput: UpdateChatInput!): Chat!
+  removeChat(id: Int!): Chat!
+  createMessage(createMessageInput: CreateMessageInput!): Message!
+  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
+  removeMessage(id: Int!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
@@ -189,6 +217,26 @@ input UpdateUserInput {
   whatsapp: String
   country: String
   activitiesIds: [String!]
+}
+
+input CreateMessageInput {
+  content: String!
+  createdAt: DateTime!
+}
+
+input CreateChatInput {
+  name: String!
+}
+
+input UpdateChatInput {
+  name: String
+  id: Int!
+}
+
+input UpdateMessageInput {
+  content: String
+  createdAt: DateTime
+  id: Int!
 }
 
 input CreateLocationInput {

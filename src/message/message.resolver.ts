@@ -10,7 +10,7 @@ export class MessageResolver {
 
   @Mutation(() => Message)
   createMessage(@Args('createMessageInput') createMessageInput: CreateMessageInput) {
-    return this.messageService.create(createMessageInput);
+    return "";
   }
 
   @Query(() => [Message], { name: 'message' })

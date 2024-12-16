@@ -1,19 +1,58 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Chat } from './entities/chat.entity';
+import { Repository } from 'typeorm';
+import { User } from '../users/entities/user.entity';
+import { CreateMessageInput } from '../message/dto/create-message.input';
+import { MessageService } from '../message/message.service';
+import { use } from 'passport';
 
 @Injectable()
 export class ChatService {
-  create(createChatInput: CreateChatInput) {
-    return 'This action adds a new chat';
+  constructor(
+    @InjectRepository(Chat)
+    private chatRepository: Repository<Chat>,
+    private messageService: MessageService
+  ){}
+
+
+  async create(): Promise<Chat> {
+    const chat = this.chatRepository.create();
+    return this.chatRepository.save(chat);
   }
 
-  findAll() {
-    return `This action returns all chat`;
+  async addUserToChat(chatId: string, user: User):Promise<Chat>{
+    const chat = await this.findOne(chatId)
+    chat.users = chat.users || []
+    chat.users.push(user)
+    return this.chatRepository.save(chat)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} chat`;
+  async findAll():Promise<Chat[]> {
+    const query = await this.chatRepository
+    .createQueryBuilder('chat')
+    .leftJoinAndSelect('chat.users', 'users')
+    .leftJoinAndSelect('chat.messages', 'messages')
+    .leftJoinAndSelect('messages.user', 'userMessage')
+    
+    const chats = query.getMany();
+    return chats;
+  }
+
+  async findOne(id: string):Promise<Chat> {
+    return this.chatRepository.findOne({
+      where:{
+        id
+      },
+      relations:[
+        'travel',
+        'users',
+        'messages',
+        'messages.user'
+      ]
+    });
   }
 
   update(id: number, updateChatInput: UpdateChatInput) {
@@ -22,5 +61,18 @@ export class ChatService {
 
   remove(id: number) {
     return `This action removes a #${id} chat`;
+  }
+
+  async save(chat: Chat):Promise<Chat>{
+    return this.chatRepository.save(chat);
+  }
+
+ async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User):Promise<any> {
+    const chat = await this.findOne(chatId);
+    const newMessage = await this.messageService.create(createMessageInput, user, chat);
+    chat.messages = chat.messages || [];
+    chat.messages.push(newMessage)
+    this.chatRepository.save(chat);
+    return newMessage;
   }
 }

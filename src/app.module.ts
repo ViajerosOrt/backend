@@ -29,6 +29,8 @@ import { Transport } from './transport/entities/transport.entity';
 import { GatewayModule } from './gateway/gateway.module';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
+import { Chat } from './chat/entities/chat.entity';
+import { Message } from './message/entities/message.entity';
 
 
 @Module({
@@ -43,6 +45,9 @@ import { MessageModule } from './message/message.module';
           code: error.extensions.code
         };
         return graphQLFormattedError;
+      },
+      subscriptions:{
+        'graphql-ws':true
       }
     }),
     TypeOrmModule.forRootAsync({
@@ -54,7 +59,7 @@ import { MessageModule } from './message/message.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport],
+        entities: [User, Activity, Location, Travel, Review, Checklist, Item, Transport,Chat, Message],
         synchronize: false,
       }),
       inject: [ConfigService]

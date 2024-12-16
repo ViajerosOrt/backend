@@ -1,15 +1,17 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TravelService } from './travel.service';
 import { TravelResolver } from './travel.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Travel } from './entities/travel.entity';
-import { ReviewModule } from '../review/review.module';
 import { UsersModule } from '../users/users.module';
 import { LocationModule } from '../location/location.module';
 import { ActivityModule } from '../activity/activity.module';
 import { ChecklistModule } from '../checklist/checklist.module';
 import { TravelTransformer } from './travel.transformer';
 import { TransportModule } from '../transport/transport.module';
+import { ChatModule } from '../chat/chat.module';
+import { GatewayModule } from '../gateway/gateway.module';
+import { MyGateway } from '../gateway/gateway';
 
 @Module({
   imports: [
@@ -18,9 +20,11 @@ import { TransportModule } from '../transport/transport.module';
     ActivityModule,
     LocationModule, 
     ChecklistModule,
-    TransportModule
+    TransportModule,
+    ChatModule,
+    GatewayModule,
   ],
-  providers: [TravelResolver, TravelService, TravelTransformer],
+  providers: [TravelResolver, TravelService, TravelTransformer, MyGateway],
   exports: [TravelService],
 })
 export class TravelModule {}
