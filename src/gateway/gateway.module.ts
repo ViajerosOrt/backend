@@ -8,6 +8,7 @@ import { MessageModule } from "../message/message.module";
 
 
 @Module({
-    providers: [MyGateway]
+    providers: [MyGateway],
+    exports:[MyGateway]
 })
 export class GatewayModule{}

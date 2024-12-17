@@ -24,7 +24,7 @@ import { MyGateway } from '../gateway/gateway';
     ChatModule,
     GatewayModule,
   ],
-  providers: [TravelResolver, TravelService, TravelTransformer, MyGateway],
+  providers: [TravelResolver, TravelService, TravelTransformer],
   exports: [TravelService],
 })
 export class TravelModule {}

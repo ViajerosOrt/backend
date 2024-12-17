@@ -11,7 +11,7 @@ import { MyGateway } from '../gateway/gateway';
     TypeOrmModule.forFeature([Message]),
     GatewayModule
   ],
-  providers: [MessageResolver, MessageService, MyGateway],
+  providers: [MessageResolver, MessageService],
   exports:[MessageService]
 
 })

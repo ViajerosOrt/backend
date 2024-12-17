@@ -3,8 +3,11 @@ import { ChatService } from './chat.service';
 import { Chat } from './entities/chat.entity';
 import { CreateChatInput } from './dto/create-chat.input';
 import { UpdateChatInput } from './dto/update-chat.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Resolver(() => Chat)
+@UseGuards(JwtAuthGuard)
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 

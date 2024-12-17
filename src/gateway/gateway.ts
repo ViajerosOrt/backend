@@ -11,6 +11,10 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway()
 export class MyGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor() {
+    console.log('MyGateway instance created');
+  }
+
   @WebSocketServer()
   server: Server;
 
@@ -35,6 +39,7 @@ export class MyGateway implements OnGatewayConnection, OnGatewayDisconnect {
   joinRoom(userId: string, chatId: string, userName: string) {
     const client = this.connectedClients.get(userId);
     if (client) {
+      client.join(chatId);
       this.server.to(chatId).emit('userJoined', { message: `User ${userName} joined the chat.` });
       console.log(`User ${userName} joined room ${chatId}`);
       console.log(client.rooms)
@@ -46,6 +51,7 @@ export class MyGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() body: { chatId: string; message: string },
     @ConnectedSocket() client: Socket,
   ) {
+    console.log('Existing rooms: ', this.server.sockets.adapter.rooms);
     console.log(client.rooms)
     this.server.to(body.chatId).emit('newMessage', { message: body.message });
     console.log(`Message sent to room ${body.chatId}: ${body.message}`);
