@@ -29,11 +29,9 @@ import { Transport } from './transport/entities/transport.entity';
 import { GatewayModule } from './gateway/gateway.module';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
-<<<<<<< HEAD
 import { Chat } from './chat/entities/chat.entity';
 import { Message } from './message/entities/message.entity';
-=======
->>>>>>> bbc90cbcf59be72c96ed6a2a7e28c934c242a184
+
 
 
 @Module({
