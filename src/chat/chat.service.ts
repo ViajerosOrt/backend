@@ -34,6 +34,7 @@ export class ChatService {
   async findAll():Promise<Chat[]> {
     const query = await this.chatRepository
     .createQueryBuilder('chat')
+    .leftJoinAndSelect('chat.travel', 'travel')
     .leftJoinAndSelect('chat.users', 'users')
     .leftJoinAndSelect('chat.messages', 'messages')
     .leftJoinAndSelect('messages.user', 'userMessage')
@@ -60,9 +61,11 @@ export class ChatService {
   async findAllChatsOfUser(userId: string):Promise<Chat[]> {
     const query = await this.chatRepository
     .createQueryBuilder('chat')
+    .leftJoinAndSelect('chat.travel', 'travel')
     .leftJoinAndSelect('chat.users', 'users')
     .leftJoinAndSelect('chat.messages', 'messages')
     .leftJoinAndSelect('messages.user', 'userMessage')
+    
     
     query.andWhere('users.id = :userId', {userId} );
 
