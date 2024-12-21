@@ -87,6 +87,13 @@ export class TravelSeeder implements Seeder {
     for(const travel of travels){
       travel.usersTravelers = travel.usersTravelers || [];
       travel.usersTravelers.push(user);
+
+      travel.chat.users = travel.chat.users || []
+      travel.chat.users.push(user)
+      user.chats = user.chats || [];
+      user.chats.push(travel.chat);
+      this.userService.save(user);
+      this.chatService.save(travel.chat)
     }
 
     const savedTravels = await this.travelRepository.save(travels);
@@ -129,6 +136,8 @@ export class TravelSeeder implements Seeder {
 
   async addChat():Promise<Chat>{
     const chat =  await this.chatService.create()
+ 
+
     return chat
   }
 }

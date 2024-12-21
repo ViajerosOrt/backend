@@ -8,6 +8,7 @@ import { User } from '../users/entities/user.entity';
 import { CreateMessageInput } from '../message/dto/create-message.input';
 import { MessageService } from '../message/message.service';
 import { use } from 'passport';
+import { Message } from '../message/entities/message.entity';
 
 @Injectable()
 export class ChatService {
@@ -55,6 +56,19 @@ export class ChatService {
     });
 
   }
+
+  async findAllChatsOfUser(userId: string):Promise<Chat[]> {
+    const query = await this.chatRepository
+    .createQueryBuilder('chat')
+    .leftJoinAndSelect('chat.users', 'users')
+    .leftJoinAndSelect('chat.messages', 'messages')
+    .leftJoinAndSelect('messages.user', 'userMessage')
+    
+    query.andWhere('users.id = :userId', {userId} );
+
+    const chats = query.getMany();
+    return chats;
+  }
   
   update(id: number, updateChatInput: UpdateChatInput) {
     return `This action updates a #${id} chat`;
@@ -68,7 +82,7 @@ export class ChatService {
     return this.chatRepository.save(chat);
   }
 
- async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User):Promise<any> {
+ async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User):Promise<Message> {
     const chat = await this.findOne(chatId);
     const newMessage = await this.messageService.create(createMessageInput, user, chat);
     chat.messages = chat.messages || [];

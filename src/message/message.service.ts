@@ -33,6 +33,18 @@ export class MessageService {
     return `This action returns a #${id} message`;
   }
 
+  async findMenssagesOfChat(chatId: string):Promise<Message[]>{
+    const query = await this.messageRepository.createQueryBuilder('message');
+
+    query.leftJoinAndSelect('message.chat', 'chat')
+    .leftJoinAndSelect('message.user', 'user')
+
+    query.andWhere('chat.id = :chatId', {chatId});
+
+    const messages = query.getMany();
+    return messages;
+  }
+
   update(id: number, updateMessageInput: UpdateMessageInput) {
     return `This action updates a #${id} message`;
   }

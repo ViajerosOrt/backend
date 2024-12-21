@@ -91,7 +91,7 @@ export class TravelService {
     const chat = await this.chatService.create();
     chat.travel = travel;
     travel.chat = await this.chatService.addUserToChat(chat.id, user);
-
+    this.userService.save(user);
     this.gateway.joinRoom(user.id, travel.chat.id, user.name);
     //******************************* *//
 
@@ -129,8 +129,8 @@ export class TravelService {
 
 
     //************CHAT************** *//
+    this.chatService.addUserToChat(travel.chat.id, user);
     this.gateway.joinRoom(user.id, travel.chat.id, user.name);
-    console.log('sasasasa')
     //***************************** *//
     return this.travelRepository.save(travel);
   }

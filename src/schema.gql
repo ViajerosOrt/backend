@@ -146,7 +146,11 @@ type Query {
   users: [User!]!
   userById(id: String!): User!
   user(email: String!): User!
+  chats: [Chat!]!
   chat(id: String!): Chat!
+  chatUser: [Chat!]!
+  messagesChat(chatId: String!): [Message!]!
+  messages: [Message!]!
   message(id: Int!): Message!
   location(id: String!): Location!
   travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String, countryName: String, creatorId: String): [TravelDto!]!
@@ -168,10 +172,10 @@ type Mutation {
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
   sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
-  createChat(createChatInput: CreateChatInput!): Chat!
+  createChat: Chat!
   updateChat(updateChatInput: UpdateChatInput!): Chat!
   removeChat(id: Int!): Chat!
-  createMessage(createMessageInput: CreateMessageInput!): Message!
+  createMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
   updateMessage(updateMessageInput: UpdateMessageInput!): Message!
   removeMessage(id: Int!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
@@ -222,10 +226,6 @@ input UpdateUserInput {
 input CreateMessageInput {
   content: String!
   createdAt: DateTime!
-}
-
-input CreateChatInput {
-  name: String!
 }
 
 input UpdateChatInput {

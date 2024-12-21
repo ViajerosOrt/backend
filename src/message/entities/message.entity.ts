@@ -30,6 +30,5 @@ export class Message {
 
   @ManyToOne(() => User, (user) => user.messages, { onDelete: 'CASCADE' })
   @Field(() => User)
-
   user: User;
 }

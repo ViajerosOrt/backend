@@ -69,7 +69,9 @@ export class UsersService {
       .leftJoinAndSelect('reviewsCreated.travel', 'travelReviewsCreated')
       .leftJoinAndSelect('reviewsReceived.createdUserBy', 'createdUserBy')
       .leftJoinAndSelect('reviewsReceived.travel', 'travelReviewsReceived')
-      .leftJoinAndSelect('user.items', 'items');
+      .leftJoinAndSelect('user.items', 'items')
+      .leftJoinAndSelect('user.chats', 'chats');
+      
 
 
 
