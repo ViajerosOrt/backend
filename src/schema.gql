@@ -225,7 +225,7 @@ input UpdateUserInput {
 
 input CreateMessageInput {
   content: String!
-  createdAt: DateTime!
+  createdAt: DateTime
 }
 
 input UpdateChatInput {

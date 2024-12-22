@@ -63,12 +63,13 @@ export class UsersResolver {
   }
 
   @Mutation(() => Message, { name: 'sendMessage' })
-async sendMessage(
-  @Args('createMessageInput') createMessageInput: CreateMessageInput,
-  @Context() context,
-  @Args('chatId') chatId: string
-): Promise<Message> {
-  return this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
-}
+  @UseGuards(JwtAuthGuard)
+  async sendMessage(
+    @Args('createMessageInput') createMessageInput: CreateMessageInput,
+    @Context() context,
+    @Args('chatId') chatId: string
+  ): Promise<Message> {
+    return this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
+  }
 
 }

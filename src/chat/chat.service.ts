@@ -87,7 +87,8 @@ export class ChatService {
 
   async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User): Promise<Message> {
     const chat = await this.findOne(chatId);
-    const newMessage = await this.messageService.create(createMessageInput, user, chat);
+
+    const newMessage = await this.messageService.create({ ...createMessageInput, createdAt: new Date() }, user, chat);
     chat.messages = chat.messages || [];
     chat.messages.push(newMessage)
     this.chatRepository.save(chat);

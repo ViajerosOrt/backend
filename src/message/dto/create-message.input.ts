@@ -5,8 +5,7 @@ import { Type } from 'class-transformer';
 export class CreateMessageInput {
   @Field(() => String)
   content: string;
-
   @Type(() => Date)
-  @Field()
-  createdAt: Date;
+  @Field({ nullable: true })
+  createdAt?: Date;
 }
