@@ -455,17 +455,5 @@ export class TravelService {
     this.travelRepository.save(travel);
   }
 
-  //********CHAT************ *//
-  /*
-  async sendMessage(createMessageInput: CreateMessageInput, user: User, travelId: string):Promise<any>{
-    const travel = await this.findOne(travelId);
 
-    if(!travel.usersTravelers.some(us => us.id === user.id)){
-      throw new GraphQLError('You dont belong on this journey');
-    }
-
-    return await this.chatService.sendMenssage(createMessageInput, travel.chat.id, user);
-  }
-  */
-  //************************ *//
 }

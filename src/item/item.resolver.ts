@@ -12,25 +12,10 @@ export class ItemResolver {
   constructor(private readonly itemService: ItemService) {}
 
 
-  @Query(() => [Item], { name: 'items' })
-  findAll() {
-    return this.itemService.findAll();
-  }
-
   @Query(() => Item, { name: 'item' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.itemService.findOne(id);
   }
 
-  @Mutation(() => Item)
-  updateItem(
-    @Args('updateItemInput') updateItemInput: UpdateItemInput,
-    @Args('id', { type: () => String }) id: string) {
-    return this.itemService.update(id, updateItemInput);
-  }
 
-  @Mutation(() => Item)
-  removeItem(@Args('id', { type: () => Int }) id: number) {
-    return this.itemService.remove(id);
-  }
 }

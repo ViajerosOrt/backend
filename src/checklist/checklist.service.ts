@@ -98,9 +98,6 @@ export class ChecklistService {
     return removedItem.length > 0;
   }
 
-  findAll() {
-    return `This action returns all checklist`;
-  }
 
   async findOne(id: string) {
     return await this.checklistRepository.findOne({
@@ -112,11 +109,5 @@ export class ChecklistService {
 
   }
 
-  update(id: string, updateChecklistInput: UpdateChecklistInput) {
-    return `This action updates a #${id} checklist`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} checklist`;
-  }
 }

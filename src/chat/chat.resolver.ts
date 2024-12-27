@@ -13,11 +13,6 @@ import { CreateMessageInput } from '../message/dto/create-message.input';
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
-  @Mutation(() => Chat)
-  async createChat() {
-    return await this.chatService.create();
-  }
-
   @Query(() => [Chat], { name: 'chats' })
   async findAll() {
     return await this.chatService.findAll();
@@ -36,13 +31,5 @@ export class ChatResolver {
     return await this.chatService.findAllChatsOfUser(context.req.user.userId)
   }
 
-  @Mutation(() => Chat)
-  updateChat(@Args('updateChatInput') updateChatInput: UpdateChatInput) {
-    return this.chatService.update(updateChatInput.id, updateChatInput);
-  }
 
-  @Mutation(() => Chat)
-  removeChat(@Args('id', { type: () => Int }) id: number) {
-    return this.chatService.remove(id);
-  }
 }

@@ -13,31 +13,11 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class ChecklistResolver {
   constructor(private readonly checklistService: ChecklistService) {}
 
-  @Mutation(() => Checklist, {name: 'createCheck'})
-  create(
-    @Args('travel') travelId: string,
-    @Args('items', {type: () => [String]}) items: string[]){
-    return this.checklistService.create(travelId, items);
 
-  }
-
-  @Query(() => [Checklist], { name: 'checklist' })
-  findAll() {
-    return this.checklistService.findAll();
-  }
 
   @Query(() => Checklist, { name: 'checklist' })
   findOne(@Args('id', { type: () => String }) id: string) {
     return this.checklistService.findOne(id);
   }
 
-  @Mutation(() => Checklist)
-  updateChecklist(@Args('updateChecklistInput') updateChecklistInput: UpdateChecklistInput) {
-    return this.checklistService.update(updateChecklistInput.id, updateChecklistInput);
-  }
-
-  @Mutation(() => Checklist)
-  removeChecklist(@Args('id', { type: () => Int }) id: number) {
-    return this.checklistService.remove(id);
-  }
 }

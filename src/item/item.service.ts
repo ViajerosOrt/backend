@@ -68,11 +68,6 @@ export class ItemService {
 
 
 
-
-  findAll() {
-    return `This action returns all item`;
-  }
-
   async findOne(id: string) {
     return await this.itemRepository.findOne({
       where: {
@@ -83,11 +78,4 @@ export class ItemService {
 
   }
 
-  update(id: string, updateItemInput: UpdateItemInput) {
-    return `This action updates a #${id} item`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} item`;
-  }
 }

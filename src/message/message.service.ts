@@ -25,13 +25,7 @@ export class MessageService {
     return this.messageRepository.save(message)
   }
 
-  findAll() {
-    return `This action returns all message`;
-  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} message`;
-  }
 
   async findMenssagesOfChat(chatId: string):Promise<Message[]>{
     const query = await this.messageRepository.createQueryBuilder('message');
@@ -45,11 +39,4 @@ export class MessageService {
     return messages;
   }
 
-  update(id: number, updateMessageInput: UpdateMessageInput) {
-    return `This action updates a #${id} message`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} message`;
-  }
 }
