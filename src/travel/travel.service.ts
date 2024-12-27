@@ -160,7 +160,8 @@ export class TravelService {
     }
 
 
-    if (this.hasItem(travel.id, userId)) {
+    if (await this.hasItem(travel.id, userId)) {
+      console.log("entro")
       await this.removeItemToUser(travel.id, userId);
     }
     travel.usersTravelers = travel.usersTravelers.filter(
@@ -193,7 +194,7 @@ export class TravelService {
       throw new GraphQLError('Only the creator can ban users');
     }
 
-    if (this.hasItem(travel.id, bannerUser.id)) {
+    if (await this.hasItem(travel.id, bannerUser.id)) {
       await this.removeItemToUser(travel.id, bannerUser.id);
     }
     travel.usersTravelers = travel.usersTravelers.filter(
@@ -306,7 +307,7 @@ export class TravelService {
     if (!travel) {
       throw new GraphQLError('this travel not exist');
     }
-    return this.checklistService.hasItem(travelId, userId)
+    return this.checklistService.hasItem(travel.checklist.id, userId)
   }
 
   async assignReview(review: Review, travelId: string, userCreatorId?: string, userReceiverId?: string): Promise<Travel> {

@@ -150,13 +150,10 @@ type Query {
   chat(id: String!): Chat!
   chatUser: [Chat!]!
   messagesChat(chatId: String!): [Message!]!
-  messages: [Message!]!
-  message(id: Int!): Message!
   location(id: String!): Location!
   travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String, countryName: String, creatorId: String): [TravelDto!]!
   travel(id: String!): TravelDto!
   checklist(id: String!): Checklist!
-  items: [Item!]!
   item(id: String!): Item!
   transports: [Transport!]!
   transport(id: String!): Transport!
@@ -172,12 +169,6 @@ type Mutation {
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
   sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
-  createChat: Chat!
-  updateChat(updateChatInput: UpdateChatInput!): Chat!
-  removeChat(id: Int!): Chat!
-  createMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
-  updateMessage(updateMessageInput: UpdateMessageInput!): Message!
-  removeMessage(id: Int!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
@@ -192,11 +183,6 @@ type Mutation {
   removeItemToUser(id: String!): TravelDto!
   updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): TravelDto!
   removeTravel(id: String!): Travel!
-  createCheck(travel: String!, items: [String!]!): Checklist!
-  updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
-  removeChecklist(id: Int!): Checklist!
-  updateItem(updateItemInput: UpdateItemInput!, id: String!): Item!
-  removeItem(id: Int!): Item!
   createTransport(createTransportInput: CreateTransportInput!): Transport!
   updateTransport(updateTransportInput: UpdateTransportInput!): Transport!
   removeTransport(id: Int!): Transport!
@@ -226,17 +212,6 @@ input UpdateUserInput {
 input CreateMessageInput {
   content: String!
   createdAt: DateTime
-}
-
-input UpdateChatInput {
-  name: String
-  id: Int!
-}
-
-input UpdateMessageInput {
-  content: String
-  createdAt: DateTime
-  id: Int!
 }
 
 input CreateLocationInput {
@@ -273,16 +248,6 @@ input UpdateTravelInput {
   isEndable: Boolean!
   country: String!
   id: String!
-}
-
-input UpdateChecklistInput {
-  name: String!
-  id: String!
-}
-
-input UpdateItemInput {
-  name: String!
-  isEndable: Boolean
 }
 
 input CreateTransportInput {

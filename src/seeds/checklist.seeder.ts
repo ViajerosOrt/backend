@@ -25,12 +25,13 @@ export class ChecklistSeeder implements Seeder{
 
   async seed(): Promise<void> {
     const travels = await this.travelService.findAll(); 
-    const travel = travels[0] 
-
+    //const travel = travels[0] 
+    /*
     if (!travel) {
       console.log('No Travel found to associate with Checklist');
       return;
     }
+    */
 
     const itemsList =   [
       'Sunscreen' ,
@@ -51,13 +52,15 @@ export class ChecklistSeeder implements Seeder{
       itemsChecklist.push(items[Math.floor(Math.random() * items.length)])
     }
 
+   for(const travel of travels){
     const createChecklist = new CreateChecklistInput()
-    createChecklist.name = 'Beach Trip Checklist'
+    createChecklist.name = travel.travelTitle
     const checklist = this.checklistRepository.create(createChecklist)
     checklist.travel = travel
     checklist.items = checklist.items || []
     checklist.items.push(...itemsChecklist)
     await this.checklistRepository.save(checklist);
+   }
   
   }
 
