@@ -208,7 +208,7 @@ export class UsersService {
   }
 
   //**********CHAT********** *//
-  async sendMessage(createMessageInput: CreateMessageInput, userId:string, chatId: string):Promise<Message>{
+  async sendMessage(createMessageInput: CreateMessageInput, userId: string, chatId: string): Promise<Message> {
     const user = await this.findById(userId);
     if (!user) {
       throw new GraphQLError('this user not exist');

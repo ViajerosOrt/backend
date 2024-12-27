@@ -16,7 +16,7 @@ export class ChatService {
     @InjectRepository(Chat)
     private chatRepository: Repository<Chat>,
     private messageService: MessageService
-  ){}
+  ) { }
 
 
   async create(): Promise<Chat> {
@@ -24,31 +24,31 @@ export class ChatService {
     return this.chatRepository.save(chat);
   }
 
-  async addUserToChat(chatId: string, user: User):Promise<Chat>{
+  async addUserToChat(chatId: string, user: User): Promise<Chat> {
     const chat = await this.findOne(chatId)
     chat.users = chat.users || []
     chat.users.push(user)
     return this.chatRepository.save(chat)
   }
 
-  async findAll():Promise<Chat[]> {
+  async findAll(): Promise<Chat[]> {
     const query = await this.chatRepository
-    .createQueryBuilder('chat')
-    .leftJoinAndSelect('chat.travel', 'travel')
-    .leftJoinAndSelect('chat.users', 'users')
-    .leftJoinAndSelect('chat.messages', 'messages')
-    .leftJoinAndSelect('messages.user', 'userMessage')
-    
+      .createQueryBuilder('chat')
+      .leftJoinAndSelect('chat.travel', 'travel')
+      .leftJoinAndSelect('chat.users', 'users')
+      .leftJoinAndSelect('chat.messages', 'messages')
+      .leftJoinAndSelect('messages.user', 'userMessage')
+
     const chats = query.getMany();
     return chats;
   }
 
-  async findOne(id: string):Promise<Chat> {
+  async findOne(id: string): Promise<Chat> {
     return this.chatRepository.findOne({
-      where:{
+      where: {
         id
       },
-      relations:[
+      relations: [
         'travel',
         'users',
         'messages',
@@ -58,21 +58,21 @@ export class ChatService {
 
   }
 
-  async findAllChatsOfUser(userId: string):Promise<Chat[]> {
+  async findAllChatsOfUser(userId: string): Promise<Chat[]> {
     const query = await this.chatRepository
-    .createQueryBuilder('chat')
-    .leftJoinAndSelect('chat.travel', 'travel')
-    .leftJoinAndSelect('chat.users', 'users')
-    .leftJoinAndSelect('chat.messages', 'messages')
-    .leftJoinAndSelect('messages.user', 'userMessage')
-    
-    
-    query.andWhere('users.id = :userId', {userId} );
+      .createQueryBuilder('chat')
+      .innerJoin('chat.users', 'filterUser', 'filterUser.id = :userId', {
+        userId,
+      })
+      .leftJoinAndSelect('chat.travel', 'travel')
+      .leftJoinAndSelect('chat.users', 'allUsers')
+      .leftJoinAndSelect('chat.messages', 'messages')
+      .leftJoinAndSelect('messages.user', 'userMessage')
 
     const chats = query.getMany();
     return chats;
   }
-  
+
   update(id: number, updateChatInput: UpdateChatInput) {
     return `This action updates a #${id} chat`;
   }
@@ -81,13 +81,14 @@ export class ChatService {
     return `This action removes a #${id} chat`;
   }
 
-  async save(chat: Chat):Promise<Chat>{
+  async save(chat: Chat): Promise<Chat> {
     return this.chatRepository.save(chat);
   }
 
- async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User):Promise<Message> {
+  async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User): Promise<Message> {
     const chat = await this.findOne(chatId);
-    const newMessage = await this.messageService.create(createMessageInput, user, chat);
+
+    const newMessage = await this.messageService.create({ ...createMessageInput, createdAt: new Date() }, user, chat);
     chat.messages = chat.messages || [];
     chat.messages.push(newMessage)
     this.chatRepository.save(chat);
