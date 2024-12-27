@@ -45,6 +45,14 @@ export class MyGateway implements OnGatewayConnection, OnGatewayDisconnect {
       console.log(client.rooms)
     }
   }
+
+  exitRoom(userId: string, chatId: string, userName: string ){
+    const client = this.connectedClients.get(userId)
+    if(client){
+      client.leave(chatId);
+      this.server.to(chatId).emit('userExit', { message: `User ${userName} joined the chat.` })
+    }
+  }
   
   @SubscribeMessage('sendMessage')
   handleSendMessage(

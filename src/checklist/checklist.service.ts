@@ -95,7 +95,6 @@ export class ChecklistService {
       throw new GraphQLError('No checklist found');
     }
     const removedItem = checklist.items.filter(item =>  item.user.id === userId)
-    console.log(removedItem.length > 0)
     return removedItem.length > 0;
   }
 

@@ -26,8 +26,21 @@ export class ChatService {
 
   async addUserToChat(chatId: string, user: User): Promise<Chat> {
     const chat = await this.findOne(chatId)
+    if (!chat) {
+      throw new Error(`Chat with ID ${chatId} not found`);
+    }
     chat.users = chat.users || []
     chat.users.push(user)
+    console.log(chat.users)
+    return this.chatRepository.save(chat)
+  }
+
+  async removeUserToChat(chatId: string, user: User): Promise<Chat>{
+    const chat = await this.findOne(chatId)
+    if (!chat) {
+      throw new Error(`Chat with ID ${chatId} not found`);
+    }
+    chat.users = chat.users.filter(us => us.id !== user.id)
     return this.chatRepository.save(chat)
   }
 
@@ -87,11 +100,19 @@ export class ChatService {
 
   async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User): Promise<Message> {
     const chat = await this.findOne(chatId);
-
+    if (!await this.isMember(chatId, user)) {
+      throw new Error(`This user is not a member`);
+    }
     const newMessage = await this.messageService.create({ ...createMessageInput, createdAt: new Date() }, user, chat);
     chat.messages = chat.messages || [];
     chat.messages.push(newMessage)
     this.chatRepository.save(chat);
     return newMessage;
+  }
+
+  async isMember(chatId: string, user: User):Promise<boolean>{
+    const chat = await this.findOne(chatId);
+    const userFind = chat.users.some(us => us.id === user.id)
+    return userFind;
   }
 }
