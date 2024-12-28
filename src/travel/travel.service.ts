@@ -322,7 +322,7 @@ export class TravelService {
       throw new GraphQLError('this travel not exist');
     }
     if (travel.checklist) {
-      return this.checklistService.hasItem(travel.checklist.id, userId);
+      return await this.checklistService.hasItem(travel.checklist.id, userId);
     }
     return false;
   }
