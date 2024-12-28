@@ -34,7 +34,7 @@ export class TravelService {
     private transportService: TransportService,
     private chatService: ChatService,
     private readonly gateway: MyGateway,
-  ) {}
+  ) { }
 
   async create(
     createTravelInput: CreateTravelInput,
@@ -321,7 +321,10 @@ export class TravelService {
     if (!travel) {
       throw new GraphQLError('this travel not exist');
     }
-    return this.checklistService.hasItem(travel.checklist.id, userId);
+    if (travel.checklist) {
+      return this.checklistService.hasItem(travel.checklist.id, userId);
+    }
+    return false;
   }
 
   async assignReview(
