@@ -12,6 +12,8 @@ import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Message } from '../message/entities/message.entity';
+import { CreateMessageInput } from '../message/dto/create-message.input';
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private usersService: UsersService) { }
@@ -58,6 +60,16 @@ export class UsersResolver {
   @UseGuards(JwtAuthGuard)
   removeUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @Mutation(() => Message, { name: 'sendMessage' })
+  @UseGuards(JwtAuthGuard)
+  async sendMessage(
+    @Args('createMessageInput') createMessageInput: CreateMessageInput,
+    @Context() context,
+    @Args('chatId') chatId: string
+  ): Promise<Message> {
+    return this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
   }
 
 }

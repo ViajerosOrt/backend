@@ -39,6 +39,26 @@ type Transport {
   travels: [Travel!]
 }
 
+type Message {
+  id: String!
+  content: String!
+  createdAt: DateTime!
+  chat: Chat!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Chat {
+  id: String!
+  travel: Travel!
+  users: [User!]
+  messages: [Message!]
+}
+
 type Travel {
   id: String!
   travelTitle: String!
@@ -55,12 +75,8 @@ type Travel {
   travelLocation: Location!
   checklist: Checklist
   transport: Transport
+  chat: Chat!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Review {
   id: String!
@@ -88,6 +104,8 @@ type User {
   reviewsCreated: [Review!]
   reviewsReceived: [Review!]
   items: [Item!]
+  chats: [Chat!]
+  messages: [Message!]
 }
 
 type TravelDto {
@@ -106,6 +124,7 @@ type TravelDto {
   travelLocation: Location!
   checklist: Checklist
   transport: Transport
+  chat: Chat!
   isJoined: Boolean
   usersCount: Int
 }
@@ -127,11 +146,15 @@ type Query {
   users: [User!]!
   userById(id: String!): User!
   user(email: String!): User!
+  chats: [Chat!]!
+  chat(id: String!): Chat!
+  chatUser: [Chat!]!
+  chatTravel(travelId: String!): [Chat!]!
+  messagesChat(chatId: String!): [Message!]!
   location(id: String!): Location!
   travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String, countryName: String, creatorId: String): [TravelDto!]!
   travel(id: String!): TravelDto!
   checklist(id: String!): Checklist!
-  items: [Item!]!
   item(id: String!): Item!
   transports: [Transport!]!
   transport(id: String!): Transport!
@@ -146,6 +169,7 @@ type Mutation {
   addActivities(activitiesIds: [String!]!): User!
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
+  sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
@@ -160,11 +184,6 @@ type Mutation {
   removeItemToUser(id: String!): TravelDto!
   updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): TravelDto!
   removeTravel(id: String!): Travel!
-  createCheck(travel: String!, items: [String!]!): Checklist!
-  updateChecklist(updateChecklistInput: UpdateChecklistInput!): Checklist!
-  removeChecklist(id: Int!): Checklist!
-  updateItem(updateItemInput: UpdateItemInput!, id: String!): Item!
-  removeItem(id: Int!): Item!
   createTransport(createTransportInput: CreateTransportInput!): Transport!
   updateTransport(updateTransportInput: UpdateTransportInput!): Transport!
   removeTransport(id: Int!): Transport!
@@ -189,6 +208,11 @@ input UpdateUserInput {
   whatsapp: String
   country: String
   activitiesIds: [String!]
+}
+
+input CreateMessageInput {
+  content: String!
+  createdAt: DateTime
 }
 
 input CreateLocationInput {
@@ -225,16 +249,6 @@ input UpdateTravelInput {
   isEndable: Boolean!
   country: String!
   id: String!
-}
-
-input UpdateChecklistInput {
-  name: String!
-  id: String!
-}
-
-input UpdateItemInput {
-  name: String!
-  isEndable: Boolean
 }
 
 input CreateTransportInput {

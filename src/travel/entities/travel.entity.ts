@@ -16,6 +16,8 @@ import {
 } from 'typeorm';
 import { Checklist } from '../../checklist/entities/checklist.entity';
 import { Transport } from '../../transport/entities/transport.entity';
+import { Chat } from '../../chat/entities/chat.entity';
+
 
 @Entity()
 @ObjectType()
@@ -87,11 +89,17 @@ export class Travel {
   /*************************** */
   @OneToOne(() => Checklist, (checklist) => checklist.travel)
   @Field(() => Checklist, { nullable: true })
-  checklist: Checklist;
+  checklist?: Checklist;
 
   //*********************************** */
   
   @ManyToOne(() => Transport, (transport) => transport.travels)
   @Field(() => Transport, { nullable: true })
   transport: Transport;
+
+  //*********************************************** */
+
+  @OneToOne(() => Chat, (chat) => chat.travel)
+  @Field(() => Chat)
+  chat: Chat;
 }

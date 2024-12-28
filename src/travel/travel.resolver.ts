@@ -33,6 +33,7 @@ export class TravelResolver {
   }
 
   @Mutation(() => TravelDto)
+  @UseGuards(JwtAuthGuard)
   async joinToTravel(
     @Args('travelId', { type: () => String }) travelId: string,
     @Context() context
@@ -42,6 +43,7 @@ export class TravelResolver {
   }
 
   @Mutation(() => TravelDto)
+  @UseGuards(JwtAuthGuard)
   async leaveTravel(
     @Args('travelId', { type: () => String }) travelId: string,
     @Context() context

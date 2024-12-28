@@ -11,6 +11,8 @@ import { use } from 'passport';
 import { Activity } from '../activity/activity.entity';
 import { Transport } from '../transport/entities/transport.entity';
 import { TransportService } from '../transport/transport.service';
+import { Chat } from '../chat/entities/chat.entity';
+import { ChatService } from '../chat/chat.service';
 
 
 
@@ -23,6 +25,7 @@ export class TravelSeeder implements Seeder {
     private readonly userService: UsersService,
     private readonly activityService: ActivityService,
     private readonly transportService: TransportService,
+    private readonly chatService: ChatService
   ) {}
 
   async seed(): Promise<any> {
@@ -46,7 +49,8 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'Brazil'
+        country: 'Brazil',
+        chat: await this.addChat()
       },
       {
         travelTitle: 'Mountain Adventure',
@@ -60,7 +64,8 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'Suiza'
+        country: 'Suiza',
+        chat: await this.addChat()
 
       },
       {
@@ -75,15 +80,22 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'EEUU'
+        country: 'EEUU',
+        chat: await this.addChat()
       },
     ];
+    const chats = await this.chatService.findAll()
     for(const travel of travels){
       travel.usersTravelers = travel.usersTravelers || [];
       travel.usersTravelers.push(user);
+      this.chatService.save(travel.chat)
     }
 
     const savedTravels = await this.travelRepository.save(travels);
+
+    for(const travel of savedTravels){
+      this.addTravelToChat(chats, travel.chat.id, travel, user)
+    }
 
     user.travelsCreated = user.travelsCreated || [];
     user.travelsCreated.push(...savedTravels);
@@ -121,4 +133,19 @@ export class TravelSeeder implements Seeder {
     return transports[Math.floor(Math.random() * transports.length)];
   }
 
+  async addChat():Promise<Chat>{
+    const chat =  await this.chatService.create()
+    return chat
+  }
+
+  async addTravelToChat(chats: Chat[] ,chatId: string, travel: Travel, user: User){
+    for(const chat of chats){
+      if(chat.id === chatId){
+        chat.travel = travel;
+        chat.users = chat.users || [];
+        chat.users.push(user);
+        this.chatService.save(chat);
+      }
+    }
+  }
 }
