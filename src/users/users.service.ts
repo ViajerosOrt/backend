@@ -226,7 +226,7 @@ export class UsersService {
       throw new GraphQLError('You dont belong on this journey');
     }
 
-    return await this.chatService.sendMenssage(createMessageInput, chatId, user)
+    return await this.chatService.sendMessage(createMessageInput, chatId, user)
   }
 
 

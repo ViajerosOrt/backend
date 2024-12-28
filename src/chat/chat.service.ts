@@ -112,7 +112,7 @@ export class ChatService {
     return this.chatRepository.save(chat);
   }
 
-  async sendMenssage(createMessageInput: CreateMessageInput, chatId: string, user: User): Promise<Message> {
+  async sendMessage(createMessageInput: CreateMessageInput, chatId: string, user: User): Promise<Message> {
     const chat = await this.findOne(chatId);
     if (!await this.isMember(chatId, user)) {
       throw new Error(`This user is not a member`);
