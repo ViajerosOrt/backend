@@ -149,6 +149,7 @@ type Query {
   chats: [Chat!]!
   chat(id: String!): Chat!
   chatUser: [Chat!]!
+  chatTravel(travelId: String!): [Chat!]!
   messagesChat(chatId: String!): [Message!]!
   location(id: String!): Location!
   travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String, countryName: String, creatorId: String): [TravelDto!]!

@@ -86,12 +86,17 @@ export class ChatService {
     return chats;
   }
 
-  update(id: number, updateChatInput: UpdateChatInput) {
-    return `This action updates a #${id} chat`;
-  }
+  async findAllChatsOsTravleId(travelId: string): Promise<Chat[]> {
+    const query = await this.chatRepository
+      .createQueryBuilder('chat')
+      .leftJoinAndSelect('chat.travel', 'travel')
+      .leftJoinAndSelect('chat.users', 'users')
+      .leftJoinAndSelect('chat.messages', 'messages')
+      .leftJoinAndSelect('messages.user', 'userMessage')
 
-  remove(id: number) {
-    return `This action removes a #${id} chat`;
+    query.andWhere('travel.id = :travelId', {travelId});
+    const chats = query.getMany();
+    return chats;
   }
 
   async save(chat: Chat): Promise<Chat> {

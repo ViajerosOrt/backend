@@ -31,5 +31,12 @@ export class ChatResolver {
     return await this.chatService.findAllChatsOfUser(context.req.user.userId)
   }
 
+  @Query(() => [Chat], {name: 'chatTravel'})
+  async findAllChatsOsTravleId(
+    @Args('travelId', { type: () => String }) travelId: string
+  ){
+    return await this.chatService.findAllChatsOsTravleId(travelId)
+  }
+
 
 }
