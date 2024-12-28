@@ -35,7 +35,7 @@ export class ChatService {
     return this.chatRepository.save(chat)
   }
 
-  async removeUserToChat(chatId: string, user: User): Promise<Chat>{
+  async removeUserToChat(chatId: string, user: User): Promise<Chat> {
     const chat = await this.findOne(chatId)
     if (!chat) {
       throw new Error(`Chat with ID ${chatId} not found`);
@@ -64,6 +64,14 @@ export class ChatService {
       relations: [
         'travel',
         'users',
+        'users.reviewsCreated',
+        'users.reviewsCreated.receivedUserBy',
+        'users.reviewsCreated.travel',
+        'users.reviewsReceived',
+        'users.reviewsReceived.createdUserBy',
+        'users.reviewsReceived.travel',
+        'users.userActivities',
+        'users.travelsCreated',
         'messages',
         'messages.user'
       ]
@@ -81,6 +89,7 @@ export class ChatService {
       .leftJoinAndSelect('chat.users', 'allUsers')
       .leftJoinAndSelect('chat.messages', 'messages')
       .leftJoinAndSelect('messages.user', 'userMessage')
+
 
     const chats = query.getMany();
     return chats;
@@ -110,7 +119,7 @@ export class ChatService {
     return newMessage;
   }
 
-  async isMember(chatId: string, user: User):Promise<boolean>{
+  async isMember(chatId: string, user: User): Promise<boolean> {
     const chat = await this.findOne(chatId);
     const userFind = chat.users.some(us => us.id === user.id)
     return userFind;

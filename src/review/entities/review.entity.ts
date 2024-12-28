@@ -21,7 +21,7 @@ export class Review {
   @Column({ nullable: true, name: 'type' })
   @Field({ nullable: true })
   type: string;
-  
+
   @ManyToOne(() => User, (user) => user.reviewsCreated)
   @Field(() => User)
   @JoinColumn({ name: 'create_user_id' })
@@ -31,7 +31,7 @@ export class Review {
   @Field(() => User, { nullable: true })
   @JoinColumn({ name: 'received_user_id' })
   receivedUserBy: User;
-  
+
   @ManyToOne(() => Travel, (travel) => travel.reviews)
   @Field(() => Travel, { nullable: true })
   @JoinColumn({ name: 'travel_id' })
