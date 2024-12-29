@@ -14,7 +14,7 @@ export class ChecklistService {
     @InjectRepository(Checklist)
     private checklistRepository: Repository<Checklist>,
     private itemService: ItemService,
-  ) {}
+  ) { }
 
   async create(travelId: string, items: string[]) {
     const checklistIntput = new CreateChecklistInput();
@@ -25,7 +25,7 @@ export class ChecklistService {
 
   async createChecklist(travel: Travel, items: string[]): Promise<Checklist> {
     if (!travel) {
-      throw new  GraphQLError('Travel cannot be null.');
+      throw new GraphQLError('Travel cannot be null.');
     }
 
     if (!items || items.length === 0) {
@@ -44,7 +44,7 @@ export class ChecklistService {
 
   async addItems(checklistId: string, items: string[]): Promise<Checklist> {
     const checklist = await this.findOne(checklistId);
-    if(!checklist){
+    if (!checklist) {
       throw new GraphQLError('No checklist found');
     }
     const newItems = await this.itemService.createAllItems(items);
@@ -53,48 +53,63 @@ export class ChecklistService {
     return this.checklistRepository.save(checklist);
   }
 
-  async removeItems(checklistId: string, itemsId: string[]):Promise<Checklist>{
+  async removeItems(checklistId: string, itemsId: string[]): Promise<Checklist> {
     const checklist = await this.findOne(checklistId);
-    if(!checklist){
+    if (!checklist) {
       throw new GraphQLError('No checklist found');
     }
     checklist.items = checklist.items.filter(item => !itemsId.includes(item.id))
     return this.checklistRepository.save(checklist)
   }
 
-  async assingItemToUser(checklistId: string,userId: string, itemId: string):Promise<void>{
+  async assingItemToUser(checklistId: string, userId: string, itemId: string): Promise<void> {
     const checklist = await this.findOne(checklistId);
-    if(!checklist){
+    if (!checklist) {
       throw new GraphQLError('No checklist found');
     }
 
     this.itemService.addUser(itemId, userId);
   }
 
-  async removeItemToUser(checklistId: string,userId: string):Promise<void>{
+  async removeItemsToUser(checklistId: string, userId: string): Promise<void> {
     const checklist = await this.findOne(checklistId);
-    if(!checklist){
+    if (!checklist) {
+      throw new GraphQLError('No checklist found');
+    }
+
+    const items = checklist.items.filter(item => item.user && item.user.id === userId).map(item => item.id)
+
+    if (items.length === 0) {
+      throw new GraphQLError('The user does not have any items');
+    }
+
+    this.itemService.removeUser(items, userId);
+  }
+
+  async removeItemToUser(checklistId: string, userId: string, itemId: string): Promise<void> {
+    const checklist = await this.findOne(checklistId);
+    if (!checklist) {
       throw new GraphQLError('No checklist found');
     }
 
     const removedItem = checklist.items
-    .filter(item => item.user && item.user.id === userId)
-    .map(item => item.id)
+      .filter(item => item.user && item.user.id === userId && item.id === itemId)
+      .map(item => item.id)
 
 
-    if(removedItem.length === 0){
-      throw new GraphQLError('The user does not have any items');
+    if (removedItem.length === 0) {
+      throw new GraphQLError('The user does not have the specified item');
     }
 
     this.itemService.removeUser(removedItem, userId);
   }
 
-  async hasItem(checklistId: string,userId: string):Promise<boolean>{
+  async hasItem(checklistId: string, userId: string): Promise<boolean> {
     const checklist = await this.findOne(checklistId);
-    if(!checklist){
+    if (!checklist) {
       throw new GraphQLError('No checklist found');
     }
-    const removedItem = checklist.items.filter(item =>  item.user.id === userId)
+    const removedItem = checklist.items.filter(item => item.user.id === userId)
     return removedItem.length > 0;
   }
 

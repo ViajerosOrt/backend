@@ -181,7 +181,7 @@ type Mutation {
   addItemsToChecklist(id: String!, items: [String!]!): TravelDto!
   removeItemsToChecklist(id: String!, items: [String!]!): TravelDto!
   assignItemToUser(id: String!, itemId: String!): TravelDto!
-  removeItemToUser(id: String!): TravelDto!
+  removeItemToUser(id: String!, itemId: String!): TravelDto!
   updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): TravelDto!
   removeTravel(id: String!): Travel!
   createTransport(createTransportInput: CreateTransportInput!): Transport!
