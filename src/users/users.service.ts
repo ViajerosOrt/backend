@@ -106,12 +106,28 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         email: email,
       },
-      relations: ['travelsCreated', 'joinsTravels', 'userActivities'],
+      relations: [
+        'travelsCreated',
+        'travelsCreated.usersTravelers',
+        'travelsCreated.travelActivities',
+        'joinsTravels',
+        'joinsTravels.usersTravelers',
+        'joinsTravels.travelActivities',
+        'reviewsCreated',
+        'reviewsCreated.receivedUserBy',
+        'reviewsCreated.travel',
+        'reviewsReceived',
+        'reviewsReceived.createdUserBy',
+        'userActivities',
+        'items',
+      ],
     });
+
+    return user
   }
 
   async joinToTravel(travel: Travel, userId: string): Promise<User> {
@@ -192,7 +208,7 @@ export class UsersService {
       user.userActivities = activities;
     }
 
-    return this.userRepository.save(user);
+    return await this.userRepository.save(user);
   }
 
   async remove(id: number): Promise<void> {

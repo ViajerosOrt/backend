@@ -14,51 +14,53 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from '../message/entities/message.entity';
 import { CreateMessageInput } from '../message/dto/create-message.input';
+import { UserDto } from './dto/user.dto';
+import { UserTransformer } from './user.transformer';
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService,
+    private readonly userTransformer: UserTransformer
+  ) { }
 
-  @Mutation(() => User)
+  @Mutation(() => UserDto)
   @UseGuards(JwtAuthGuard)
   async addActivities(
     @Args({ name: 'activitiesIds', type: () => [String] })
     @Context() context,
     activitiesIds: String[],
-  ): Promise<User> {
-    return await this.usersService.addActivity(context.req.user.userId, activitiesIds);
+  ): Promise<UserDto> {
+    const user = await this.usersService.addActivity(context.req.user.userId, activitiesIds);
+    return await this.userTransformer.toDto(user)
   }
 
-  @Query(() => [User], { name: 'users' })
+  @Query(() => [UserDto], { name: 'users' })
   @UseGuards(JwtAuthGuard)
-  async findAll(): Promise<User[]> {
-    return this.usersService.findAll();
+  async findAll(): Promise<UserDto[]> {
+    const users = await this.usersService.findAll();
+    return await this.userTransformer.toDtos(users)
   }
 
-  @Query(() => User, { name: 'userById' })
+  @Query(() => UserDto, { name: 'userById' })
   @UseGuards(JwtAuthGuard)
-  async findById(@Args('id', { type: () => String }) id: string): Promise<User> {
+  async findById(@Args('id', { type: () => String }) id: string): Promise<UserDto> {
     const user = await this.usersService.findById(id);
-    return user;
+    return await this.userTransformer.toDto(user);
 
   }
 
-  @Query(() => User, { name: 'user' })
-  findByEmail(@Args('email', { type: () => String }) email: string): Promise<User> {
-    return this.usersService.findByEmail(email);
-  }
-
-  @Mutation(() => User)
+  @Mutation(() => UserDto)
   @UseGuards(JwtAuthGuard)
-  update(
+  async update(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
     @Context() context,
-  ) {
-    return this.usersService.update(context.req.user.userId, updateUserInput);
+  ): Promise<UserDto> {
+    const user = await this.usersService.update(context.req.user.userId, updateUserInput);
+    return this.userTransformer.toDto(user)
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserDto)
   @UseGuards(JwtAuthGuard)
-  removeUser(@Args('id', { type: () => Int }) id: number) {
+  async removeUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.remove(id);
   }
 

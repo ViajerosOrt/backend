@@ -108,6 +108,27 @@ type User {
   messages: [Message!]
 }
 
+type UserDto {
+  id: String!
+  name: String!
+  email: String!
+  password: String!
+  birthDate: DateTime!
+  description: String
+  instagram: String
+  whatsapp: String
+  country: String
+  userActivities: [Activity!]
+  travelsCreated: [Travel!]
+  joinsTravels: [Travel!]
+  reviewsCreated: [Review!]
+  reviewsReceived: [Review!]
+  items: [Item!]
+  chats: [Chat!]
+  messages: [Message!]
+  totalReviews: Float
+}
+
 type TravelDto {
   id: String!
   travelTitle: String!
@@ -143,9 +164,8 @@ type LoginResponse {
 type Query {
   activities: [Activity!]!
   activity(id: String!): Activity!
-  users: [User!]!
-  userById(id: String!): User!
-  user(email: String!): User!
+  users: [UserDto!]!
+  userById(id: String!): UserDto!
   chats: [Chat!]!
   chat(id: String!): Chat!
   chatUser: [Chat!]!
@@ -166,9 +186,9 @@ type Query {
 
 type Mutation {
   createActivity(activityInp: CreateActivityInput!): Activity!
-  addActivities(activitiesIds: [String!]!): User!
-  update(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
+  addActivities(activitiesIds: [String!]!): UserDto!
+  update(updateUserInput: UpdateUserInput!): UserDto!
+  removeUser(id: Int!): UserDto!
   sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
