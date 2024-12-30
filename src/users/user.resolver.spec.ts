@@ -3,10 +3,12 @@ import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
+import { UserTransformer } from './user.transformer';
 
 describe('UsersResolver', () => {
   let resolver: UsersResolver;
   let service: UsersService;
+  let transformer: UserTransformer
 
   let mockUser: User = {
     id: "1",
@@ -17,12 +19,15 @@ describe('UsersResolver', () => {
     description: "",
     instagram: 'mockUser',
     whatsapp: '1234',
+    country: 'EEUU',
     userActivities: [],
     travelsCreated: [],
     joinsTravels: [],
     reviewsCreated: [],
     reviewsReceived: [],
     items: [],
+    chats: [],    
+    messages:[],
   }
 
   const mockContext = {
@@ -48,11 +53,13 @@ describe('UsersResolver', () => {
             update: jest.fn(),
           },
         },
+        UserTransformer,
       ],
     }).compile();
 
     resolver = module.get<UsersResolver>(UsersResolver);
     service = module.get<UsersService>(UsersService);
+    transformer = module.get<UserTransformer>(UserTransformer);
   });
 
 
@@ -70,12 +77,15 @@ describe('UsersResolver', () => {
         description: null,
         instagram: 'mockUser',
         whatsapp: '1234',
+        country: 'EEUU',
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],
         reviewsCreated: [],
         reviewsReceived: [],
         items: [],
+        chats: [],    
+        messages:[],
       };
 
       jest.spyOn(service, 'addActivity').mockResolvedValue(result);
@@ -96,12 +106,15 @@ describe('UsersResolver', () => {
           description: null,
           instagram: 'mockUser',
           whatsapp: '1234',
+          country: 'EEUU',
           userActivities: [],
           travelsCreated: [],
           joinsTravels: [],
           reviewsCreated: [],
           reviewsReceived: [],
           items: [],
+          chats: [],    
+          messages:[],
         },
       ];
 
@@ -126,12 +139,15 @@ describe('UsersResolver', () => {
         description: null,
         instagram: 'mockUser',
         whatsapp: '1234',
+        country: 'EEUU',
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],
         reviewsCreated: [],
         reviewsReceived: [],
         items: [],
+        chats: [],    
+        messages:[],
       }
 
       jest.spyOn(service, 'findById').mockResolvedValue(result);
@@ -148,6 +164,7 @@ describe('UsersResolver', () => {
         description: "des",
         instagram: 'mockUser',
         whatsapp: '1234',
+        country: 'EEUU',
         activitiesIds: []
       };
 

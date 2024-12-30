@@ -164,8 +164,9 @@ type LoginResponse {
 type Query {
   activities: [Activity!]!
   activity(id: String!): Activity!
-  users: [UserDto!]!
-  userById(id: String!): UserDto!
+  users: [User!]!
+  userById(id: String!): User!
+  getUserSocre(id: String!): UserDto!
   chats: [Chat!]!
   chat(id: String!): Chat!
   chatUser: [Chat!]!
@@ -186,9 +187,9 @@ type Query {
 
 type Mutation {
   createActivity(activityInp: CreateActivityInput!): Activity!
-  addActivities(activitiesIds: [String!]!): UserDto!
-  update(updateUserInput: UpdateUserInput!): UserDto!
-  removeUser(id: Int!): UserDto!
+  addActivities(activitiesIds: [String!]!): User!
+  update(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
   sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
