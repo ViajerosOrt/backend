@@ -9,6 +9,7 @@ import { CreateMessageInput } from '../message/dto/create-message.input';
 import { MessageService } from '../message/message.service';
 import { use } from 'passport';
 import { Message } from '../message/entities/message.entity';
+import { UpdateMessageInput } from '../message/dto/update-message.input';
 
 @Injectable()
 export class ChatService {
@@ -128,5 +129,12 @@ export class ChatService {
     const chat = await this.findOne(chatId);
     const userFind = chat.users.some(us => us.id === user.id)
     return userFind;
+  }
+
+  async editMessage(updateMessageInput: UpdateMessageInput,messageId: string, chat: Chat, user: User){
+    if (!await this.isMember(chat.id, user)) {
+      throw new Error(`This user is not a member`);
+    }
+    return await this.messageService.editMessage(updateMessageInput,messageId,user)
   }
 }

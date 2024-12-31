@@ -16,6 +16,7 @@ import { Message } from '../message/entities/message.entity';
 import { CreateMessageInput } from '../message/dto/create-message.input';
 import { UserDto } from './dto/user.dto';
 import { UserTransformer } from './user.transformer';
+
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private usersService: UsersService,
@@ -80,4 +81,14 @@ export class UsersResolver {
     return this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
   }
 
+  @Mutation(() => Message, {name: 'editMessage'})
+  @UseGuards(JwtAuthGuard)
+  async editMessage(
+    @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
+    @Args('messageId') messageId: string,
+    @Context() context,
+    @Args('chatId') chatId: string
+  ):Promise<Message>{
+    return await this.usersService.editMessage(updateMessageInput,messageId,context.req.user.userId, chatId);
+  }
 }

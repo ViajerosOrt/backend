@@ -24,6 +24,10 @@ export class Message {
   @Field()
   createdAt: Date;
 
+  @Column({ type: 'boolean', default: false, name: 'was_edited' })
+  @Field()
+  wasEdited: boolean;
+
   @ManyToOne(() => Chat, (chat) => chat.messages, { onDelete: 'CASCADE' })
   @Field(() => Chat)
   chat: Chat;

@@ -39,4 +39,30 @@ export class MessageService {
     return messages;
   }
 
+  async findOne(id: string):Promise<Message>{
+    return await this.messageRepository.findOne({
+      where: {id},
+      relations: [
+        'chat',
+        'user'
+      ]
+    })
+  }
+
+  async editMessage(updateMessageInput: UpdateMessageInput, messageId: string, user: User):Promise<Message>{
+    const message = await this.findOne(messageId);
+    if(!message){
+      throw new Error(`This message not exist`);
+    }
+
+    if(message.user.id != user.id){
+      throw new Error(`Only the creator cant edit the message`);
+    }
+
+    Object.assign(message, updateMessageInput);
+    message.wasEdited = true
+    return this.messageRepository.save(message);
+
+  }
+
 }
