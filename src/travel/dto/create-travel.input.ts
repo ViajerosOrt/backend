@@ -26,4 +26,7 @@ export class CreateTravelInput {
   @Field()
   country: string;
 
+  @Field()
+  countryOfOrigin: string;
+
 }
