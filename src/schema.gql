@@ -43,6 +43,7 @@ type Message {
   id: String!
   content: String!
   createdAt: DateTime!
+  wasEdited: Boolean!
   chat: Chat!
   user: User!
 }
@@ -170,6 +171,7 @@ type Mutation {
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
   sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
+  editMessage(updateMessageInput: UpdateMessageInput!, messageId: String!, chatId: String!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!
   removeLocation(id: Int!): Location!
@@ -211,6 +213,11 @@ input UpdateUserInput {
 }
 
 input CreateMessageInput {
+  content: String!
+  createdAt: DateTime
+}
+
+input UpdateMessageInput {
   content: String!
   createdAt: DateTime
 }

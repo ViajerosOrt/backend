@@ -13,6 +13,7 @@ import { Item } from '../item/entities/item.entity';
 import { CreateMessageInput } from '../message/dto/create-message.input';
 import { Message } from '../message/entities/message.entity';
 import { ChatService } from '../chat/chat.service';
+import { UpdateMessageInput } from '../message/dto/update-message.input';
 
 @Injectable()
 export class UsersService {
@@ -222,13 +223,25 @@ export class UsersService {
       throw new GraphQLError('The user is not part of this travel');
     }
 
-    if(!travel.usersTravelers.some(us => us.id === user.id)){
-      throw new GraphQLError('You dont belong on this journey');
-    }
 
     return await this.chatService.sendMessage(createMessageInput, chatId, user)
   }
 
+  async editMessage(updateMessageInput: UpdateMessageInput,messageId: string, userId: string, chatId: string):Promise<Message>{
+    const user = await this.findById(userId);
+    if (!user) {
+      throw new GraphQLError('this user not exist');
+    }
 
+    const chat = await this.chatService.findOne(chatId);
+
+    const travel = user.joinsTravels.find(tr => tr.id === chat.travel.id);
+
+    if (!travel) {
+      throw new GraphQLError('The user is not part of this travel');
+    }
+
+    return await this.chatService.editMessage(updateMessageInput,messageId,chat,user);
+  }
   //*********************** *//
 }
