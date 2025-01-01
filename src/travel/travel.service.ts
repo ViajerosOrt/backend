@@ -164,7 +164,7 @@ export class TravelService {
     }
 
     if (await this.hasItem(travel.id, userId)) {
-      await this.removeItemToUser(travel.id, userId);
+      await this.removeItemsToUser(travel.id, userId);
     }
     /***************CHAT************************ */
     await this.chatService.removeUserToChat(travel.chat.id, user);
@@ -206,7 +206,7 @@ export class TravelService {
     }
 
     if (await this.hasItem(travel.id, bannerUser.id)) {
-      await this.removeItemToUser(travel.id, bannerUser.id);
+      await this.removeItemsToUser(travel.id, bannerUser.id);
     }
     /***************CHAT************************ */
     await this.chatService.removeUserToChat(travel.chat.id, bannerUser);
@@ -307,12 +307,23 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async removeItemToUser(travelId: string, userId: string): Promise<Travel> {
+  // Remove all items to user
+  async removeItemsToUser(travelId: string, userId: string): Promise<Travel> {
     const travel = await this.findOne(travelId);
     if (!travel) {
       throw new GraphQLError('this travel not exist');
     }
-    this.checklistService.removeItemToUser(travel.checklist.id, userId);
+    this.checklistService.removeItemsToUser(travel.checklist.id, userId);
+    return this.travelRepository.save(travel);
+  }
+
+  // Remove a specific item to user
+  async removeItemToUser(travelId: string, userId: string, itemId: string): Promise<Travel> {
+    const travel = await this.findOne(travelId);
+    if (!travel) {
+      throw new GraphQLError('this travel not exist');
+    }
+    this.checklistService.removeItemToUser(travel.checklist.id, userId, itemId);
     return this.travelRepository.save(travel);
   }
 

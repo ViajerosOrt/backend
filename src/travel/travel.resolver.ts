@@ -106,8 +106,9 @@ export class TravelResolver {
   async removeItemToUser(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
+    @Args('itemId', { type: () => String }) itemId: string,
   ) {
-    const travel = await this.travelService.removeItemToUser(id, context.req.user.userId)
+    const travel = await this.travelService.removeItemToUser(id, context.req.user.userId, itemId)
     return this.travelTransformer.toDto(travel)
   }
 
@@ -124,10 +125,8 @@ export class TravelResolver {
   ) {
     const travels = await this.travelService.findAll(startDate, endDate, travelName, activityIds, transportId, countryName, creatorId);
 
-
     return await this.travelTransformer.toDTOs(travels, context.req.user.userId);
   }
-
 
 
   @Query(() => TravelDto, { name: 'travel' })
@@ -137,7 +136,6 @@ export class TravelResolver {
     const travel = await this.travelService.findOne(id, context.req.user.userId);
     return await this.travelTransformer.toDto(travel, context.req.user.userId)
   }
-
 
   @Mutation(() => TravelDto)
   async updateTravel(
