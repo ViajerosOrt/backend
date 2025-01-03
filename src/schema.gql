@@ -108,6 +108,27 @@ type User {
   messages: [Message!]
 }
 
+type UserDto {
+  id: String!
+  name: String!
+  email: String!
+  password: String!
+  birthDate: DateTime!
+  description: String
+  instagram: String
+  whatsapp: String
+  country: String
+  userActivities: [Activity!]
+  travelsCreated: [Travel!]
+  joinsTravels: [Travel!]
+  reviewsCreated: [Review!]
+  reviewsReceived: [Review!]
+  items: [Item!]
+  chats: [Chat!]
+  messages: [Message!]
+  totalReviews: Float
+}
+
 type TravelDto {
   id: String!
   travelTitle: String!
@@ -145,7 +166,7 @@ type Query {
   activity(id: String!): Activity!
   users: [User!]!
   userById(id: String!): User!
-  user(email: String!): User!
+  getUserSocre(id: String!): UserDto!
   chats: [Chat!]!
   chat(id: String!): Chat!
   chatUser: [Chat!]!
