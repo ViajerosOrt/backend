@@ -81,14 +81,5 @@ export class UsersResolver {
     return this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
   }
 
-  @Mutation(() => Message, {name: 'editMessage'})
-  @UseGuards(JwtAuthGuard)
-  async editMessage(
-    @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
-    @Args('messageId') messageId: string,
-    @Context() context,
-    @Args('chatId') chatId: string
-  ):Promise<Message>{
-    return await this.usersService.editMessage(updateMessageInput,messageId,context.req.user.userId, chatId);
-  }
+
 }
