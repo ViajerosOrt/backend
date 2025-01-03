@@ -85,7 +85,8 @@ describe('TravelResolver', () => {
         finishDate: new Date(Date.now() + 200000),
         maxCap: 10,
         isEndable: true,
-        country: 'Uruguay'
+        country: 'Uruguay',
+        countryOfOrigin: 'Uruguay'
       };
       const activityIds = ["1", "2", "3"];
       const createLocationInput = {

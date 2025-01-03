@@ -54,6 +54,10 @@ export class Travel {
   @Field({ nullable: true })
   country: string;
 
+  @Column({ nullable: true, name: 'country_of_origin' })
+  @Field({ nullable: true })
+  countryOfOrigin: string;
+
   //********************************** */
 
   @ManyToOne(() => User, (user) => user.travelsCreated)
