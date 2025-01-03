@@ -227,21 +227,5 @@ export class UsersService {
     return await this.chatService.sendMessage(createMessageInput, chatId, user)
   }
 
-  async editMessage(updateMessageInput: UpdateMessageInput,messageId: string, userId: string, chatId: string):Promise<Message>{
-    const user = await this.findById(userId);
-    if (!user) {
-      throw new GraphQLError('this user not exist');
-    }
-
-    const chat = await this.chatService.findOne(chatId);
-
-    const travel = user.joinsTravels.find(tr => tr.id === chat.travel.id);
-
-    if (!travel) {
-      throw new GraphQLError('The user is not part of this travel');
-    }
-
-    return await this.chatService.editMessage(updateMessageInput,messageId,chat,user);
-  }
   //*********************** *//
 }

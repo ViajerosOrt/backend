@@ -19,6 +19,14 @@ export class MessageResolver {
     return await this.messageService.findMenssagesOfChat(chatId);
   }
 
+  @Mutation(() => Message, {name: 'editMessage'})
+  async editMessage(
+    @Args('updateMessageInput') updateMessageInput: UpdateMessageInput,
+    @Args('messageId') messageId: string,
+    @Context() context,
+  ):Promise<Message>{
+    return await this.messageService.editMessage(updateMessageInput,messageId,context.req.user.userId);
+  }
 
 
 
