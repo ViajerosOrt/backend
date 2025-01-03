@@ -4,7 +4,6 @@ import {
   Mutation,
   Args,
   Int,
-  ResolveField,
   Context,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
