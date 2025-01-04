@@ -75,7 +75,10 @@ export class ItemService {
       },
       relations:['user']
     });
+  }
 
+  async save(item: Item):Promise<Item>{
+    return this.itemRepository.save(item)
   }
 
 }
