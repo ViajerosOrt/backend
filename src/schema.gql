@@ -68,6 +68,7 @@ type Travel {
   maxCap: Int
   isEndable: Boolean!
   country: String
+  countryOfOrigin: String
   creatorUser: User!
   usersTravelers: [User!]
   travelActivities: [Activity!]
@@ -138,6 +139,7 @@ type TravelDto {
   maxCap: Int
   isEndable: Boolean!
   country: String
+  countryOfOrigin: String
   creatorUser: User!
   usersTravelers: [User!]
   travelActivities: [Activity!]
@@ -259,6 +261,7 @@ input CreateTravelInput {
   maxCap: Float!
   isEndable: Boolean!
   country: String!
+  countryOfOrigin: String!
 }
 
 input UpdateTravelInput {
@@ -269,6 +272,7 @@ input UpdateTravelInput {
   maxCap: Int
   isEndable: Boolean!
   country: String!
+  countryOfOrigin: String
   id: String!
 }
 

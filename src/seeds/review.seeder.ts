@@ -16,8 +16,8 @@ export class ReviewSeeder implements Seeder{
   ) {}
 
   async seed() {
-    const user = await this.userService.findByEmail('fabricioSc@example.com');
-    const userReviewed = await this.userService.findByEmail('francoBoe@example.com');
+    const user = await this.userService.findByEmail('fabricio@example.com');
+    const userReviewed = await this.userService.findByEmail('franco@example.com');
     const travels = await this.travelService.findAll();
     const travel = travels[0];
 

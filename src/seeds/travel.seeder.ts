@@ -33,76 +33,102 @@ export class TravelSeeder implements Seeder {
     const location =
       await this.locationService.findLocationByLog('-31.4827, -57.9119');
     
-    const user = await this.userService.findByEmail('fabricioSc@example.com');
+    const user = await this.userService.findByEmail('fabricio@example.com');
+
+    const users =  await this.userService.findAll()
+
+    const locations = await this.locationService.findAll();
+    const chats = await this.chatService.findAll()
+
+    const travelNames1 = ["Mountain Adventure", "Ocean Escape", "Cultural Journey", "Safari Expedition", "Island Retreat"];
+    const travelNames2 = ["City Break", "Historical Tour", "Desert Trek", "Wildlife Discovery", "Road Trip"];
+    const descriptions = [
+      "Experience breathtaking views and adventure.",
+      "Discover hidden gems and local culture.",
+      "Relax and unwind in serene surroundings.",
+      "Embark on a journey filled with excitement."
+    ];
 
 
-    const travels = [
-      {
-        travelTitle: 'Summer Beach Getaway',
-        travelDescription: 'A relaxing trip to the sunny beach.',
-        startDate: new Date('2025-06-15'),
-        finishDate: new Date('2025-06-20'),
+    
+
+    for(let i =0; i< travelNames1.length; i++){
+      let month = i+1;
+      let locationTravel = locations[Math.floor(Math.random() * locations.length)];
+      let userCreator = users[Math.floor(Math.random() * users.length)]
+
+      const actualTravel =       {
+        travelTitle: travelNames1[i],
+        travelDescription: descriptions[Math.floor(Math.random() * descriptions.length)],
+        startDate: new Date('2025-'+'0'+month+'-2'),
+        finishDate: new Date('2025-'+'0'+month+'-20'),
         maxCap: 10,
         isEndable: true,
-        creatorUser: user,
-        travelLocation: location,
+        creatorUser: userCreator,
+        travelLocation: locationTravel,
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'Brazil',
+        country: 'Uruguay',
+        countryOfOrigin: 'Uruguay' ,
         chat: await this.addChat()
-      },
-      {
-        travelTitle: 'Mountain Adventure',
-        travelDescription: 'Hiking and exploring the beautiful mountains.',
-        startDate: new Date('2025-07-01'),
-        finishDate: new Date('2025-07-05'),
-        maxCap: 8,
-        isEndable: true,
-        creatorUser: user,
-        travelLocation: location,
-        travelActivities: await this.addActivity(),
-        usersTravelers: [],
-        transport: await this.addTransport(),
-        country: 'Suiza',
-        chat: await this.addChat()
+      }
 
-      },
-      {
-        travelTitle: 'City Exploration',
-        travelDescription: 'Discovering the hidden gems of the city.',
-        startDate: new Date('2025-08-10'),
-        finishDate: new Date('2025-08-15'),
-        maxCap: 15,
+      
+      actualTravel.usersTravelers = actualTravel.usersTravelers || [];
+      actualTravel.usersTravelers.push(userCreator);
+      this.chatService.save(actualTravel.chat)
+      const savedTravelactual = await this.travelRepository.save(actualTravel);
+
+      await this.addTravelToChat(chats, savedTravelactual.chat.id, savedTravelactual, userCreator)
+
+      userCreator.travelsCreated = userCreator.travelsCreated || [];
+      userCreator.travelsCreated.push(savedTravelactual);
+      userCreator.joinsTravels = userCreator.joinsTravels || [];
+      userCreator.joinsTravels.push(savedTravelactual)
+  
+      this.userService.save(userCreator);
+
+    }
+
+    
+    for(let i =0; i< travelNames2.length; i++){
+      let month = i+1;
+      let locationTravel = locations[Math.floor(Math.random() * locations.length)];
+      let userCreator = users[Math.floor(Math.random() * users.length)]
+
+      const endTravel =       {
+        travelTitle: travelNames2[i],
+        travelDescription: descriptions[Math.floor(Math.random() * descriptions.length)],
+        startDate: new Date('2024-'+'0'+month+'-2'),
+        finishDate: new Date('2024-'+'0'+month+'-20'),
+        maxCap: 10,
         isEndable: false,
-        creatorUser: user,
-        travelLocation: location,
+        creatorUser: userCreator,
+        travelLocation: locationTravel,
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'EEUU',
+        country: 'Uruguay',
+        countryOfOrigin: 'Uruguay' ,
         chat: await this.addChat()
-      },
-    ];
-    const chats = await this.chatService.findAll()
-    for(const travel of travels){
-      travel.usersTravelers = travel.usersTravelers || [];
-      travel.usersTravelers.push(user);
-      this.chatService.save(travel.chat)
+      }
+
+      endTravel.usersTravelers = endTravel.usersTravelers || [];
+      endTravel.usersTravelers.push(userCreator);
+      this.chatService.save(endTravel.chat)
+      const savedTravelEnd = await this.travelRepository.save(endTravel);
+
+      await this.addTravelToChat(chats, savedTravelEnd.chat.id, savedTravelEnd, userCreator)
+
+      userCreator.travelsCreated = userCreator.travelsCreated || [];
+      userCreator.travelsCreated.push(savedTravelEnd);
+      userCreator.joinsTravels = userCreator.joinsTravels || [];
+      userCreator.joinsTravels.push(savedTravelEnd)
+
+      this.userService.save(userCreator);
+
     }
-
-    const savedTravels = await this.travelRepository.save(travels);
-
-    for(const travel of savedTravels){
-      this.addTravelToChat(chats, travel.chat.id, travel, user)
-    }
-
-    user.travelsCreated = user.travelsCreated || [];
-    user.travelsCreated.push(...savedTravels);
-    user.joinsTravels = user.joinsTravels || [];
-    user.joinsTravels.push(...savedTravels)
-
-    this.userService.save(user);
 
   }
 

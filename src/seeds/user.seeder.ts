@@ -16,44 +16,56 @@ export class UserSeeder implements Seeder {
   ) {}
 
   async seed(): Promise<any> {
+    const nombres = [
+      'Fabricio',
+      'Franco',
+      'Bruno',
+      "Sofía",
+      "Mateo",
+      "Valentina",
+      "Lucas",
+      "Camila",
+      "Julián",
+      "Isabella",
+      "Diego",
+      "Martina",
+      "Sebastián",
+      "Emily",
+      "Daniel",
+      "Mía",
+      "Gabriel",
+      "Paula",
+      "Javier",
+      "Natalia",
+    ];
 
-    const users = [
-      {
-        name: 'Fabricio Scarone',
-        email: 'fabricioSc@example.com',
-        password: await bcrypt.hash('password123', 10),
-        birthDate: new Date('2002-01-01'),
-        description: 'First user for seeder',
-        userActivities: await this.addActivity(),
-        instagram: 'fabriscar22',
-        whatsapp: '+59897418914',
-        country: 'Uruguay',
-      },
-      {
-        name: 'Franco Borreli',
-        email: 'francoBoe@example.com',
-        password: await bcrypt.hash('password456', 10),
-        birthDate: new Date('2002-05-10'),
-        description: 'Second user for seeder',
-        userActivities: await this.addActivity(),
-        instagram: 'francobor_',
-        whatsapp: '+59896799173',
-        country: 'Uruguay',
-      },
-      {
-        name: 'Bruno Lapaz',
-        email: 'brunoLa@example.com',
-        password: await bcrypt.hash('password789', 10),
-        birthDate: new Date('2001-11-20'),
-        description: 'Third user for seeder',
-        userActivities: await this.addActivity(),
-        instagram: 'brunnaries',
-        whatsapp: '+59894136832',
-        country: 'Uruguay',
-      },
-    ];  
+    const paises = [
+      "Uruguay",
+      "Argentina",
+      "Brasil",
+      "España",
+      "Canadá",
+      "Japón",
+      "Australia"
+    ];
     
-    await this.userRepository.save(users);
+    for(let i =0; i < nombres.length; i++){
+      let user = {
+        name: nombres[i],
+        email: nombres[i].toLocaleLowerCase()+'@example.com',
+        password: await bcrypt.hash('password'+ i, 10),
+        birthDate: await this.generarFechaAleatoriaMayorDe18(),
+        description: 'User number ' + i + ' for seeder',
+        userActivities: await this.addActivity(),
+        instagram: 'ig'+ nombres[i],
+        whatsapp: '+59897418914',
+        country: paises[Math.floor(Math.random() * paises.length)],
+        travelsCreated: [],
+      }
+
+      await this.userRepository.save(user);
+    }
+
   }
 
   async drop(): Promise<any> {
@@ -75,6 +87,18 @@ export class UserSeeder implements Seeder {
     }
 
     return activityTravel
+  }
+
+  async generarFechaAleatoriaMayorDe18(): Promise<Date> {
+    const fechaActual = new Date();
+    const anioMaximo = fechaActual.getFullYear() - 18; 
+    const anioMinimo = anioMaximo - 82; 
+  
+    const anioAleatorio = Math.floor(Math.random() * (anioMaximo - anioMinimo + 1)) + anioMinimo;
+    const mesAleatorio = Math.floor(Math.random() * 12); 
+    const diaAleatorio = Math.floor(Math.random() * 28) + 1; 
+  
+    return new Date(anioAleatorio, mesAleatorio, diaAleatorio);
   }
   
 }
