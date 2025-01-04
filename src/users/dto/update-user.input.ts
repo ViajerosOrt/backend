@@ -28,6 +28,9 @@ export class UpdateUserInput extends PartialType(SignupUserInput) {
   @Field({ nullable: true })
   country: string;
 
+  @Field({ nullable: true })
+  userImage: string;
+
   @Field(() => [String], { nullable: true })
   activitiesIds: string[];
 }

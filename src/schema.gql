@@ -68,6 +68,8 @@ type Travel {
   maxCap: Int
   isEndable: Boolean!
   country: String
+  countryOfOrigin: String
+  imageUrl: String
   creatorUser: User!
   usersTravelers: [User!]
   travelActivities: [Activity!]
@@ -98,6 +100,7 @@ type User {
   instagram: String
   whatsapp: String
   country: String
+  userImage: String
   userActivities: [Activity!]
   travelsCreated: [Travel!]
   joinsTravels: [Travel!]
@@ -118,6 +121,7 @@ type UserDto {
   instagram: String
   whatsapp: String
   country: String
+  userImage: String
   userActivities: [Activity!]
   travelsCreated: [Travel!]
   joinsTravels: [Travel!]
@@ -138,6 +142,8 @@ type TravelDto {
   maxCap: Int
   isEndable: Boolean!
   country: String
+  countryOfOrigin: String
+  imageUrl: String
   creatorUser: User!
   usersTravelers: [User!]
   travelActivities: [Activity!]
@@ -228,6 +234,7 @@ input UpdateUserInput {
   instagram: String
   whatsapp: String
   country: String
+  userImage: String
   activitiesIds: [String!]
 }
 
@@ -259,6 +266,8 @@ input CreateTravelInput {
   maxCap: Float!
   isEndable: Boolean!
   country: String!
+  countryOfOrigin: String!
+  imageUrl: String!
 }
 
 input UpdateTravelInput {
@@ -269,6 +278,8 @@ input UpdateTravelInput {
   maxCap: Int
   isEndable: Boolean!
   country: String!
+  countryOfOrigin: String
+  imageUrl: String
   id: String!
 }
 
@@ -295,6 +306,7 @@ input SignupUserInput {
   instagram: String
   whatsapp: String
   country: String
+  userImage: String
 }
 
 input CreateReviewInput {

@@ -68,5 +68,4 @@ export class ChecklistSeeder implements Seeder{
     await this.checklistRepository.delete({});
     await this.itemRepository.delete({});
   }
-  
 }

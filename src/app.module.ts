@@ -31,6 +31,8 @@ import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 import { Chat } from './chat/entities/chat.entity';
 import { Message } from './message/entities/message.entity';
+import { MulterModule } from '@nestjs/platform-express';
+import { UploadModule } from './upload/upload.module';
 
 
 
@@ -65,7 +67,10 @@ import { Message } from './message/entities/message.entity';
       }),
       inject: [ConfigService]
     }),
-
+    MulterModule.register({
+      dest: './uploads',
+    }),
+    UploadModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

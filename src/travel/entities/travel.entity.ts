@@ -58,6 +58,10 @@ export class Travel {
   @Field({ nullable: true })
   countryOfOrigin: string;
 
+  @Column({ nullable: true })
+  @Field({ nullable: true })
+  imageUrl: string;
+
   //********************************** */
 
   @ManyToOne(() => User, (user) => user.travelsCreated)
