@@ -21,13 +21,13 @@ export class ReviewService {
   ) { }
 
 
-  async create(createReviewInput: CreateReviewInput, userCreatorId: string, userReceiverId: string, travelId: string): Promise<Review> {
+  async create(createReviewInput: CreateReviewInput, userCreatorId: string,travelId: string, userReceiverId?: string): Promise<Review> {
     const review = this.reviewRepository.create(createReviewInput);
 
     review.createdUserBy = await this.userService.assignReview(review, userCreatorId);
 
-    if (userReceiverId && travelId) {
-      review.travel = await this.travelService.assignReview(review, travelId, userCreatorId, userReceiverId);
+    if (userReceiverId) {
+      review.travel = null;
       review.receivedUserBy = await this.userService.receiveReview(review, userReceiverId);
       review.type = 'USER';
     }

@@ -15,11 +15,11 @@ export class ReviewResolver {
   createReview(
     @Args('createReviewInput') createReviewInput: CreateReviewInput,
     @Context() context,
-    @Args('userReceiverId', { type: () => String }) userReceiverId: string,
     @Args('travelId', { type: () => String }) travelId: string,
+    @Args('userReceiverId', { type: () => String }) userReceiverId?: string,
 
   ): Promise<Review> {
-    return this.reviewService.create(createReviewInput, context.req.user.userId, userReceiverId, travelId);
+    return this.reviewService.create(createReviewInput, context.req.user.userId, travelId, userReceiverId);
   }
 
   @Query(() => [Review], { name: 'reviews' })

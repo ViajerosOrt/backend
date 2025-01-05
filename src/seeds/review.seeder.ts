@@ -17,15 +17,10 @@ export class ReviewSeeder implements Seeder{
   ) {}
 
   async seed() {
-    const user = await this.userService.findByEmail('fabricio@example.com');
-    const userReviewed = await this.userService.findByEmail('franco@example.com');
     const travels = await this.travelService.findAll();
-    const travel = travels[0];
+    const travelsEnds = travels.filter(tr => tr.isEndable === false)
+    
 
-    if (!user || !travel) {
-      console.error('Required User or Travel not found for seeding.');
-      return;
-    }
 
     const reviews = [
       "The trip was amazing! Everything was perfectly organized.",
@@ -48,9 +43,9 @@ export class ReviewSeeder implements Seeder{
   
     
     for(let i =0; i < reviews.length; i++ ){
-      const travelRandom = travels[Math.floor(Math.random() * travels.length)]
+      const travelRandom = travelsEnds[Math.floor(Math.random() * travelsEnds.length)]
       const randomUser = await this.randomUser()
-
+      console.log(travelRandom.isEndable)
       const travelReview = this.reviewRepository.create({
         stars: await this.randonNumber(),
         content: reviews[i],
@@ -58,7 +53,6 @@ export class ReviewSeeder implements Seeder{
         travel: travelRandom,
         type: 'TRAVEL',
       });
-      console.log(randomUser.name)
       const saveReview = await this.reviewRepository.save(travelReview);
 
       travelRandom.reviews = travelRandom.reviews || []
@@ -79,7 +73,7 @@ export class ReviewSeeder implements Seeder{
         content: userReviews[i],
         createdUserBy: randomUserCreated,
         receivedUserBy: randomUserRecived,
-        travel: travel,
+        travel: null,
         type: 'USER',
       })
 
@@ -94,28 +88,6 @@ export class ReviewSeeder implements Seeder{
       await this.reviewRepository.save(userReview);
 
     }
-
-    /*
-    const userReview = this.reviewRepository.create({
-      stars: '5',
-      content: 'very good travel companion',
-      createdUserBy: user,
-      receivedUserBy: userReviewed,
-      travel: travel,
-      type: 'USER',
-    })
-
-    
-    userReviewed.reviewsReceived = userReviewed.reviewsReceived || []
-    userReviewed.reviewsReceived.push(userReview)
-
-    user.reviewsCreated = user.reviewsCreated || []
-    user.reviewsCreated.push(userReview)
-
-    await this.userService.save(user)
-    await this.userService.save(userReviewed)
-    await this.reviewRepository.save(userReview);
-    */
   }
 
   async drop() {
