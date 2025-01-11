@@ -4,7 +4,6 @@ import {
   Mutation,
   Args,
   Int,
-  ResolveField,
   Context,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
@@ -16,6 +15,8 @@ import { Message } from '../message/entities/message.entity';
 import { CreateMessageInput } from '../message/dto/create-message.input';
 import { UserDto } from './dto/user.dto';
 import { UserTransformer } from './user.transformer';
+
+
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private usersService: UsersService,
@@ -79,5 +80,6 @@ export class UsersResolver {
   ): Promise<Message> {
     return this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
   }
+
 
 }

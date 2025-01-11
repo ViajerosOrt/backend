@@ -9,6 +9,7 @@ import { CreateMessageInput } from '../message/dto/create-message.input';
 import { MessageService } from '../message/message.service';
 import { use } from 'passport';
 import { Message } from '../message/entities/message.entity';
+import { UpdateMessageInput } from '../message/dto/update-message.input';
 
 @Injectable()
 export class ChatService {
