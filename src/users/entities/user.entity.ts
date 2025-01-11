@@ -47,6 +47,10 @@ export class User {
   @Field({ nullable: true })
   country: string;
 
+  @Column({type: 'varchar', nullable: true })
+  @Field({ nullable: true })
+  userImage: string
+
   @ManyToMany(() => Activity, (activity) => activity.userActivities)
   @Field(() => [Activity], { nullable: true })
   @JoinTable()

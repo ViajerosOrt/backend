@@ -29,4 +29,7 @@ export class CreateTravelInput {
   @Field()
   countryOfOrigin: string;
 
+  @Field()
+  imageUrl?: string;
+
 }

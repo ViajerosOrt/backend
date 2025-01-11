@@ -41,4 +41,7 @@ export class SignupUserInput {
   @Field({ nullable: true })
   country: string;
 
+  @Field({ nullable: true })
+  userImage: string;
+
 }
