@@ -471,6 +471,7 @@ export class TravelService {
     if (travel.creatorUser.id !== userId) {
       throw new GraphQLError('The creator of the trip cannot update');
     }
+    const maxCap = updateTravelInput.maxCap;
 
     const transport = await this.transportService.findOne(transportId);
     if (!transport) {
@@ -484,7 +485,7 @@ export class TravelService {
 
     if (travel.usersTravelers.length >= updateTravelInput.maxCap) {
       throw new GraphQLError(
-        'There are already more travelers joined than the amount you want to add',
+        'There are already more travelers joined than the amount you want update',
       );
     }
 
