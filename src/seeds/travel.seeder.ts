@@ -64,7 +64,7 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'Suiza',
+        country: 'Uruguay',
         chat: await this.addChat()
 
       },
@@ -80,12 +80,12 @@ export class TravelSeeder implements Seeder {
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
-        country: 'EEUU',
+        country: 'Argentina',
         chat: await this.addChat()
       },
     ];
     const chats = await this.chatService.findAll()
-    for(const travel of travels){
+    for (const travel of travels) {
       travel.usersTravelers = travel.usersTravelers || [];
       travel.usersTravelers.push(user);
       this.chatService.save(travel.chat)
@@ -93,7 +93,7 @@ export class TravelSeeder implements Seeder {
 
     const savedTravels = await this.travelRepository.save(travels);
 
-    for(const travel of savedTravels){
+    for (const travel of savedTravels) {
       this.addTravelToChat(chats, travel.chat.id, travel, user)
     }
 
@@ -110,7 +110,7 @@ export class TravelSeeder implements Seeder {
     await this.travelRepository.delete({});
   }
 
-  async addActivity():Promise<Activity[]>{
+  async addActivity(): Promise<Activity[]> {
     const activities = await this.activityService.findAll()
     const activityTravel = [];
     const activitesFiltered = new Set<string>();
@@ -118,7 +118,7 @@ export class TravelSeeder implements Seeder {
     while (activityTravel.length < 3) {
       const rActivity = activities[Math.floor(Math.random() * activities.length)];
 
-      if(!activitesFiltered.has(rActivity.id)){
+      if (!activitesFiltered.has(rActivity.id)) {
         activityTravel.push(rActivity);
         activitesFiltered.add(rActivity.id);
 
@@ -128,19 +128,19 @@ export class TravelSeeder implements Seeder {
     return activityTravel
   }
 
-  async addTransport():Promise<Transport>{
-    const transports =  await this.transportService.findAll();
+  async addTransport(): Promise<Transport> {
+    const transports = await this.transportService.findAll();
     return transports[Math.floor(Math.random() * transports.length)];
   }
 
-  async addChat():Promise<Chat>{
-    const chat =  await this.chatService.create()
+  async addChat(): Promise<Chat> {
+    const chat = await this.chatService.create()
     return chat
   }
 
-  async addTravelToChat(chats: Chat[] ,chatId: string, travel: Travel, user: User){
-    for(const chat of chats){
-      if(chat.id === chatId){
+  async addTravelToChat(chats: Chat[], chatId: string, travel: Travel, user: User) {
+    for (const chat of chats) {
+      if (chat.id === chatId) {
         chat.travel = travel;
         chat.users = chat.users || [];
         chat.users.push(user);

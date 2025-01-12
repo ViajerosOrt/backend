@@ -78,17 +78,17 @@ export class TravelResolver {
     @Context() context,
     @Args('items', { type: () => [String] }) items: string[],
   ) {
-    const travel = await this.travelService.addItemToChecklist(id, context.req.user.userId, items);
+    const travel = await this.travelService.addItemsToChecklist(id, context.req.user.userId, items);
     return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => TravelDto, { name: 'removeItemsToChecklist' })
-  async removeItemsToChecklist(
+  @Mutation(() => TravelDto, { name: 'removeItemsFromChecklist' })
+  async removeItemsFromChecklist(
     @Args('id', { type: () => String }) id: string,
     @Context() context,
     @Args('items', { type: () => [String] }) items: string[],
   ) {
-    const travel = await this.travelService.removeItemToChecklist(id, context.req.user.userId, items);
+    const travel = await this.travelService.removeItemFromChecklist(id, context.req.user.userId, items);
     return this.travelTransformer.toDto(travel);
   }
 
@@ -142,8 +142,11 @@ export class TravelResolver {
     @Args('updateTravelInput') updateTravelInput: UpdateTravelInput,
     @Context() context,
     @Args('activityId', { type: () => [String] }) activityId: string[],
+    @Args('transportId', { type: () => String, nullable: true }) transportId: string,
+    @Args('items', { type: () => [String], nullable: true }) items: string[],
+    @Args('updateLocationInput') updateLocationInput: CreateLocationInput,
   ) {
-    const travel = await this.travelService.update(updateTravelInput.id, updateTravelInput, activityId, context.req.user.userId);
+    const travel = await this.travelService.update(updateTravelInput.id, updateTravelInput, activityId, transportId, items, updateLocationInput, context.req.user.userId);
     return this.travelTransformer.toDto(travel);
   }
 

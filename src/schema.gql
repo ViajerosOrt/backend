@@ -208,10 +208,10 @@ type Mutation {
   expelFromTravel(bannedUserId: String!, travelId: String!): TravelDto!
   addChecklistToTravel(id: String!, items: [String!]!): TravelDto!
   addItemsToChecklist(id: String!, items: [String!]!): TravelDto!
-  removeItemsToChecklist(id: String!, items: [String!]!): TravelDto!
+  removeItemsFromChecklist(id: String!, items: [String!]!): TravelDto!
   assignItemToUser(id: String!, itemId: String!): TravelDto!
   removeItemToUser(id: String!, itemId: String!): TravelDto!
-  updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!): TravelDto!
+  updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!, transportId: String, items: [String!], updateLocationInput: CreateLocationInput!): TravelDto!
   removeTravel(id: String!): Travel!
   createTransport(createTransportInput: CreateTransportInput!): Transport!
   updateTransport(updateTransportInput: UpdateTransportInput!): Transport!

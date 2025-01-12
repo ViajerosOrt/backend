@@ -251,7 +251,7 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async addItemToChecklist(
+  async addItemsToChecklist(
     travelId: string,
     userId: string,
     items: string[],
@@ -272,7 +272,7 @@ export class TravelService {
     return this.travelRepository.save(travel);
   }
 
-  async removeItemToChecklist(
+  async removeItemFromChecklist(
     travelId: string,
     userId: string,
     itemsId: string[],
@@ -457,6 +457,9 @@ export class TravelService {
     id: string,
     updateTravelInput: UpdateTravelInput,
     activityId: string[],
+    transportId: string,
+    items: string[],
+    updateLocationInput: CreateLocationInput,
     userId: string,
   ): Promise<Travel> {
     const travel = await this.findOne(id);
@@ -468,6 +471,12 @@ export class TravelService {
     if (travel.creatorUser.id !== userId) {
       throw new GraphQLError('The creator of the trip cannot update');
     }
+
+    const transport = await this.transportService.findOne(transportId);
+    if (!transport) {
+      throw new GraphQLError('Transport not found');
+    }
+    travel.transport = transport;
 
     const uniqueActivityIds = [...new Set(activityId)];
     const activities =
@@ -493,11 +502,37 @@ export class TravelService {
       );
     }
 
+    if (updateLocationInput) {
+      const location =
+        await this.locationService.assignLocation(updateLocationInput);
+
+      travel.travelLocation = location;
+    }
+
+    const currentItems = travel.checklist?.items?.map(item => item.id) || [];
+    const newItems = items;
+
+    const itemsToRemove = currentItems.filter(id => !newItems.includes(id));
+    const itemsToAdd = newItems.filter(id => !currentItems.includes(id));
+
+    if (itemsToRemove.length > 0) {
+      await this.removeItemFromChecklist(travel.id, userId, itemsToRemove);
+    }
+
     Object.assign(travel, updateTravelInput);
 
     travel.travelActivities = activities;
+    await this.travelRepository.save(travel);
 
-    return this.travelRepository.save(travel);
+    if (itemsToAdd.length > 0) {
+      if (!!travel.checklist) {
+        return await this.addItemsToChecklist(travel.id, userId, itemsToAdd);
+      } else {
+        return await this.addChecklistToTravel(travel.id, userId, itemsToAdd);
+      }
+    }
+
+    return await this.travelRepository.save(travel);
   }
 
   remove(id: string) {
