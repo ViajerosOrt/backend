@@ -32,7 +32,7 @@ export class ChatService {
     }
     chat.users = chat.users || []
     chat.users.push(user)
-    console.log(chat.users)
+
     return this.chatRepository.save(chat)
   }
 

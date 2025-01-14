@@ -34,11 +34,14 @@ export class ChecklistService {
     }
 
     const checklistIntput = new CreateChecklistInput();
+
     checklistIntput.name = 'checklist ' + travel.travelTitle;
     const checklist = this.checklistRepository.create(checklistIntput);
+
     checklist.travel = travel;
     checklist.items = checklist.items || [];
     checklist.items = await this.itemService.createAllItems(items);
+
     return this.checklistRepository.save(checklist);
   }
 
