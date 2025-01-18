@@ -18,18 +18,24 @@ export class ReviewSeeder implements Seeder{
   async seed() {
     const user = await this.userService.findByEmail('fabricioSc@example.com');
     const userReviewed = await this.userService.findByEmail('francoBoe@example.com');
+    const userReviewed2 = await this.userService.findByEmail('luciaf@example.com');
+    
     const travels = await this.travelService.findAll();
-    const travel = travels[0];
-
-    if (!user || !travel) {
-      console.error('Required User or Travel not found for seeding.');
-      return;
-    }
-
+    const travelsEnd = travels.filter(trav => trav.isEndable === false);
+    const travel = travelsEnd[0];
+    console.log("llego")
     const travelReview = this.reviewRepository.create({
       stars: '5',
       content: 'Great travel experience!',
       createdUserBy: user,
+      travel: travel,
+      type: 'TRAVEL',
+    });
+
+    const travelReview2 = this.reviewRepository.create({
+      stars: '4',
+      content: 'Beautiful scenery, but the trip was a bit rushed.',
+      createdUserBy: userReviewed,
       travel: travel,
       type: 'TRAVEL',
     });
@@ -39,25 +45,43 @@ export class ReviewSeeder implements Seeder{
       content: 'very good travel companion',
       createdUserBy: user,
       receivedUserBy: userReviewed,
-      travel: travel,
       type: 'USER',
     })
 
-    travel.reviews = travel.reviews || [];
-    travel.reviews.push(travelReview)
+    const userReview2 = this.reviewRepository.create({
+      stars: '4',
+      content: 'Good travel companion, but a bit quiet at times.',
+      createdUserBy: userReviewed2,
+      receivedUserBy: userReviewed,
+      type: 'USER',
+    });
     
-    userReviewed.reviewsReceived = userReviewed.reviewsReceived || []
-    userReviewed.reviewsReceived.push(userReview)
+    const travelReviewSave1 = await this.reviewRepository.save(travelReview);
+    const travelReviewSave2 = await this.reviewRepository.save(travelReview2);
+    const userReviewSave1 = await this.reviewRepository.save(userReview);
+    const userReviewSave2 = await this.reviewRepository.save(userReview2);
+
+    travel.reviews = travel.reviews || [];
+    travel.reviews.push(travelReviewSave1)
+    travel.reviews.push(travelReviewSave2)
 
     user.reviewsCreated = user.reviewsCreated || []
-    user.reviewsCreated.push(travelReview)
-    user.reviewsCreated.push(userReview)
+    user.reviewsCreated.push(travelReviewSave1)
+    user.reviewsCreated.push(userReviewSave1)
+
+    userReviewed2.reviewsCreated = userReviewed2.reviewsCreated || []
+    userReviewed2.reviewsCreated.push(travelReviewSave2)
+    userReviewed2.reviewsCreated.push(userReviewSave2)
+    
+    userReviewed.reviewsReceived = userReviewed.reviewsReceived || []
+    userReviewed.reviewsReceived.push(userReviewSave1)
+    userReviewed.reviewsReceived.push(userReviewSave2)
+    
 
     await this.travelService.save(travel)
     await this.userService.save(user)
     await this.userService.save(userReviewed)
-    await this.reviewRepository.save(travelReview);
-    await this.reviewRepository.save(userReview);
+    await this.userService.save(userReviewed2)
   }
 
   async drop() {

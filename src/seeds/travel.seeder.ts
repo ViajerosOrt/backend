@@ -7,12 +7,12 @@ import { LocationService } from '../location/location.service';
 import { UsersService } from '../users/users.service';
 import { ActivityService } from '../activity/activity.service';
 import { User } from '../users/entities/user.entity';
-import { use } from 'passport';
 import { Activity } from '../activity/activity.entity';
 import { Transport } from '../transport/entities/transport.entity';
 import { TransportService } from '../transport/transport.service';
 import { Chat } from '../chat/entities/chat.entity';
 import { ChatService } from '../chat/chat.service';
+import { Location } from '../location/entities/location.entity';
 
 
 
@@ -30,10 +30,11 @@ export class TravelSeeder implements Seeder {
 
   async seed(): Promise<any> {
 
-    const location =
-      await this.locationService.findLocationByLog('-31.4827, -57.9119');
     
     const user = await this.userService.findByEmail('fabricioSc@example.com');
+
+    const user2 = await this.userService.findByEmail('francoBoe@example.com');
+    const user3 = await this.userService.findByEmail('luciaf@example.com');
 
 
     const travels = [
@@ -45,7 +46,7 @@ export class TravelSeeder implements Seeder {
         maxCap: 10,
         isEndable: true,
         creatorUser: user,
-        travelLocation: location,
+        travelLocation: await this.addLocation(),
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
@@ -60,7 +61,7 @@ export class TravelSeeder implements Seeder {
         maxCap: 8,
         isEndable: true,
         creatorUser: user,
-        travelLocation: location,
+        travelLocation: await this.addLocation(),
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
@@ -74,21 +75,86 @@ export class TravelSeeder implements Seeder {
         startDate: new Date('2025-08-10'),
         finishDate: new Date('2025-08-15'),
         maxCap: 15,
-        isEndable: false,
+        isEndable: true,
         creatorUser: user,
-        travelLocation: location,
+        travelLocation: await this.addLocation(),
         travelActivities: await this.addActivity(),
         usersTravelers: [],
         transport: await this.addTransport(),
         country: 'Argentina',
         chat: await this.addChat()
       },
+      {
+        travelTitle: 'Historic City Tour',
+        travelDescription: 'Explore the rich history and culture of ancient landmarks.',
+        startDate: new Date('2024-03-01'),
+        finishDate: new Date('2024-03-05'),
+        maxCap: 20,
+        isEndable: false,
+        creatorUser: user,
+        travelLocation: await this.addLocation(),
+        travelActivities: await this.addActivity(),
+        usersTravelers: [],
+        transport: await this.addTransport(),
+        country: 'Italy',
+        chat: await this.addChat(),
+      },
+      {
+        travelTitle: 'Rainforest Trekking',
+        travelDescription: 'Immerse yourself in the breathtaking beauty of the rainforest.',
+        startDate: new Date('2024-06-15'),
+        finishDate: new Date('2024-06-20'),
+        maxCap: 12,
+        isEndable: false,
+        creatorUser: user,
+        travelLocation: await this.addLocation(), 
+        travelActivities: await this.addActivity(),
+        usersTravelers: [],
+        transport: await this.addTransport(),
+        country: 'Peru',
+        chat: await this.addChat(),
+      },
+      {
+        travelTitle: 'Northern Lights Adventure',
+        travelDescription: 'Witness the magical auroras in the clear northern skies.',
+        startDate: new Date('2024-11-10'),
+        finishDate: new Date('2024-11-15'),
+        maxCap: 6,
+        isEndable: false,
+        creatorUser: user,
+        travelLocation: await this.addLocation(),
+        travelActivities: await this.addActivity(),
+        usersTravelers: [],
+        transport: await this.addTransport(),
+        country: 'Norway',
+        chat: await this.addChat(),
+      },
+      {
+        travelTitle: 'Safari Expedition',
+        travelDescription: 'Experience the adventure of wildlife in their natural habitat.',
+        startDate: new Date('2025-12-01'),
+        finishDate: new Date('2025-12-10'),
+        maxCap: 10,
+        isEndable: true,
+        creatorUser: user,
+        travelLocation: await this.addLocation(),
+        travelActivities: await this.addActivity(),
+        usersTravelers: [],
+        transport: await this.addTransport(),
+        country: 'South Africa',
+        chat: await this.addChat(),
+      },
+      
     ];
+
     const chats = await this.chatService.findAll()
     for (const travel of travels) {
       travel.usersTravelers = travel.usersTravelers || [];
       travel.usersTravelers.push(user);
+      travel.usersTravelers.push(user2);
+      travel.usersTravelers.push(user3);
       this.chatService.save(travel.chat)
+      console.log(travel.isEndable)
     }
 
     const savedTravels = await this.travelRepository.save(travels);
@@ -102,7 +168,15 @@ export class TravelSeeder implements Seeder {
     user.joinsTravels = user.joinsTravels || [];
     user.joinsTravels.push(...savedTravels)
 
+    user2.joinsTravels = user2.joinsTravels || [];
+    user2.joinsTravels.push(...savedTravels)
+
+    user3.joinsTravels = user3.joinsTravels || [];
+    user3.joinsTravels.push(...savedTravels)
+
     this.userService.save(user);
+    this.userService.save(user2);
+    this.userService.save(user3);
 
   }
 
@@ -147,5 +221,10 @@ export class TravelSeeder implements Seeder {
         this.chatService.save(chat);
       }
     }
+  }
+
+  async addLocation():Promise<Location>{
+    const locations = await this.locationService.findAll();
+    return locations[Math.floor(Math.random() * locations.length)]
   }
 }

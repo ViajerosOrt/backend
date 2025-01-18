@@ -25,31 +25,24 @@ export class ChecklistSeeder implements Seeder{
 
   async seed(): Promise<void> {
     const travels = await this.travelService.findAll(); 
-    //const travel = travels[0] 
-    /*
-    if (!travel) {
-      console.log('No Travel found to associate with Checklist');
-      return;
-    }
-    */
-
-    const itemsList =   [
-      'Sunscreen' ,
-       'Swimwear' ,
-      'Beach Towel' ,
-       'Water Bottle' ,
-      'Hiking Boots' ,
-       'Trail Map' ,
-    ]
+    const itemsList = [
+      'Sunscreen',
+      'Swimwear',
+      'Beach Towel',
+      'Water Bottle',
+      'Hiking Boots',
+      'Trail Map',
+      'Backpack with essentials',
+      'Travel guide or map',
+      'Portable charger',
+      'Reusable water bottle',
+    ];
 
     const items = await this.itemService.createAllItems(itemsList);
+    const savedItems: Item[] = [];
 
-
-
-    const itemsChecklist: Item[] = [];
-
-    for(let i = 0; i < items.length; i++){
-      itemsChecklist.push(items[Math.floor(Math.random() * items.length)])
+    for(const item of items){
+      savedItems.push(await this.itemService.save(item));
     }
 
    for(const travel of travels){
@@ -58,7 +51,7 @@ export class ChecklistSeeder implements Seeder{
     const checklist = this.checklistRepository.create(createChecklist)
     checklist.travel = travel
     checklist.items = checklist.items || []
-    checklist.items.push(...itemsChecklist)
+    checklist.items.push(...await this.addItems(savedItems))
     await this.checklistRepository.save(checklist);
    }
   
@@ -67,5 +60,20 @@ export class ChecklistSeeder implements Seeder{
   async drop(): Promise<void> {
     await this.checklistRepository.delete({});
     await this.itemRepository.delete({});
+  }
+
+  async addItems(items: Item[]):Promise<Item[]>{
+    const itemsReturn = [];
+    const itemsFilter = new Set<string>()
+
+    while(itemsReturn.length < 3){
+      const randomItem = items[Math.floor(Math.random() * items.length)]
+      if(!itemsFilter.has(randomItem.id)){
+        itemsReturn.push(randomItem);
+        itemsFilter.add(randomItem.id)
+      }
+    }
+
+    return itemsReturn;
   }
 }
