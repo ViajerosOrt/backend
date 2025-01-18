@@ -112,7 +112,10 @@ export class ChecklistService {
     if (!checklist) {
       throw new GraphQLError('No checklist found');
     }
-    const removedItem = checklist.items.filter(item => item.user.id === userId)
+
+    // The user in the item can be null if the item is not assigned to any user!
+    const removedItem = checklist.items.filter(item => item.user?.id === userId)
+
     return removedItem.length > 0;
   }
 

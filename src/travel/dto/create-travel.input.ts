@@ -9,6 +9,15 @@ export class CreateTravelInput {
   @Field()
   travelDescription: string;
 
+  @Field({ nullable: true })
+  imageUrl?: string;
+
+  @Field()
+  country: string;
+
+  @Field()
+  maxCap: number;
+
   @Type(() => Date)
   @Field()
   startDate: Date;
@@ -18,18 +27,8 @@ export class CreateTravelInput {
   finishDate: Date;
 
   @Field()
-  maxCap: number;
-
-  @Field()
   isEndable: boolean;
 
-  @Field()
-  country: string;
-
-  @Field()
-  countryOfOrigin: string;
-
-  @Field()
-  imageUrl?: string;
-
+  @Field({ nullable: true })
+  countryOfOrigin?: string;
 }

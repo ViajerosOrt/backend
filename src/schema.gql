@@ -177,7 +177,7 @@ type Query {
   chats: [Chat!]!
   chat(id: String!): Chat!
   chatUser: [Chat!]!
-  chatTravel(travelId: String!): [Chat!]!
+  findChatByTravelId(travelId: String!): Chat!
   messagesChat(chatId: String!): [Message!]!
   location(id: String!): Location!
   travels(startDate: DateTime, endDate: DateTime, travelName: String, activityIds: [String!], transportId: String, countryName: String, creatorId: String): [TravelDto!]!
@@ -268,25 +268,25 @@ input UpdateLocationInput {
 input CreateTravelInput {
   travelTitle: String!
   travelDescription: String!
+  imageUrl: String
+  country: String!
+  maxCap: Float!
   startDate: DateTime!
   finishDate: DateTime!
-  maxCap: Float!
   isEndable: Boolean!
-  country: String!
-  countryOfOrigin: String!
-  imageUrl: String!
+  countryOfOrigin: String
 }
 
 input UpdateTravelInput {
   travelTitle: String!
   travelDescription: String
+  imageUrl: String
+  country: String!
+  maxCap: Int
   startDate: DateTime!
   finishDate: DateTime!
-  maxCap: Int
   isEndable: Boolean!
-  country: String!
   countryOfOrigin: String
-  imageUrl: String
   id: String!
 }
 

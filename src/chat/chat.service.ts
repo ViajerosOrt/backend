@@ -96,7 +96,7 @@ export class ChatService {
     return chats;
   }
 
-  async findAllChatsOsTravleId(travelId: string): Promise<Chat[]> {
+  async findChatByTravelId(travelId: string): Promise<Chat> {
     const query = await this.chatRepository
       .createQueryBuilder('chat')
       .leftJoinAndSelect('chat.travel', 'travel')
@@ -104,8 +104,8 @@ export class ChatService {
       .leftJoinAndSelect('chat.messages', 'messages')
       .leftJoinAndSelect('messages.user', 'userMessage')
 
-    query.andWhere('travel.id = :travelId', {travelId});
-    const chats = query.getMany();
+    query.andWhere('travel.id = :travelId', { travelId });
+    const chats = query.getOne();
     return chats;
   }
 
