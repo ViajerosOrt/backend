@@ -78,4 +78,8 @@ export class ItemService {
 
   }
 
+  async save(item: Item):Promise<Item>{
+    return this.itemRepository.save(item);
+  }
+
 }
