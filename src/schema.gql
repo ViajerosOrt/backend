@@ -325,3 +325,8 @@ input UpdateReviewInput {
   stars: String!
   content: String!
 }
+
+type Subscription {
+  chatMessageAdded(chatId: String!): Message!
+  chatUpdated(userId: String!): Message!
+}

@@ -5,6 +5,7 @@ import {
   Args,
   Int,
   Context,
+  Subscription,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
@@ -15,8 +16,9 @@ import { Message } from '../message/entities/message.entity';
 import { CreateMessageInput } from '../message/dto/create-message.input';
 import { UserDto } from './dto/user.dto';
 import { UserTransformer } from './user.transformer';
+import { PubSub } from 'graphql-subscriptions';
 
-
+const pubSub = new PubSub();
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private usersService: UsersService,
@@ -78,8 +80,30 @@ export class UsersResolver {
     @Context() context,
     @Args('chatId') chatId: string
   ): Promise<Message> {
-    return this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
+    const message = await this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
+    pubSub.publish('chatMessageAdded', { chatMessageAdded: message });
+    pubSub.publish('chatUpdated', { chatUpdated: message });
+    return message;
   }
 
+  @Subscription(() => Message, {
+    name: 'chatMessageAdded',
+    filter: (payload, variables) => {
+      return payload.chatMessageAdded.chat.id === variables.chatId;
+    },
+  })
+  chatMessageAdded(@Args('chatId', { type: () => String }) chatId: string) {
+    return pubSub.asyncIterableIterator('chatMessageAdded')
+  }
 
+  @Subscription(() => Message, {
+    name: 'chatUpdated',
+    filter: (payload, variables) => {
+      return payload.chatUpdated.chat.users.some(user => user.id === variables.userId);
+    },
+  })
+  chatUpdated(@Args('userId', { type: () => String }) userId: string) {
+    return pubSub.asyncIterableIterator('chatUpdated')
+  }
 }
+
