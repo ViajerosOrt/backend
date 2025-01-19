@@ -17,13 +17,12 @@ export class ReviewSeeder implements Seeder{
 
   async seed() {
     const user = await this.userService.findByEmail('fabricioSc@example.com');
-    const userReviewed = await this.userService.findByEmail('francoBoe@example.com');
+    const userReviewed = await this.userService.findByEmail('francoBor@example.com');
     const userReviewed2 = await this.userService.findByEmail('luciaf@example.com');
     
     const travels = await this.travelService.findAll();
     const travelsEnd = travels.filter(trav => trav.isEndable === false);
     const travel = travelsEnd[0];
-    console.log("llego")
     const travelReview = this.reviewRepository.create({
       stars: '5',
       content: 'Great travel experience!',
