@@ -157,9 +157,11 @@ export class TravelSeeder implements Seeder {
     }
 
     const savedTravels = await this.travelRepository.save(travels);
+    const allUsers: User[] = [];
+    allUsers.push(user, user2, user3)
 
     for (const travel of savedTravels) {
-      this.addTravelToChat(chats, travel.chat.id, travel, user)
+      await this.addTravelToChat(chats, travel.chat.id, travel, allUsers)
     }
 
     user.travelsCreated = user.travelsCreated || [];
@@ -211,12 +213,12 @@ export class TravelSeeder implements Seeder {
     return chat
   }
 
-  async addTravelToChat(chats: Chat[], chatId: string, travel: Travel, user: User) {
+  async addTravelToChat(chats: Chat[], chatId: string, travel: Travel, users: User[]) {
     for (const chat of chats) {
       if (chat.id === chatId) {
         chat.travel = travel;
         chat.users = chat.users || [];
-        chat.users.push(user);
+        chat.users.push(...users);
         this.chatService.save(chat);
       }
     }
