@@ -127,7 +127,7 @@ export class ChatService {
     const newMessage = await this.messageService.create(
       { ...createMessageInput, createdAt: new Date() },
       user,
-      chat,
+      chat
     );
     chat.messages = chat.messages || [];
     chat.messages.push(newMessage);
@@ -164,7 +164,7 @@ export class ChatService {
       const newMessagebot = await this.messageService.create(
         { ...createMessageInput, createdAt: new Date() },
         bot,
-        chat,
+        chat
       );
       chat.messages = chat.messages || [];
       chat.messages.push(newMessagebot);
