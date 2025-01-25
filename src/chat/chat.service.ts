@@ -118,13 +118,12 @@ export class ChatService {
     createMessageInput: CreateMessageInput,
     chatId: string,
     user: User,
-    bot: User,
-  ): Promise<Message[]> {
+  ): Promise<Message> {
     const chat = await this.findOne(chatId);
     if (!(await this.isMember(chatId, user))) {
       throw new Error(`This user is not a member`);
     }
-    const retornoFinal: Message[] = []
+
     const newMessage = await this.messageService.create(
       { ...createMessageInput, createdAt: new Date() },
       user,
@@ -133,9 +132,22 @@ export class ChatService {
     chat.messages = chat.messages || [];
     chat.messages.push(newMessage);
     this.chatRepository.save(chat);
-    retornoFinal.push(newMessage)
+    return newMessage;
+  }
 
-    if (createMessageInput.content.startsWith('@bot')) {
+  async isMember(chatId: string, user: User): Promise<boolean> {
+    const chat = await this.findOne(chatId);
+    const userFind = chat.users.some((us) => us.id === user.id);
+    return userFind;
+  }
+
+  async botResponse(
+    createMessageInput: CreateMessageInput,
+    chatId: string,
+    bot: User,
+  ): Promise<Message> {
+    try {
+      const chat = await this.findOne(chatId);
       const activitiesName: string[] = [];
       for (const activity of chat.travel.travelActivities) {
         activitiesName.push(activity.activityName);
@@ -143,26 +155,23 @@ export class ChatService {
       const nearbyPlaces = await this.gptService.getNearbyPlaces(
         chat.travel.travelLocation.longLatPoint,
       );
-      console.log(nearbyPlaces)
       const botResponse = await this.gptService.getRecommendations(
         activitiesName,
         createMessageInput.content,
-        nearbyPlaces
+        nearbyPlaces,
       );
       createMessageInput.content = botResponse;
-      const newMessagebot = await this.messageService.create({ ...createMessageInput, createdAt: new Date() },bot,chat,);
+      const newMessagebot = await this.messageService.create(
+        { ...createMessageInput, createdAt: new Date() },
+        bot,
+        chat,
+      );
       chat.messages = chat.messages || [];
       chat.messages.push(newMessagebot);
       this.chatRepository.save(chat);
-      retornoFinal.push(newMessagebot)
+      return newMessagebot;
+    } catch (error) {
+      throw new Error('Oops, we cant process your request, please try again!');
     }
-    
-    return retornoFinal;
-  }
-
-  async isMember(chatId: string, user: User): Promise<boolean> {
-    const chat = await this.findOne(chatId);
-    const userFind = chat.users.some((us) => us.id === user.id);
-    return userFind;
   }
 }

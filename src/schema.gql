@@ -197,7 +197,7 @@ type Mutation {
   addActivities(activitiesIds: [String!]!): User!
   update(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
-  sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): [Message!]!
+  sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
   editMessage(updateMessageInput: UpdateMessageInput!, messageId: String!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
   updateLocation(updateLocationInput: UpdateLocationInput!): Location!

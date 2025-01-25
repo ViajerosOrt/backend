@@ -3,12 +3,10 @@ import axios from 'axios';
 
 @Injectable()
 export class GptService {
-  private readonly apiKey =
-    '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';
-  private readonly apiUrl = 'https://api.openai.com/v1/chat/completions';
-  private readonly googleApiKey = 'AIzaSyAt_RqOCQlq2AnINH7-ULoiU_J-BskgP_A';
-  private readonly googleApiUrl =
-    'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+  private readonly apiKey = process.env.OPENAI_API_KEY;
+  private readonly apiUrl = process.env.OPENAI_API_URL;
+  private readonly googleApiKey = process.env.GOOGLE_API_KEY;
+  private readonly googleApiUrl =  process.env.GOOGLE_API_URL;
 
   async getRecommendations(
     activities: string[],
