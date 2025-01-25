@@ -95,6 +95,17 @@ export class UserSeeder implements Seeder {
         whatsapp: '+59894567890',
         country: 'Paraguay',
       },
+      {
+        name: 'bot',
+        email: 'bot@gpt.com',
+        password: await bcrypt.hash('password0101', 10),
+        birthDate: new Date('1998-08-09'),
+        description: '¿Has tenido alguna vez un sueño, Neo, que parecías tan seguro de que era real? ¿Y si no pudieras despertar de ese sueño? ¿Cómo diferenciarías el mundo de los sueños del mundo real?',
+        userActivities: await this.addActivity(),
+        instagram: 'gpt',
+        whatsapp: '+010101010101',
+        country: 'Uruguay',
+      },
     ];  
     
     await this.userRepository.save(users);

@@ -73,17 +73,24 @@ export class UsersResolver {
     return this.usersService.remove(id);
   }
 
-  @Mutation(() => Message, { name: 'sendMessage' })
+  @Mutation(() => [Message], { name: 'sendMessage' })
   @UseGuards(JwtAuthGuard)
   async sendMessage(
     @Args('createMessageInput') createMessageInput: CreateMessageInput,
     @Context() context,
     @Args('chatId') chatId: string
-  ): Promise<Message> {
+  ): Promise<Message[]> {
+
     const message = await this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
-    pubSub.publish('chatMessageAdded', { chatMessageAdded: message });
-    pubSub.publish('chatUpdated', { chatUpdated: message });
+    if(message.length > 1){
+      pubSub.publish('chatMessageAdded', { chatMessageAdded: message[0] });
+      pubSub.publish('chatMessageAdded', { chatMessageAdded: message[1] });
+    }else{
+      pubSub.publish('chatMessageAdded', { chatMessageAdded: message[0] });
+      pubSub.publish('chatUpdated', { chatUpdated: message[0] });
+    }
     return message;
+
   }
 
   @Subscription(() => Message, {

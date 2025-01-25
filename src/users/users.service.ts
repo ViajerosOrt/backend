@@ -225,7 +225,7 @@ export class UsersService {
   }
 
   //**********CHAT********** *//
-  async sendMessage(createMessageInput: CreateMessageInput, userId: string, chatId: string): Promise<Message> {
+  async sendMessage(createMessageInput: CreateMessageInput, userId: string, chatId: string): Promise<Message[]> {
     const user = await this.findById(userId);
     if (!user) {
       throw new GraphQLError('this user not exist');
@@ -239,8 +239,9 @@ export class UsersService {
       throw new GraphQLError('The user is not part of this travel');
     }
 
+    const bot = await this.findByEmail('bot@gpt.com')
 
-    return await this.chatService.sendMessage(createMessageInput, chatId, user)
+    return await this.chatService.sendMessage(createMessageInput, chatId, user, bot)
   }
 
   //*********************** *//
