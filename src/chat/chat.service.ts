@@ -19,7 +19,7 @@ export class ChatService {
     private chatRepository: Repository<Chat>,
     private messageService: MessageService,
     private gptService: GptService,
-  ) {}
+  ) { }
 
   async create(): Promise<Chat> {
     const chat = this.chatRepository.create();
@@ -67,6 +67,7 @@ export class ChatService {
         'travel',
         'travel.travelActivities',
         'travel.travelLocation',
+        'travel.usersTravelers',
         'users',
         'users.reviewsCreated',
         'users.reviewsCreated.receivedUserBy',
@@ -155,10 +156,30 @@ export class ChatService {
       const nearbyPlaces = await this.gptService.getNearbyPlaces(
         chat.travel.travelLocation.longLatPoint,
       );
+
+      // Los ultimos 5 promts realizados por un usuario
+      const oldBotPromts = chat.messages
+        .filter(message => message.content.toLowerCase().includes('@bot'))
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+        .slice(-5);
+
+      // Las ultimas 5 respuestas del bot
+      const oldBotResponses = chat.messages
+        .filter(message => message.user.id === bot.id)
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+        .slice(-5);
+
+      const travelDuration = Math.abs(new Date(chat.travel.finishDate).getTime() - new Date(chat.travel.startDate).getTime()) / (1000 * 60 * 60 * 24);
+      const amountOfTravelers = chat.travel.usersTravelers.length;
+
       const botResponse = await this.gptService.getRecommendations(
         activitiesName,
         createMessageInput.content,
         nearbyPlaces,
+        oldBotPromts,
+        oldBotResponses,
+        travelDuration,
+        amountOfTravelers,
       );
       createMessageInput.content = botResponse;
       const newMessagebot = await this.messageService.create(
