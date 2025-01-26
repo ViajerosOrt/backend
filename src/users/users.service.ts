@@ -239,9 +239,12 @@ export class UsersService {
       throw new GraphQLError('The user is not part of this travel');
     }
 
-
     return await this.chatService.sendMessage(createMessageInput, chatId, user)
   }
 
+  async sendMessageBot(createMessageInput: CreateMessageInput, chatId: string):Promise<Message>{
+    const bot = await this.findByEmail('bot@gpt.com');
+    return await this.chatService.botResponse(createMessageInput, chatId, bot);
+  }
   //*********************** *//
 }

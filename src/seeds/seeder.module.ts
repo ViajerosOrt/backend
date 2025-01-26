@@ -33,6 +33,7 @@ import { Chat } from "../chat/entities/chat.entity";
 import { Message } from "../message/entities/message.entity";
 import { ChatModule } from "../chat/chat.module";
 import { MessageModule } from "../message/message.module";
+import { GptModule } from "../GPT/gpt.module";
 
 
 
@@ -68,7 +69,8 @@ import { MessageModule } from "../message/message.module";
         ChecklistModule,
         TransportModule,
         ChatModule,
-        MessageModule
+        MessageModule,
+        GptModule
     ],
     providers: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService, UsersService, ActivityService, ChecklistSeeder, ReviewSeeder, TransportSeeder],
     exports: [ActivitySeeder, Seeder, UserSeeder, LocationSeeder, TravelSeeder, LocationService,UsersService, ActivityService, ChecklistSeeder,  ReviewSeeder, TransportSeeder]

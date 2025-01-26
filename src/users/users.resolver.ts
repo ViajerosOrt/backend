@@ -81,8 +81,12 @@ export class UsersResolver {
     @Args('chatId') chatId: string
   ): Promise<Message> {
     const message = await this.usersService.sendMessage(createMessageInput, context.req.user.userId, chatId);
-    pubSub.publish('chatMessageAdded', { chatMessageAdded: message });
+    pubSub.publish('chatMessageAdded', { chatMessageAdded: message});
     pubSub.publish('chatUpdated', { chatUpdated: message });
+    if(createMessageInput.content.startsWith('@bot')){
+      const botResponse = await this.usersService.sendMessageBot(createMessageInput, chatId);
+      pubSub.publish('chatMessageAdded', { chatMessageAdded: botResponse});
+    }
     return message;
   }
 
