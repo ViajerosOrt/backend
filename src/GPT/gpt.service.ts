@@ -31,6 +31,7 @@ export class GptService {
         Actividades relacionadas al viaje: ${activities.join(', ')}.
         Duración del viaje: ${travelDuration} días.
         Cantidad de viajeros: ${amountOfTravelers}.
+        Ten en cuenta que el usuario eventualmente puede hacer peticiones no relacionadas con el viaje, en cuyo caso debes responderles sin tener en cuenta los datos anteriores y siendo creativo.
       `;
 
       if (oldBotPromts.length > 0) {
