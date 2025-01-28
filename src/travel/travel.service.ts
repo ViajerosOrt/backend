@@ -536,8 +536,26 @@ export class TravelService {
     return await this.travelRepository.save(travel);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} travel`;
+  async remove(travelId: string, userId: string):Promise<any> {
+    try {
+      const travel = await this.findOne(travelId);
+
+      if (!travel) {
+        throw new GraphQLError('this travel not exist');
+      }
+  
+      if (travel.creatorUser.id !== userId) {
+        throw new GraphQLError('The creator of the trip cannot delete');
+      }
+
+      await this.chatService.delete(travel.chat.id)
+
+      await this.travelRepository.delete(travelId);
+      return 'trip successfully deleted'
+
+    } catch (error) {
+      throw new GraphQLError(error);
+    };
   }
 
   async save(travel: Travel): Promise<void> {

@@ -151,7 +151,10 @@ export class TravelResolver {
   }
 
   @Mutation(() => Travel)
-  removeTravel(@Args('id', { type: () => String }) id: string) {
-    return this.travelService.remove(id);
+  async removeTravel(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context,
+  ) {
+    await this.travelService.remove(id, context.req.user.userId);
   }
 }
