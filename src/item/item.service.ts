@@ -82,4 +82,7 @@ export class ItemService {
     return this.itemRepository.save(item);
   }
 
+  async delete(itemId: string):Promise<void>{
+    await this.itemRepository.delete(itemId)
+  }
 }
