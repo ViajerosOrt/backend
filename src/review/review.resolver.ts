@@ -12,32 +12,31 @@ export class ReviewResolver {
   constructor(private readonly reviewService: ReviewService) { }
 
   @Mutation(() => Review)
-  createReview(
+  async createReview(
     @Args('createReviewInput') createReviewInput: CreateReviewInput,
     @Context() context,
     @Args('userReceiverId', { type: () => String }) userReceiverId: string,
     @Args('travelId', { type: () => String }) travelId: string,
 
   ): Promise<Review> {
-    return this.reviewService.create(createReviewInput, context.req.user.userId, userReceiverId, travelId);
+    return await this.reviewService.create(createReviewInput, context.req.user.userId, userReceiverId, travelId);
   }
 
   @Query(() => [Review], { name: 'reviews' })
-  findAll() {
-    return this.reviewService.findAll();
+  async findAll() {
+    return await this.reviewService.findAll();
   }
 
   @Query(() => Review, { name: 'review' })
-  findOne(@Args('id', { type: () => String }) id: string) {
-    return this.reviewService.findOne(id);
+  async findOne(@Args('id', { type: () => String }) id: string) {
+    return await this.reviewService.findOne(id);
   }
 
 
 
   @Mutation(() => Review)
-  removeReview(@Args('id', { type: () => String }) id: string) {
+  async removeReview(@Args('id', { type: () => String }) id: string):Promise<any> {
     return this.reviewService.remove(id);
-
   }
 
   @Query(() => [Review])
@@ -51,7 +50,7 @@ export class ReviewResolver {
   }
 
   @Mutation(() => Review)
-  updateReview(
+  async updateReview(
     @Args('id') id: string,
     @Args('updateReviewInput') updateReviewInput: UpdateReviewInput,
     @Context() context

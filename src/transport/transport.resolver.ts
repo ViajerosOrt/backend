@@ -26,13 +26,4 @@ export class TransportResolver {
     return this.transportService.findOne(id);
   }
 
-  @Mutation(() => Transport)
-  updateTransport(@Args('updateTransportInput') updateTransportInput: UpdateTransportInput) {
-    return this.transportService.update(updateTransportInput.id, updateTransportInput);
-  }
-
-  @Mutation(() => Transport)
-  removeTransport(@Args('id', { type: () => Int }) id: number) {
-    return this.transportService.remove(id);
-  }
 }

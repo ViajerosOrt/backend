@@ -28,6 +28,7 @@ describe('UsersResolver', () => {
     items: [],
     chats: [],    
     messages:[],
+    userImage: null
   }
 
   const mockContext = {
@@ -86,6 +87,7 @@ describe('UsersResolver', () => {
         items: [],
         chats: [],    
         messages:[],
+        userImage: null
       };
 
       jest.spyOn(service, 'addActivity').mockResolvedValue(result);
@@ -115,6 +117,7 @@ describe('UsersResolver', () => {
           items: [],
           chats: [],    
           messages:[],
+          userImage: null
         },
       ];
 
@@ -148,6 +151,7 @@ describe('UsersResolver', () => {
         items: [],
         chats: [],    
         messages:[],
+        userImage: null
       }
 
       jest.spyOn(service, 'findById').mockResolvedValue(result);
@@ -165,7 +169,8 @@ describe('UsersResolver', () => {
         instagram: 'mockUser',
         whatsapp: '1234',
         country: 'EEUU',
-        activitiesIds: []
+        activitiesIds: [],
+        userImage: null
       };
 
       const userId = "1";
@@ -175,4 +180,5 @@ describe('UsersResolver', () => {
       expect(service.update).toHaveBeenCalledWith(userId, updateUserInput);
     })
   })
+
 });
