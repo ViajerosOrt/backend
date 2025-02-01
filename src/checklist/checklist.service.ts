@@ -130,5 +130,20 @@ export class ChecklistService {
 
   }
 
+  async delete(checklistId: string):Promise<void>{
+    const checklist = await this.findOne(checklistId);
+    if (!checklist) {
+      throw new GraphQLError('No checklist found');
+    }
+
+    const items = checklist.items || [];
+
+    for(const item of items){
+      await this.itemService.delete(item.id)
+    }
+
+    await this.checklistRepository.delete(checklistId)
+  }
+
 
 }

@@ -65,4 +65,8 @@ export class MessageService {
 
   }
 
+  async delete(messageId:string):Promise<void>{
+    await this.messageRepository.delete(messageId)
+  }
+
 }

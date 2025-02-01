@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateReviewInput } from './dto/create-review.input';
 import { UpdateReviewInput } from './dto/update-review.input';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,8 +16,10 @@ export class ReviewService {
   constructor(
     @InjectRepository(Review)
     private reviewRepository: Repository<Review>,
+
+    @Inject(forwardRef(() => TravelService)) // Declaración de dependencia circular
+    private readonly travelService: TravelService,
     private userService: UsersService,
-    private travelService: TravelService,
   ) { }
 
 
@@ -64,9 +66,7 @@ export class ReviewService {
 
   }
 
-  async remove(id: string): Promise<Review> {
-    const review = await this.findOne(id);
+  async remove(id: string): Promise<void> {
     await this.reviewRepository.delete(id);
-    return review;
   }
 }

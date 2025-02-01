@@ -1,4 +1,4 @@
-import { Injectable, Module } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Module } from '@nestjs/common';
 import { CreateTravelInput } from './dto/create-travel.input';
 import { UpdateTravelInput } from './dto/update-travel.input';
 import { InjectRepository, TypeOrmModule } from '@nestjs/typeorm';
@@ -16,6 +16,7 @@ import { ChatService } from '../chat/chat.service';
 import { MyGateway } from '../gateway/gateway';
 import { CreateMessageInput } from '../message/dto/create-message.input';
 import { User } from '../users/entities/user.entity';
+import { ReviewService } from '../review/review.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Travel])],
@@ -27,6 +28,11 @@ export class TravelService {
   constructor(
     @InjectRepository(Travel)
     private travelRepository: Repository<Travel>,
+
+
+    @Inject(forwardRef(() => ReviewService)) // Declaración de dependencia circular
+    private readonly reviewService: ReviewService,
+
     private userService: UsersService,
     private activityService: ActivityService,
     private locationService: LocationService,
@@ -171,9 +177,12 @@ export class TravelService {
     this.gateway.exitRoom(user.id, travel.chat.id, user.name);
     /******************************************** */
 
+
+  
     travel.usersTravelers = travel.usersTravelers.filter(
       (traveler) => traveler.id !== userId,
     );
+    
 
     await this.userService.leaveTravel(travel, user);
     return this.travelRepository.save(travel);
@@ -536,8 +545,44 @@ export class TravelService {
     return await this.travelRepository.save(travel);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} travel`;
+  async remove(travelId: string, userId: string):Promise<any> {
+
+      const travel = await this.findOne(travelId);
+      
+      if (!travel) {
+        throw new GraphQLError('this travel not exist');
+      }
+      if (travel.creatorUser.id !== userId) {
+        throw new GraphQLError('The creator of the trip cannot delete');
+      } 
+
+      travel.usersTravelers = travel.usersTravelers.filter(
+        (traveler) => traveler.id !== userId,
+      );
+      
+      const user = await this.userService.findById(userId)
+      await this.userService.leaveTravel(travel, user);
+      this.travelRepository.save(travel);
+
+      for(const user of travel.usersTravelers){
+        await this.leaveTravel(user.id, travelId)
+      }
+      await this.chatService.delete(travel.chat.id)
+      
+      if(travel.reviews.length > 0){
+        for(const review of travel.reviews){
+          await this.reviewService.remove(review.id)
+        }
+      }
+
+      if(travel.checklist){
+        await this.checklistService.delete(travel.checklist.id)
+      }
+      
+      await this.travelRepository.delete(travelId);
+      return 'trip successfully deleted'
+
+    
   }
 
   async save(travel: Travel): Promise<void> {

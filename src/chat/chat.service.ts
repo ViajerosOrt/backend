@@ -195,4 +195,24 @@ export class ChatService {
       throw new Error('Oops, we cant process your request, please try again!');
     }
   }
+
+  async delete(chatId: string):Promise<void>{
+
+    try {
+      const chat = await this.findOne(chatId);
+      if (!chat) {
+        throw new Error(`Chat with ID ${chatId} not found`);
+      }
+
+      const messages = chat.messages || []
+      for(const message of messages){
+        await this.messageService.delete(message.id)
+      }
+
+      await this.chatRepository.delete(chatId)
+
+    } catch (error) {
+      throw new Error(`${error}`);
+    }
+  }    
 }

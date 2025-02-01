@@ -212,15 +212,15 @@ type Mutation {
   assignItemToUser(id: String!, itemId: String!): TravelDto!
   removeItemToUser(id: String!, itemId: String!): TravelDto!
   updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!, transportId: String, items: [String!], updateLocationInput: CreateLocationInput!): TravelDto!
-  removeTravel(id: String!): Travel!
+  removeTravel(id: String!): String!
   createTransport(createTransportInput: CreateTransportInput!): Transport!
   updateTransport(updateTransportInput: UpdateTransportInput!): Transport!
   removeTransport(id: Int!): Transport!
-  login(loginUserInput: LoginUserInput!): LoginResponse!
-  signup(signupUserInput: SignupUserInput!): User!
   createReview(createReviewInput: CreateReviewInput!, userReceiverId: String!, travelId: String!): Review!
   removeReview(id: String!): Review!
   updateReview(id: String!, updateReviewInput: UpdateReviewInput!): Review!
+  login(loginUserInput: LoginUserInput!): LoginResponse!
+  signup(signupUserInput: SignupUserInput!): User!
 }
 
 input CreateActivityInput {
@@ -299,6 +299,16 @@ input UpdateTransportInput {
   id: Int!
 }
 
+input CreateReviewInput {
+  stars: Int!
+  content: String!
+}
+
+input UpdateReviewInput {
+  stars: String!
+  content: String!
+}
+
 input LoginUserInput {
   email: String!
   password: String!
@@ -314,16 +324,6 @@ input SignupUserInput {
   whatsapp: String
   country: String
   userImage: String
-}
-
-input CreateReviewInput {
-  stars: Int!
-  content: String!
-}
-
-input UpdateReviewInput {
-  stars: String!
-  content: String!
 }
 
 type Subscription {

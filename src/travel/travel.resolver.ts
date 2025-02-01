@@ -150,8 +150,11 @@ export class TravelResolver {
     return this.travelTransformer.toDto(travel);
   }
 
-  @Mutation(() => Travel)
-  removeTravel(@Args('id', { type: () => String }) id: string) {
-    return this.travelService.remove(id);
+  @Mutation(() => String)
+  async removeTravel(
+    @Args('id', { type: () => String }) id: string,
+    @Context() context,
+  ):Promise<any> {
+    return await this.travelService.remove(id, context.req.user.userId);
   }
 }

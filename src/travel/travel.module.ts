@@ -12,6 +12,7 @@ import { TransportModule } from '../transport/transport.module';
 import { ChatModule } from '../chat/chat.module';
 import { GatewayModule } from '../gateway/gateway.module';
 import { MyGateway } from '../gateway/gateway';
+import { ReviewModule } from '../review/review.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MyGateway } from '../gateway/gateway';
     TransportModule,
     ChatModule,
     GatewayModule,
+    forwardRef(() => ReviewModule)
   ],
   providers: [TravelResolver, TravelService, TravelTransformer],
   exports: [TravelService],
