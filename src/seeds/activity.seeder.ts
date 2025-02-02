@@ -14,49 +14,49 @@ export class ActivitySeeder implements Seeder {
   async seed(): Promise<any> {
     const activities = [
       {
-        activityName: 'Caminar',
+        activityName: 'Walking',
       },
       {
-        activityName: 'Bailar',
+        activityName: 'Dancing',
       },
       {
-        activityName: 'Correr',
+        activityName: 'Running',
       },
       {
-        activityName: 'Nadar',
+        activityName: 'Swimming',
       },
       {
-        activityName: 'Entrenar',
+        activityName: 'Training',
       },
       {
-        activityName: 'Senderismo',
+        activityName: 'Hiking',
       },
       {
-        activityName: 'Atletismo',
+        activityName: 'Athletics',
       },
       {
         activityName: 'Pilates',
       },
       {
-        activityName: 'Escalar',
+        activityName: 'Climbing',
       },
       {
-        activityName: 'Patinar',
+        activityName: 'Skating',
       },
       {
-        activityName: 'Ciclismo',
+        activityName: 'Cycling',
       },
       {
-        activityName: 'Boxeo',
+        activityName: 'Boxing',
       },
       {
-        activityName: 'Esgrima',
+        activityName: 'Fencing',
       },
       {
-        activityName: 'Gimnasia',
+        activityName: 'Gymnastics',
       },
       {
-        activityName: 'Remo en canoa',
+        activityName: 'Canoeing',
       },
     ];
 
