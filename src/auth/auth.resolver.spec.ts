@@ -35,6 +35,10 @@ describe('AuthResolver', () => {
         password: '123456789',
         birthDate: new Date('2000-01-01'),
         description: "",
+        instagram:'john_Ig',
+        whatsapp:'0101010101',
+        country:'Matrix',
+        userImage: '',
       };
 
       const result: User = {
@@ -44,6 +48,12 @@ describe('AuthResolver', () => {
         password: '123456',
         birthDate: new Date('2000-01-01'),
         description: null,
+        instagram:'john_Ig',
+        whatsapp:'0101010101',
+        country:'Matrix',
+        userImage: '',
+        chats: null,
+        messages: [],
         userActivities: [],
         travelsCreated: [],
         joinsTravels: [],

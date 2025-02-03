@@ -200,8 +200,6 @@ type Mutation {
   sendMessage(createMessageInput: CreateMessageInput!, chatId: String!): Message!
   editMessage(updateMessageInput: UpdateMessageInput!, messageId: String!): Message!
   createLocation(createLocationInput: CreateLocationInput!): Location!
-  updateLocation(updateLocationInput: UpdateLocationInput!): Location!
-  removeLocation(id: Int!): Location!
   createTravel(createTravelInput: CreateTravelInput!, activityId: [String!]!, createLocationInput: CreateLocationInput!, items: [String!]!, transportId: String): TravelDto!
   joinToTravel(travelId: String!): TravelDto!
   leaveTravel(travelId: String!): TravelDto!
@@ -214,8 +212,6 @@ type Mutation {
   updateTravel(updateTravelInput: UpdateTravelInput!, activityId: [String!]!, transportId: String, items: [String!], updateLocationInput: CreateLocationInput!): TravelDto!
   removeTravel(id: String!): String!
   createTransport(createTransportInput: CreateTransportInput!): Transport!
-  updateTransport(updateTransportInput: UpdateTransportInput!): Transport!
-  removeTransport(id: Int!): Transport!
   createReview(createReviewInput: CreateReviewInput!, userReceiverId: String!, travelId: String!): Review!
   removeReview(id: String!): Review!
   updateReview(id: String!, updateReviewInput: UpdateReviewInput!): Review!
@@ -257,14 +253,6 @@ input CreateLocationInput {
   longLatPoint: String!
 }
 
-input UpdateLocationInput {
-  name: String
-  state: String
-  address: String
-  longLatPoint: String
-  id: Int!
-}
-
 input CreateTravelInput {
   travelTitle: String!
   travelDescription: String!
@@ -292,11 +280,6 @@ input UpdateTravelInput {
 
 input CreateTransportInput {
   name: String!
-}
-
-input UpdateTransportInput {
-  name: String
-  id: Int!
 }
 
 input CreateReviewInput {

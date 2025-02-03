@@ -177,13 +177,10 @@ export class TravelService {
     this.gateway.exitRoom(user.id, travel.chat.id, user.name);
     /******************************************** */
 
-
-  
     travel.usersTravelers = travel.usersTravelers.filter(
       (traveler) => traveler.id !== userId,
     );
     
-
     await this.userService.leaveTravel(travel, user);
     return this.travelRepository.save(travel);
   }

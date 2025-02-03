@@ -26,13 +26,4 @@ export class LocationResolver {
     return this.locationService.findOne(id);
   }
 
-  @Mutation(() => Location)
-  updateLocation(@Args('updateLocationInput') updateLocationInput: UpdateLocationInput) {
-    return this.locationService.update(updateLocationInput.id, updateLocationInput);
-  }
-
-  @Mutation(() => Location)
-  removeLocation(@Args('id', { type: () => Int }) id: number) {
-    return this.locationService.remove(id);
-  }
 }
