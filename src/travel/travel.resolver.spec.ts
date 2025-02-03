@@ -23,6 +23,7 @@ describe('TravelResolver', () => {
     },
   };
 
+  
   const mockTravelDto = {
     id: '1',
     travelTitle: 'Test Travel',
@@ -41,6 +42,7 @@ describe('TravelResolver', () => {
     isJoined: false,
     transport: { id: '1' },
   };
+  
 
   const mockTravelService = {
     create: jest.fn().mockResolvedValue(mockTravelDto),
