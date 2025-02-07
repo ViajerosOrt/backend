@@ -563,8 +563,6 @@ export class TravelService {
         await this.leaveTravel(user.id, travelId)
       }
 
-      await console.log(travel.usersTravelers)
-
       await this.chatService.delete(travel.chat.id)
       
       if(travel.reviews.length > 0){
