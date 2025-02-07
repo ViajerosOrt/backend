@@ -108,7 +108,7 @@ describe('ReviewResolver', () => {
   
       jest.spyOn(service, 'remove').mockResolvedValue(undefined); 
   
-      expect(await resolver.removeReview(reviewId)).toBeUndefined(); 
+      expect(await resolver.removeReview(reviewId)).toEqual('review successfully deleted'); 
       expect(service.remove).toHaveBeenCalledWith(reviewId);
     });
   });
