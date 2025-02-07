@@ -34,9 +34,10 @@ export class ReviewResolver {
 
 
 
-  @Mutation(() => Review)
+  @Mutation(() => String)
   async removeReview(@Args('id', { type: () => String }) id: string):Promise<any> {
-    return this.reviewService.remove(id);
+    await this.reviewService.remove(id);
+    return 'review successfully deleted';
   }
 
   @Query(() => [Review])

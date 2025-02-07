@@ -153,7 +153,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async leaveTravel(travel: Travel, user: User) {
+  async leaveTravel(travel: Travel, user: User):Promise<void> {
     user.joinsTravels = user.joinsTravels.filter(
       (trav) => trav.id !== travel.id,
     );

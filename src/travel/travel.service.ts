@@ -165,10 +165,6 @@ export class TravelService {
       throw new GraphQLError('The user is not attached to this trip');
     }
 
-    if (travel.creatorUser.id === userId) {
-      throw new GraphQLError('The creator of the trip cannot leave it');
-    }
-
     if (await this.hasItem(travel.id, userId)) {
       await this.removeItemsToUser(travel.id, userId);
     }
@@ -553,17 +549,22 @@ export class TravelService {
         throw new GraphQLError('The creator of the trip cannot delete');
       } 
 
-      travel.usersTravelers = travel.usersTravelers.filter(
-        (traveler) => traveler.id !== userId,
-      );
-      
+      if (travel.creatorUser.id !== userId) {
+        throw new GraphQLError('Only the creator can remove travel');
+      }
+
       const user = await this.userService.findById(userId)
-      await this.userService.leaveTravel(travel, user);
-      this.travelRepository.save(travel);
+      
+      if (!user) {
+        throw new GraphQLError('This user does not exist');
+      }
 
       for(const user of travel.usersTravelers){
         await this.leaveTravel(user.id, travelId)
       }
+
+      await console.log(travel.usersTravelers)
+
       await this.chatService.delete(travel.chat.id)
       
       if(travel.reviews.length > 0){

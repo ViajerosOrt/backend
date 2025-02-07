@@ -213,7 +213,7 @@ type Mutation {
   removeTravel(id: String!): String!
   createTransport(createTransportInput: CreateTransportInput!): Transport!
   createReview(createReviewInput: CreateReviewInput!, userReceiverId: String!, travelId: String!): Review!
-  removeReview(id: String!): Review!
+  removeReview(id: String!): String!
   updateReview(id: String!, updateReviewInput: UpdateReviewInput!): Review!
   login(loginUserInput: LoginUserInput!): LoginResponse!
   signup(signupUserInput: SignupUserInput!): User!
